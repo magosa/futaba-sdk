@@ -3,18 +3,18 @@ const https = require('https');
 
 class Futaba {
   /**
-  * [Futabaクラスのコンストラクタ]
-  * @constructor
-  * @this {Futaba}
-  * @param {String} host_auth [アクセストークン認証用のURL]
-  * @param {String} host_hot [WoT APIのURL]
-  * @param {String} host_cold [建物メタデータのURL]
-  * @param {String} host_ext [データ交換用の特殊URL]
-  * @param {String} client_id [サービサー毎に払い出されるID]
-  * @param {String} client_secret [サービサー毎に払い出されるシークレット文字列]
-  * @param {String} access_token [発行から24時間有効なアクセストークン文字列]
-  * @param {String} refresh_token [アクセストークンの再発行に必要な文字列]
-  */
+   * [Futabaクラスのコンストラクタ]
+   * @constructor
+   * @this {Futaba}
+   * @param {String} host_auth [アクセストークン認証用のURL]
+   * @param {String} host_hot [WoT APIのURL]
+   * @param {String} host_cold [建物メタデータのURL]
+   * @param {String} host_ext [データ交換用の特殊URL]
+   * @param {String} client_id [サービサー毎に払い出されるID]
+   * @param {String} client_secret [サービサー毎に払い出されるシークレット文字列]
+   * @param {String} access_token [発行から24時間有効なアクセストークン文字列]
+   * @param {String} refresh_token [アクセストークンの再発行に必要な文字列]
+   */
   constructor() {
     this.host_auth = "futaba-dev-app-auth.azurewebsites.net";
     this.host_hot = "futaba-dev-app-hot.azurewebsites.net";
@@ -428,12 +428,12 @@ class Futaba {
     let options = {
       protocol: "https:",
       host: this.host_hot,
-      path: "/api/things" + "?path=" + encodeURIComponent(bot_path),
+      path: '/api/things' + '?path=' + encodeURIComponent(bot_path),
       method: "GET",
       headers: {
         'Content-Type': "application/json",
         'X-NEDO-CLIENT-ID': this.client_id,
-        'X-NEDO-CLIENT-SECRET': this.client_secret,
+        'X-NEDO-ACCESS-TOKEN': this.access_token
       }
     }
 
@@ -525,6 +525,70 @@ class Futaba {
     }
 
     return await this.requestFutaba(options, edit_data);
+  }
+
+  /**
+   * [setEventSubscription description]
+   * @param  {String}  event_name [description]
+   * @param  {Object}  data_set   [description]
+   * @return {Promise}            [description]
+   */
+  async setEventSubscription(event_name, data_set) {
+    let options = {
+      protocol: "https:",
+      host: this.host_hot,
+      path: "/api/things/events/" + encodeURIComponent(event_name),
+      method: "POST",
+      headers: {
+        'Content-Type': "application/json",
+        'X-NEDO-CLIENT-ID': this.client_id,
+        'X-NEDO-ACCESS-TOKEN': this.access_token
+      }
+    }
+
+    return await this.requestFutaba(options, data_set);
+  }
+
+  /**
+   * [deleteEventSubscription description]
+   * @param  {String}  event_name      [description]
+   * @param  {String}  subscription_id [description]
+   * @return {Promise}                 [description]
+   */
+  async deleteEventSubscription(event_name, subscription_id) {
+    let options = {
+      protocol: "https:",
+      host: this.host_hot,
+      path: "/api/things/events/" + encodeURIComponent(event_name) + "/" + encodeURIComponent(subscription_id),
+      method: "DELETE",
+      headers: {
+        'Content-Type': "application/json",
+        'X-NEDO-CLIENT-ID': this.client_id,
+        'X-NEDO-ACCESS-TOKEN': this.access_token
+      }
+    }
+
+    return await this.requestFutaba(options);
+  }
+
+  /**
+   * [getEventSubscription description]
+   * @return {Promise} [description]
+   */
+  async getEventSubscription() {
+    let options = {
+      protocol: "https:",
+      host: this.host_hot,
+      path: "/api/things/events",
+      method: "GET",
+      headers: {
+        'Content-Type': "application/json",
+        'X-NEDO-CLIENT-ID': this.client_id,
+        'X-NEDO-ACCESS-TOKEN': this.access_token
+      }
+    }
+
+    return await this.requestFutaba(options);
   }
 
   /**
