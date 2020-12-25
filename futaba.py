@@ -171,7 +171,7 @@ class Futaba:
     def deleteSharedData(self, delete_conditions):
         options = {
             'url': "https://{}/api/extdata/search".format(self.host_ext),
-            'method': "GET",
+            'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
                 'X-NEDO-CLIENT-ID': obj['client_id'],
@@ -179,3 +179,167 @@ class Futaba:
             }
         }
         return self.requestFutaba(options, delete_conditions)
+
+    def getWeatherData(self, search_conditions):
+        options = {
+            'url': "https://{}/api/weather".format(self.host_ext),
+            'method': "POST",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, search_conditions)
+
+    def getMetadata(self, bot_path):
+        options = {
+            'url': "https://{}/api/metadata?path={}".format(
+                self.host_hot, urllib.parse.quote(bot_path)),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options)
+
+    def getMetadataWithQuery(self, query_data):
+        options = {
+            'url': "https://{}/api/metadata".format(self.host_hot),
+            'method': "POST",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, query_data)
+
+    def setMetadataProperty(self, edit_data):
+        options = {
+            'url': "https://{}/api/metadata".format(self.host_hot),
+            'method': "PUT",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, edit_data)
+
+    def getThings(self, bot_path):
+        options = {
+            'url': "https://{}/api/things?path={}".format(
+                self.host_hot, urllib.parse.quote(bot_path)),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options)
+
+    def getThingsWithQuery(self, query_data):
+        options = {
+            'url': "https://{}/api/things".format(self.host_hot),
+            'method': "POST",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, query_data)
+
+    def getThingsProperties(self, tdid):
+        options = {
+            'url': "https://{}/api/things/{}/properties".format(
+                self.host_hot, urllib.parse.quote(tdid)),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options)
+
+    def getThingsProperty(self, tdid, pointid):
+        options = {
+            'url': "https://{}/api/things/{}/properties/{}".format(
+                self.host_hot, urllib.parse.quote(tdid), urllib.parse.quote(pointid)),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options)
+
+    def setThingsProperty(self, tdid, pointid, edit_data):
+        options = {
+            'url': "https://{}/api/things/{}/properties/{}".format(
+                self.host_hot, urllib.parse.quote(tdid), urllib.parse.quote(pointid)),
+            'method': "PUT",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, edit_data)
+
+    def setEventSubscription(self, event_name='telemetry_eventhub', data_set):
+        options = {
+            'url': "https://{}/api/things/events/{}".format(
+                self.host_hot, urllib.parse.quote(event_name)),
+            'method': "POST",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, edit_data)
+
+    def deleteEventSubscription(self, event_name='telemetry_eventhub', subscription_id):
+        options = {
+            'url': "https://{}/api/things/events/{}/{}".format(
+                self.host_hot, urllib.parse.quote(event_name), urllib.parse.quote(subscription_id)),
+            'method': "DELETE",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, edit_data)
+
+    def getEventSubscription(self):
+        options = {
+            'url': "https://{}/api/things/events".format(self.host_hot),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options, edit_data)
+
+    def getThingsPropertiesWithAlias(self, tdid):
+        options = {
+            'url': "https://{}/api/things/{}/propertiesEx".format(
+                self.host_hot, urllib.parse.quote(tdid)),
+            'method': "GET",
+            'headers': {
+                'Content-Type': "application/json",
+                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+            }
+        }
+        return self.requestFutaba(options)
