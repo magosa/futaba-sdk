@@ -6,14 +6,6 @@ class Futaba {
    * [Futabaクラスのコンストラクタ]
    * @constructor
    * @this {Futaba}
-   * @param {String} host_auth [アクセストークン認証用のURL]
-   * @param {String} host_hot [WoT APIのURL]
-   * @param {String} host_cold [建物メタデータのURL]
-   * @param {String} host_ext [データ交換用の特殊URL]
-   * @param {String} client_id [サービサー毎に払い出されるID]
-   * @param {String} client_secret [サービサー毎に払い出されるシークレット文字列]
-   * @param {String} access_token [発行から24時間有効なアクセストークン文字列]
-   * @param {String} refresh_token [アクセストークンの再発行に必要な文字列]
    */
   constructor() {
     this.host_auth = "futaba-dev-app-auth.azurewebsites.net";
@@ -184,7 +176,7 @@ class Futaba {
    * @param  {Boolean} [status=false] [description]
    * @return {Promise}                [description]
    */
-  async changeTaskValidity(task_id = 1, status = false) {
+  async changeTaskValidity(task_id, status = false) {
     let options = {
       protocol: "https:",
       host: this.host_cold,
@@ -210,7 +202,7 @@ class Futaba {
    * @param  {Number}  task_id        [description]
    * @return {Promise}                [description]
    */
-  async changeTaskDelete(task_id) {
+  async deleteTask(task_id) {
     let options = {
       protocol: "https:",
       host: this.host_cold,
@@ -231,7 +223,7 @@ class Futaba {
    * @param  {String}  url [description]
    * @return {Promise}     [description]
    */
-  async changeTaskValidity(url) {
+  async setWebhook(url) {
     let options = {
       protocol: "https:",
       host: this.host_cold,
@@ -256,7 +248,7 @@ class Futaba {
    * @param  {[type]}  webhook_id [description]
    * @return {Promise}            [description]
    */
-  async changeTaskValidity(webhook_id) {
+  async deleteWebhook(webhook_id) {
     let options = {
       protocol: "https:",
       host: this.host_cold,
@@ -303,7 +295,7 @@ class Futaba {
       protocol: "https:",
       host: this.host_ext,
       path: "/api/extdata/search",
-      method: "POST",
+      method: "GET",
       headers: {
         'Content-Type': "application/json",
         'X-NEDO-CLIENT-ID': this.client_id,
@@ -533,7 +525,7 @@ class Futaba {
    * @param  {Object}  data_set   [description]
    * @return {Promise}            [description]
    */
-  async setEventSubscription(event_name, data_set) {
+  async setEventSubscription(event_name='telemetry_eventhub', data_set) {
     let options = {
       protocol: "https:",
       host: this.host_hot,
