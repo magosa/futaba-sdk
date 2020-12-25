@@ -547,7 +547,7 @@ class Futaba {
    * @param  {String}  subscription_id [description]
    * @return {Promise}                 [description]
    */
-  async deleteEventSubscription(event_name, subscription_id) {
+  async deleteEventSubscription(event_name='telemetry_eventhub', subscription_id) {
     let options = {
       protocol: "https:",
       host: this.host_hot,
