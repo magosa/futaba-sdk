@@ -36,7 +36,7 @@ class Futaba:
             'method': "",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
+                'X-NEDO-CLIENT-ID': self.client_id,
                 'X-NEDO-CLIENT-SECRET': obj['client_secret']
             }
         }
@@ -48,7 +48,7 @@ class Futaba:
             options['method'] = "POST"
             options['headers']['X-NEDO-GRANT-TYPE'] = "client_credentials"
         response = self.requestFutaba(request_header=options)
-        self.client_id = obj['client_id']
+        self.client_id = self.client_id
         self.client_secret = obj['client_secret']
         self.access_token = response['access_token']
         self.refresh_token = response['refresh_token']
@@ -66,8 +66,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, task)
@@ -78,8 +78,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         if task_id is None:
@@ -93,8 +93,8 @@ class Futaba:
             'method': "PATCH",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         task = {
@@ -110,8 +110,8 @@ class Futaba:
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -122,8 +122,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         webhook = {
@@ -138,8 +138,8 @@ class Futaba:
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -150,8 +150,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -162,8 +162,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, search_conditions)
@@ -174,8 +174,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, delete_conditions)
@@ -186,8 +186,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, search_conditions)
@@ -199,8 +199,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -211,8 +211,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, query_data)
@@ -223,8 +223,8 @@ class Futaba:
             'method': "PUT",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, edit_data)
@@ -236,8 +236,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -248,8 +248,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, query_data)
@@ -261,8 +261,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -274,8 +274,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
@@ -287,8 +287,8 @@ class Futaba:
             'method': "PUT",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, edit_data)
@@ -300,8 +300,8 @@ class Futaba:
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, edit_data)
@@ -313,8 +313,8 @@ class Futaba:
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, edit_data)
@@ -325,8 +325,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options, edit_data)
@@ -338,8 +338,8 @@ class Futaba:
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': obj['client_id'],
-                'X-NEDO-ACCESS-TOKEN': obj['access_token']
+                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
         return self.requestFutaba(options)
