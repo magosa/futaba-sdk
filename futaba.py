@@ -304,7 +304,7 @@ class Futaba:
                 'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
-        return self.requestFutaba(options, edit_data)
+        return self.requestFutaba(options, data_set)
 
     def deleteEventSubscription(self, subscription_id, event_name='telemetry_eventhub'):
         options = {
@@ -317,7 +317,7 @@ class Futaba:
                 'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
-        return self.requestFutaba(options, edit_data)
+        return self.requestFutaba(options)
 
     def getEventSubscription(self):
         options = {
@@ -329,7 +329,7 @@ class Futaba:
                 'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
-        return self.requestFutaba(options, edit_data)
+        return self.requestFutaba(options)
 
     def getThingsPropertiesWithAlias(self, tdid):
         options = {
