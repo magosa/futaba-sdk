@@ -82,9 +82,9 @@ class Futaba:
                 'X-NEDO-ACCESS-TOKEN': self.access_token
             }
         }
-        if task_id is None:
+        if task_id is not None:
             options['url'] = "https://{}/api/model/task?task_id={}".format(
-                self.host_cold, urllib.parse.quote(task_id))
+                self.host_cold, urllib.parse.quote(str(task_id)))
         return self.requestFutaba(options)
 
     def changeTaskValidity(self, task_id, status=False):
@@ -106,7 +106,7 @@ class Futaba:
     def deleteTask(self, task_id):
         options = {
             'url': "https://{}/api/model/task?task_id={}".format(
-                self.host_cold, urllib.parse.quote(task_id)),
+                self.host_cold, urllib.parse.quote(str(task_id))),
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
@@ -134,7 +134,7 @@ class Futaba:
     def deleteWebhook(self, webhook_id):
         options = {
             'url': "https://{}/api/model/webhook?webhook_id={}".format(
-                self.host_cold, urllib.parse.quote(webhook_id)),
+                self.host_cold, urllib.parse.quote(str(webhook_id))),
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
@@ -195,7 +195,7 @@ class Futaba:
     def getMetadata(self, bot_path):
         options = {
             'url': "https://{}/api/metadata?path={}".format(
-                self.host_hot, urllib.parse.quote(bot_path)),
+                self.host_hot, urllib.parse.quote(bot_path, safe='')),
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
@@ -232,7 +232,7 @@ class Futaba:
     def getThings(self, bot_path):
         options = {
             'url': "https://{}/api/things?path={}".format(
-                self.host_hot, urllib.parse.quote(bot_path)),
+                self.host_hot, urllib.parse.quote(bot_path, safe='')),
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
@@ -257,7 +257,7 @@ class Futaba:
     def getThingsProperties(self, tdid):
         options = {
             'url': "https://{}/api/things/{}/properties".format(
-                self.host_hot, urllib.parse.quote(tdid)),
+                self.host_hot, urllib.parse.quote(str(tdid))),
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
@@ -270,7 +270,7 @@ class Futaba:
     def getThingsProperty(self, tdid, pointid):
         options = {
             'url': "https://{}/api/things/{}/properties/{}".format(
-                self.host_hot, urllib.parse.quote(tdid), urllib.parse.quote(pointid)),
+                self.host_hot, urllib.parse.quote(str(tdid)), urllib.parse.quote(str(pointid))),
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
@@ -283,7 +283,7 @@ class Futaba:
     def setThingsProperty(self, tdid, pointid, edit_data):
         options = {
             'url': "https://{}/api/things/{}/properties/{}".format(
-                self.host_hot, urllib.parse.quote(tdid), urllib.parse.quote(pointid)),
+                self.host_hot, urllib.parse.quote(str(tdid)), urllib.parse.quote(str(pointid))),
             'method': "PUT",
             'headers': {
                 'Content-Type': "application/json",
@@ -296,7 +296,7 @@ class Futaba:
     def setEventSubscription(self, data_set, event_name='telemetry_eventhub'):
         options = {
             'url': "https://{}/api/things/events/{}".format(
-                self.host_hot, urllib.parse.quote(event_name)),
+                self.host_hot, urllib.parse.quote(event_name, safe='')),
             'method': "POST",
             'headers': {
                 'Content-Type': "application/json",
@@ -309,7 +309,7 @@ class Futaba:
     def deleteEventSubscription(self, subscription_id, event_name='telemetry_eventhub'):
         options = {
             'url': "https://{}/api/things/events/{}/{}".format(
-                self.host_hot, urllib.parse.quote(event_name), urllib.parse.quote(subscription_id)),
+                self.host_hot, urllib.parse.quote(event_name, safe=''), urllib.parse.quote(str(subscription_id))),
             'method': "DELETE",
             'headers': {
                 'Content-Type': "application/json",
@@ -334,7 +334,7 @@ class Futaba:
     def getThingsPropertiesWithAlias(self, tdid):
         options = {
             'url': "https://{}/api/things/{}/propertiesEx".format(
-                self.host_hot, urllib.parse.quote(tdid)),
+                self.host_hot, urllib.parse.quote(str(tdid))),
             'method': "GET",
             'headers': {
                 'Content-Type': "application/json",
