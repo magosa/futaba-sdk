@@ -87,7 +87,7 @@ class Futaba:
                 self.host_cold, urllib.parse.quote(task_id))
         return self.requestFutaba(options)
 
-    def changeTaskValidity(self, task_id, status=false):
+    def changeTaskValidity(self, task_id, status=False):
         options = {
             'url': "https://{}/api/model/task".format(self.host_cold),
             'method': "PATCH",
@@ -293,7 +293,7 @@ class Futaba:
         }
         return self.requestFutaba(options, edit_data)
 
-    def setEventSubscription(self, event_name='telemetry_eventhub', data_set):
+    def setEventSubscription(self, data_set, event_name='telemetry_eventhub'):
         options = {
             'url': "https://{}/api/things/events/{}".format(
                 self.host_hot, urllib.parse.quote(event_name)),
@@ -306,7 +306,7 @@ class Futaba:
         }
         return self.requestFutaba(options, edit_data)
 
-    def deleteEventSubscription(self, event_name='telemetry_eventhub', subscription_id):
+    def deleteEventSubscription(self, subscription_id, event_name='telemetry_eventhub'):
         options = {
             'url': "https://{}/api/things/events/{}/{}".format(
                 self.host_hot, urllib.parse.quote(event_name), urllib.parse.quote(subscription_id)),
