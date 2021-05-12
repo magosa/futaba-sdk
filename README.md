@@ -43,7 +43,7 @@ client.setHostURL(url);
 
 * アクセストークンの発効
 
-初めてのアクセストークの発効には"getAccessToken"関数を使って認証APIにアクセスします。
+初めてのアクセストークの発効には"getAccessToken"関数を使って認証APIにアクセスします。  
 引数にはconfig.jsonの内容を用います。
 
 
