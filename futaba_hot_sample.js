@@ -28,39 +28,39 @@ client.getAccessToken(obj)
     console.log(res);
   });
 
-// //既存トークンのセット
-// // client.setAccessToken(obj);
-//
-//
-// // 特定のTDを検索し、プロパティを表示
+//既存トークンのセット
+// client.setAccessToken(obj);
+
+
+// 特定のTDを検索し、プロパティを表示
+let data = {
+  building: 'nkc/livinglab',
+  query_type: 'odata',
+  query: "$filter=element eq 'DL4'" //Titleに合致するthingを検索
+};
+
+client.getThingsWithQuery(data)
+  .then(res => {
+    res.things.map(item => {
+      // console.log(item);
+      client.getThingsPropertiesWithAlias(item.tdId)
+        .then(d => {
+          console.log(item.tdId);
+          console.log(d)
+        });
+    })
+  });
+
+// client.getThingsWithQuery(data)
+//   .then(d => console.log(d))
+
+
+// TDへの書き込み
 // let data = {
-//   building: 'nkc/livinglab',
-//   query_type: 'odata',
-//   query: "$filter=element eq 'DL4'" //Titleに合致するthingを検索
+//   values: {
+//     value: '0'
+//   }
 // };
 //
-// client.getThingsWithQuery(data)
-//   .then(res => {
-//     res.things.map(item => {
-//       // console.log(item);
-//       client.getThingsPropertiesWithAlias(item.tdId)
-//         .then(d => {
-//           console.log(item.tdId);
-//           console.log(d)
-//         });
-//     })
-//   });
-//
-// // client.getThingsWithQuery(data)
-// //   .then(d => console.log(d))
-//
-//
-// // TDへの書き込み
-// // let data = {
-// //   values: {
-// //     value: '0'
-// //   }
-// // };
-// //
-// // client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', data)
-// // .then(d => console.log(d));
+// client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', data)
+// .then(d => console.log(d));
