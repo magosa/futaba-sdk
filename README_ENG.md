@@ -80,7 +80,7 @@ If the token has expired, execute the ***"getAccessToken"*** function again to u
 
 ### Set a valid access token
 
-期限内のアクセストークンを利用するには***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
+If you want to use an access token that has not expired, use the ***"setAccessToken"*** function to write the credentials to the client instance.
 
 ```Javascript:futaba_hot_sample.js
 const fs = require('fs');
@@ -90,7 +90,7 @@ let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
 client.setAccessToken(obj);
 ```
 
-### Thingデータと状態値の取得
+### Get Thing data and status values
 
 To use the access token before the expiration date, write the authentication information to the client instance using the ***"setAccessToken"*** function.
 
