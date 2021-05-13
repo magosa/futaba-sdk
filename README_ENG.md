@@ -51,10 +51,10 @@ url['host_ext'] = 'cgll-dev-app-extapi.azurewebsites.net';
 client.setHostURL(url);
 ```
 
-### アクセストークンの発効・更新
+### Activate and update the access token
 
-***"getAccessToken"*** 関数を使って認証APIにアクセスし、アクセストークンの発効を行います。  
-引数にはconfig.jsonの内容を用います。
+Use the ***"getAccessToken"*** function to access the authentication API and activate the access token.
+Use the contents of ***config.json*** as an argument.
 
 ```Javascript:futaba_hot_sample.js
 const fs = require('fs');
@@ -72,18 +72,81 @@ client.getAccessToken(obj)
   });
 ```
 
-APIからのレスポンスには***"access_token"***と***"refresh_token"***が含まれています。認証API以外のAPI（hot, cold, ext）には***"access_token"***が必須となりますが、発行後24時間のみ有効なトークンとなります。
+The response from the API includes ***"access_token"*** and ***"refresh_token"***.  
+***"access_token"*** is required for APIs other than the authentication API (hot, cold, extension), but it expires 24 hours after issuance.
 
-トークンの期限が切れた場合には再度***"getAccessToken"*** 関数を実行してトークンの更新を行ってください。***"refresh_token"***を使って最新のトークンに更新するため、***"refresh_token"***を紛失した場合には管理者に問い合わせを行ってください。
+If the token has expired, execute the ***"getAccessToken"*** function again to update the token.  
+***"Refresh_token"*** will be used to update to the latest token, so if you lose ***"refresh_token"***, please contact administrator.
 
-### 期限内のアクセストークンの利用
+### Set a valid access token
 
-***"getAccessToken"*** 関数を使って認証APIにアクセスし、アクセストークンの発効を行います。  
-引数には***"getAccessToken"*** 関数と同様にconfig.jsonの内容を用います。
+期限内のアクセストークンを利用するには***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
+
+```Javascript:futaba_hot_sample.js
+const fs = require('fs');
+let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
+
+//既存トークンのセット
+client.setAccessToken(obj);
+```
+
+### Thingデータと状態値の取得
+
+To use the access token before the expiration date, write the authentication information to the client instance using the ***"setAccessToken"*** function.
+
+The following is an example of getting the current value.
+
+1. Get TD using ***"getThingsWithQuery"*** function
+2. Get the current value by passing the obtained TD ID to the ***"getThingsPropertiesWithAlias"*** function.
+
+```Javascript:futaba_hot_sample.js
+// 特定のTDを検索し、プロパティを表示
+let data = {
+  building: 'nkc/livinglab',
+  query_type: 'odata',
+  query: "$filter=element eq 'DL4'" //Titleに合致するthingを検索
+};
+
+client.getThingsWithQuery(data)
+  .then(res => {
+    res.things.map(item => {
+      // console.log(item);
+      client.getThingsPropertiesWithAlias(item.tdId)
+        .then(d => {
+          console.log(item.tdId);
+          console.log(d)
+        });
+    })
+  });
+```
+
+If the response from the API exceeds **1024KB**, Thing will not be returned and the download URL will be returned.
+
+We have multiple functions for getting TDs and properties.  
+For details, please check the API specifications provided separately by the administrator.
+
+### Remote control of equipment
+
+Use the ***"setThingsProperty"*** function for remote control.  
+Pass <TD ID>, <Device point ID>, <JSON object of data to be written> as arguments.  
+<TD ID> and <Device point ID> are described in the TD that can be obtained by the ***"getThingsWithQuery"*** function.
+
+```Javascript:futaba_hot_sample.js
+// TDへの書き込み
+let data = {
+  values: {
+    value: '0'
+  }
+};
+
+client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', data)
+.then(d => console.log(d));
+```
 
 # Note
 
-シークレットやリフレッシュトークンを紛失した場合には、即座に管理者へ問い合わせを行ってください。
+For each futaba API, check the API specifications provided separately by the administrator.  
+If you lose your secret or refresh token, please contact administrator immediately.
 
 # Author
 
