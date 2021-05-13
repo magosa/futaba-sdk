@@ -128,8 +128,8 @@ For details, please check the API specifications provided separately by the admi
 ### Remote control of equipment
 
 Use the ***"setThingsProperty"*** function for remote control.  
-Pass ***<TD ID>*** , ***<Device point ID>*** , ***<JSON object of data to be written>*** as arguments.  
-<TD ID> and <Device point ID> are described in the TD that can be obtained by the  ***"getThingsWithQuery"*** function.
+Pass "TD ID" , "Device point ID" , "JSON object of data to be written" as arguments.  
+"TD ID" and "Device point ID" are described in the TD that can be obtained by the  ***"getThingsWithQuery"*** function.
 
 ```Javascript:futaba_hot_sample.js
 // TDへの書き込み
