@@ -2,7 +2,7 @@
 
 futabaのAPIに接続するためのラッパー関数ライブラリーとサンプルです。
 
-futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
+ライブラリを利用することでAPIリクエストを簡略化し、futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
 
 # Installation
 
@@ -82,11 +82,72 @@ APIからのレスポンスには***"access_token"***と***"refresh_token"***が
 
 ### 期限内のアクセストークンの利用
 
-***"getAccessToken"*** 関数を使って認証APIにアクセスし、アクセストークンの発効を行います。  
-引数には***"getAccessToken"*** 関数と同様にconfig.jsonの内容を用います。
+期限内のアクセストークンを利用するには***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
+
+```Javascript:futaba_hot_sample.js
+const fs = require('fs');
+let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
+
+//既存トークンのセット
+client.setAccessToken(obj);
+```
+
+### Thingデータと状態値の取得
+
+建物内の機器の状態値を取得するには、WoT APIから建物のThing Descriptions（TD）を取得し、TDのIDをキーに機器のプロパティを検索します。
+
+以下に現在値取得の一例を示します。  
+
+1. ***"getThingsWithQuery"*** 関数を利用してTDを取得
+2. 取得したTDのIDを***"getThingsPropertiesWithAlias"*** 関数に渡すことで現在値を取得
+
+```Javascript:futaba_hot_sample.js
+// 特定のTDを検索し、プロパティを表示
+let data = {
+  building: 'nkc/livinglab',
+  query_type: 'odata',
+  query: "$filter=element eq 'DL4'" //Titleに合致するthingを検索
+};
+
+client.getThingsWithQuery(data)
+  .then(res => {
+    res.things.map(item => {
+      // console.log(item);
+      client.getThingsPropertiesWithAlias(item.tdId)
+        .then(d => {
+          console.log(item.tdId);
+          console.log(d)
+        });
+    })
+  });
+```
+
+APIからのレスポンスが**1024KB**を超える場合には、Thingが返却されずダウンロードURLが返却されます。
+
+TDやプロパティ取得の関数は複数用意されています。  
+詳しくは、管理者から別途提供されるAPI仕様書をご確認ください。
+
+### 機器の遠隔制御
+
+建物内の機器に値を書き込むには***"setThingsProperty"*** 関数を利用します。  
+引数には＜TDのID＞, ＜機器のポイントID＞, ＜書き込むデータのJSONオブジェクト＞を渡します。  
+＜TDのID＞と＜機器のポイントID＞については***"getThingsWithQuery"*** 関数で取得できるTDに記載されています。
+
+```Javascript:futaba_hot_sample.js
+// TDへの書き込み
+let data = {
+  values: {
+    value: '0'
+  }
+};
+
+client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', data)
+.then(d => console.log(d));
+```
 
 # Note
 
+futabaの各APIについては、管理者から別途提供されるAPI仕様書を確認してください。  
 シークレットやリフレッシュトークンを紛失した場合には、即座に管理者へ問い合わせを行ってください。
 
 # Author
