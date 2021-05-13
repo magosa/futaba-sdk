@@ -1,14 +1,12 @@
 # futaba-sdk:The SDK for futaba API
 
-futabaのAPIに接続するためのラッパー関数ライブラリーとサンプルです。
+* futabaのAPIに接続するためのラッパー関数ライブラリーとサンプルです。
 
-ライブラリを利用することでAPIリクエストを簡略化し、futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
+* ライブラリを利用することでAPIリクエストを簡略化し、futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
 
 # Installation
 
 * 環境構築.
-
-npmコマンドを実施してください。
 
 ```bash
 git clone -b js https://github.com/magosa/futaba-sdk.git
@@ -57,7 +55,7 @@ client.setHostURL(url);
 
 ### アクセストークンの発効・更新
 
-***"getAccessToken"*** 関数を使って認証APIにアクセスし、アクセストークンの発効を行います。
+***"getAccessToken"*** 関数を使って認証APIにアクセスし、アクセストークンの発効を行います。  
 引数にはconfig.jsonの内容を用います。
 
 ```Javascript:futaba_hot_sample.js
@@ -76,15 +74,14 @@ client.getAccessToken(obj)
   });
 ```
 
-APIからのレスポンスには ***"access_token"*** と ***"refresh_token"*** が含まれています。
-認証API以外のAPI（hot, cold, ext）には ***"access_token"*** が必須となりますが、発行後24時間のみ有効なトークンとなります。
+APIからのレスポンスには***"access_token"***と***"refresh_token"***が含まれています。  
+認証API以外のAPI（hot, cold, ext）には***"access_token"***が必須となりますが、発行後24時間のみ有効なトークンとなります。
 
-トークンの期限が切れた場合には再度 ***"getAccessToken"*** 関数を実行してトークンの更新を行ってください。  
-***"refresh_token"*** を使って最新のトークンに更新するため、 ***"refresh_token"*** を紛失した場合には管理者に問い合わせを行ってください。
+トークンの期限が切れた場合には再度***"getAccessToken"*** 関数を実行してトークンの更新を行ってください。***"refresh_token"***を使って最新のトークンに更新するため、***"refresh_token"***を紛失した場合には管理者に問い合わせを行ってください。
 
 ### 期限内のアクセストークンの利用
 
-期限内のアクセストークンを利用するには ***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
+期限内のアクセストークンを利用するには***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
 
 ```Javascript:futaba_hot_sample.js
 const fs = require('fs');
@@ -98,10 +95,10 @@ client.setAccessToken(obj);
 
 建物内の機器の状態値を取得するには、WoT APIから建物のThing Descriptions（TD）を取得し、TDのIDをキーに機器のプロパティを検索します。
 
-以下に現在値取得の一例を示します。
+以下に現在値取得の一例を示します。  
 
 1. ***"getThingsWithQuery"*** 関数を利用してTDを取得
-2. 取得したTDのIDを ***"getThingsPropertiesWithAlias"*** 関数に渡すことで現在値を取得
+2. 取得したTDのIDを***"getThingsPropertiesWithAlias"*** 関数に渡すことで現在値を取得
 
 ```Javascript:futaba_hot_sample.js
 // 特定のTDを検索し、プロパティを表示
@@ -124,16 +121,16 @@ client.getThingsWithQuery(data)
   });
 ```
 
-APIからのレスポンスが **1024KB** を超える場合には、Thingが返却されずダウンロードURLが返却されます。
+APIからのレスポンスが**1024KB**を超える場合には、Thingが返却されずダウンロードURLが返却されます。
 
-TDやプロパティ取得の関数は複数用意されています。
+TDやプロパティ取得の関数は複数用意されています。  
 詳しくは、管理者から別途提供されるAPI仕様書をご確認ください。
 
 ### 機器の遠隔制御
 
-建物内の機器に値を書き込むには ***"setThingsProperty"*** 関数を利用します。
-引数には＜TDのID＞, ＜機器のポイントID＞, ＜書き込むデータのJSONオブジェクト＞を渡します。
-＜TDのID＞と＜機器のポイントID＞については ***"getThingsWithQuery"*** 関数で取得できるTDに記載されています。
+建物内の機器に値を書き込むには***"setThingsProperty"*** 関数を利用します。  
+引数には＜TDのID＞, ＜機器のポイントID＞, ＜書き込むデータのJSONオブジェクト＞を渡します。  
+＜TDのID＞と＜機器のポイントID＞については***"getThingsWithQuery"*** 関数で取得できるTDに記載されています。
 
 ```Javascript:futaba_hot_sample.js
 // TDへの書き込み
@@ -149,7 +146,7 @@ client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', d
 
 # Note
 
-futabaの各APIについては、管理者から別途提供されるAPI仕様書を確認してください。
+futabaの各APIについては、管理者から別途提供されるAPI仕様書を確認してください。  
 シークレットやリフレッシュトークンを紛失した場合には、即座に管理者へ問い合わせを行ってください。
 
 # Author
