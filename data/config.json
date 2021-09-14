@@ -1,1 +1,7 @@
-{"client_id":"00005","client_secret":"KO6Ao","access_token":"0eQVES3AUIPNlUIo7bDCt1F7C5AsOS1SLIXBjZqZrwbkbtU/5uKuui+dr63qDjze","refresh_token":"XjmO9rP0OuWntXOyNYkLYkotv40TU7QW8CKVd7BADRJUYID8d4P0DL3psLRdJ5Xj"}
+{
+  "target_api": "cgll",
+  "client_id": "00002",
+  "client_secret": "48bG8",
+  "access_token": "0eQVES3AUIPNlUIo7bDCt8VmRCi2vbz6WrKf0WFhUMWpchcLmGHdlcBfEp6rFEpA",
+  "refresh_token": "XjmO9rP0OuWntXOyNYkLYheVV7LRuRty/T1fjhRriumAtEyGpX8B1R1IP88oUDG+"
+}

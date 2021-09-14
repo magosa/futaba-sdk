@@ -23,32 +23,15 @@ client.setAccessToken(obj);
 
 
 // 特定のTDを検索し、parquetファイルを取得
-// let data = {
-//   exec_type: 1,
-// "building": "nkc/livinglab",
-// "start_date": "2021-01-27T00:00:00+09:00",
-// "end_date": "2021-01-27T13:00:00+09:00",
-//   sample_interval_min: 30,
-//   points: [{
-//     type: "query",
-//     query_kind: "botpath",
-//     // query_kind: "odata",
-//     file_name: "sensor_test",
-//     query: "nkc/livinglab*" //Titleに合致するthingを検索],
-//     // query: "$filter=type eq 'Wireless_Sensor'" //Titleに合致するthingを検索],
-//   }],
-//   file_type: "parquet"
-// };
-
 let data = {
   "exec_type": 1,
   "building": "nkc/livinglab",
-  "start_date": "2021-01-27T00:00:00+09:00",
-  "end_date": "2021-01-27T13:00:00+09:00",
+  "start_date": "2021-08-31T12:00:00+09:00",
+  "end_date": "2021-08-31T15:00:00+09:00",
   "sample_interval_min": 1,
   "points": [{
     "type": "name",
-    "file_name": "check-2021-1-27",
+    "file_name": "check-2021-8-31",
     "names": [
       "CGL_000005",
       "CGL_000007",
@@ -59,11 +42,11 @@ let data = {
 }
 
 
-// client.createTask(data)
-//   .then(res => console.log(res))
+client.createTask(data)
+  .then(res => console.log(res))
 
 // 特定のタスク状況を確認し、parquetファイルの作成状況を確認
-client.getTaskProgress(2)
-  .then(res => {
-    console.log(JSON.stringify(res, null, 2));
-  })
+// client.getTaskProgress(3)
+//   .then(res => {
+//     console.log(JSON.stringify(res, null, 2));
+//   })

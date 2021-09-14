@@ -8,10 +8,10 @@ class Futaba {
    * @this {Futaba}
    */
   constructor() {
-    this.host_auth = "futaba-dev-app-auth.azurewebsites.net";
-    this.host_hot = "futaba-dev-app-hot.azurewebsites.net";
-    this.host_cold = "futaba-dev-app-cold.azurewebsites.net";
-    this.host_ext = "futaba-dev-app-extapi.azurewebsites.net";
+    this.host_auth = "";
+    this.host_hot = "";
+    this.host_cold = "";
+    this.host_ext = "";
     this.client_id = "";
     this.client_secret = "";
     this.access_token = "";
@@ -26,11 +26,12 @@ class Futaba {
    * @param {String} url.host_cold [建物メタデータのURL]
    * @param {String} url.host_ext [データ交換用の特殊URL]
    */
-  setHostURL(url) {
-    this.host_auth = url.host_auth;
-    this.host_hot = url.host_hot;
-    this.host_cold = url.host_cold;
-    this.host_ext = url.host_ext;
+
+  setAPIURL(target) {
+    this.host_auth = target + '-dev-app-auth.azurewebsites.net';
+    this.host_hot = target + '-dev-app-hot.azurewebsites.net';
+    this.host_cold = target + '-dev-app-cold.azurewebsites.net';
+    this.host_ext = target + '-dev-app-extapi.azurewebsites.net';
   }
 
   /**
@@ -79,6 +80,7 @@ class Futaba {
    * @return {Promise}     [description]
    */
   async getAccessToken(obj) {
+    this.setAPIURL(obj.target_api);
     let options = {
       protocol: "https:",
       host: this.host_auth,
@@ -117,6 +119,7 @@ class Futaba {
    * @param {String} obj.refresh_token [アクセストークンの再発行に必要な文字列（アクセストークンの初回以外は必須）]
    */
   setAccessToken(obj) {
+    this.setAPIURL(obj.target_api);
     this.client_id = obj.client_id;
     this.client_secret = obj.client_secret;
     this.access_token = obj.access_token;
