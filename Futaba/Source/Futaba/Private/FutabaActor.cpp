@@ -6,27 +6,27 @@
 // Sets default values
 AFutabaActor::AFutabaActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	Http = &FHttpModule::Get();
+    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
+    Http = &FHttpModule::Get();
 
 }
 
 // Called when the game starts or when spawned
 void AFutabaActor::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+
 }
 
 // Called every frame
 void AFutabaActor::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
 }
 
-void AFutabaActor::AddCommonHeaders(TSharedRef<IHttpRequest> Request)
+void AFutabaActor::AddCommonHeaders(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request)
 {
     Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
     Request->SetHeader(TEXT("X-NEDO-CLIENT-ID"), AFutabaActor::ClientId);
@@ -60,7 +60,7 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
     if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
     {
         // Create HTTP Request
-        TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+        TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
         Request->SetURL("https://" + AFutabaActor::HostAuth + "/api/token");
 
         if (!JsonObject->GetStringField("refresh_token").IsEmpty())
@@ -210,7 +210,7 @@ void AFutabaActor::SetAccessToken(FString Id, FString Secret, FString Access_Tok
 
 void AFutabaActor::GetMetadata(FString bot_path)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata?path=" + bot_path);
     Request->SetVerb("GET");
     AddCommonHeaders(Request);
@@ -220,7 +220,7 @@ void AFutabaActor::GetMetadata(FString bot_path)
 
 void AFutabaActor::GetMetadataWithQuery(FString query_data)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata");
     Request->SetVerb("POST");
     AddCommonHeaders(Request);
@@ -231,7 +231,7 @@ void AFutabaActor::GetMetadataWithQuery(FString query_data)
 
 void AFutabaActor::SetMetadataProperty(FString edit_data_json_string)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata");
     Request->SetVerb("PUT");
     AddCommonHeaders(Request);
@@ -243,7 +243,7 @@ void AFutabaActor::SetMetadataProperty(FString edit_data_json_string)
 
 void AFutabaActor::GetThings(FString bot_path)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things?path=" + bot_path);
     Request->SetVerb("GET");
     AddCommonHeaders(Request);
@@ -253,7 +253,7 @@ void AFutabaActor::GetThings(FString bot_path)
 
 void AFutabaActor::GetThingsWithQuery(FString query_data)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things");
     Request->SetVerb("POST");
     AddCommonHeaders(Request);
@@ -264,7 +264,7 @@ void AFutabaActor::GetThingsWithQuery(FString query_data)
 
 void AFutabaActor::GetThingsProperties(FString tdid)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/properties");
     Request->SetVerb("GET");
     AddCommonHeaders(Request);
@@ -274,7 +274,7 @@ void AFutabaActor::GetThingsProperties(FString tdid)
 
 void AFutabaActor::GetThingsProperty(FString tdid, FString pointid)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/properties/" + pointid);
     Request->SetVerb("GET");
     AddCommonHeaders(Request);
@@ -284,7 +284,7 @@ void AFutabaActor::GetThingsProperty(FString tdid, FString pointid)
 
 void AFutabaActor::GetThingsPropertiesWithAlias(FString tdid)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/propertiesEx");
     Request->SetVerb("GET");
     AddCommonHeaders(Request);
@@ -294,7 +294,7 @@ void AFutabaActor::GetThingsPropertiesWithAlias(FString tdid)
 
 void AFutabaActor::SetThingsProperty(FString tdid, FString pointid, FString edit_data)
 {
-    TSharedRef<IHttpRequest> Request = AFutabaActor::Http->CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
     Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + L"/properties/" + pointid);
     Request->SetVerb("PUT");
     AddCommonHeaders(Request);

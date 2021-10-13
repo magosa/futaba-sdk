@@ -24,8 +24,8 @@ UCLASS()
 class FUTABA_API AFutabaActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AFutabaActor();
 
@@ -53,7 +53,7 @@ protected:
 
 	void HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -116,7 +116,7 @@ private:
 	FString HostCold = "cgll-dev-app-cold.azurewebsites.net";
 	FString HostExt = "cgll-dev-app-extapi.azurewebsites.net";
 
-	FJsonObject RequestFutaba(TSharedRef<IHttpRequest> Request);
-	void AddCommonHeaders(TSharedRef<IHttpRequest> Request);
+	FJsonObject RequestFutaba(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
+	void AddCommonHeaders(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
 
 };
