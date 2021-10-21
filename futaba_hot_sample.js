@@ -6,21 +6,20 @@ const fs = require('fs');
 let client = new futaba();
 let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
 
-
 // トークンの発行・更新
-// client.getAccessToken(obj)
-//   .then(res => {
-//     obj.access_token = res.access_token;
-//     obj.refresh_token = res.refresh_token;
-//     if (obj.access_token && obj.refresh_token) {
-//       fs.writeFileSync('./data/config.json', JSON.stringify(obj));
-//     }
-//     console.log(res);
-//   });
+client.getAccessToken(obj)
+  .then(res => {
+    obj.access_token = res.access_token;
+    obj.refresh_token = res.refresh_token;
+    if (obj.access_token && obj.refresh_token) {
+      fs.writeFileSync('./data/config.json', JSON.stringify(obj));
+    }
+    console.log(res);
+  });
 
 
 //既存トークンのセット
-client.setAccessToken(obj);
+// client.setAccessToken(obj);
 
 
 // Bot pathによるTDの取得
@@ -29,23 +28,24 @@ client.setAccessToken(obj);
 
 
 // 特定のTDを検索し、プロパティを表示
-let data = {
-  building: 'nkc/livinglab',
-  query_type: 'odata',
-  query: "$filter=element eq 'PAC001'" //Titleに合致するthingを検索
-};
-
-client.getThingsWithQuery(data)
-  .then(res => {
-    res.things.map(item => {
-      // console.log(item);
-      client.getThingsPropertiesWithAlias(item.tdId)
-        .then(d => {
-          console.log("Thing: " +item.title + "(" + item.tdId + ")");
-          console.log(d)
-        });
-    })
-  });
+// let data = {
+//   building: 'nkc/livinglab',
+//   query_type: 'odata',
+//   query: "$filter=element eq 'PAC001'" //Titleに合致するthingを検索
+// };
+//
+// client.getThingsWithQuery(data)
+//   .then(res => {
+//     console.log(res);
+//     res.things.map(item => {
+//       // console.log(item);sa
+//       client.getThingsPropertiesWithAlias(item.tdId)
+//         .then(d => {
+//           console.log("Thing: " +item.title + "(" + item.tdId + ")");
+//           console.log(d)
+//         });
+//     })
+//   });
 
 
 // TDへの書き込み
