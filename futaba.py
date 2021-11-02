@@ -27,7 +27,7 @@ class Futaba:
                                json=request_body,
                                timeout=(180.0))
         if(req.status_code != 200):
-            raise Exception("request error {}".format(req.status_code))
+            raise Exception("request error {0}:{1}".format(req.status_code, req.json()))
         return req.json()
 
     def getAccessToken(self, obj):
@@ -36,7 +36,7 @@ class Futaba:
             'method': "",
             'headers': {
                 'Content-Type': "application/json",
-                'X-NEDO-CLIENT-ID': self.client_id,
+                'X-NEDO-CLIENT-ID': obj['client_id'],
                 'X-NEDO-CLIENT-SECRET': obj['client_secret']
             }
         }
@@ -48,7 +48,7 @@ class Futaba:
             options['method'] = "POST"
             options['headers']['X-NEDO-GRANT-TYPE'] = "client_credentials"
         response = self.requestFutaba(request_header=options)
-        self.client_id = self.client_id
+        self.client_id = obj['client_id']
         self.client_secret = obj['client_secret']
         self.access_token = response['access_token']
         self.refresh_token = response['refresh_token']
