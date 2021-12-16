@@ -9,8 +9,8 @@ let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
 // トークンの発行・更新
 client.getAccessToken(obj)
   .then(res => {
-    obj.access_token = res.access_token;
-    obj.refresh_token = res.refresh_token;
+    obj.access_token = res.accessToken;
+    obj.refresh_token = res.refreshToken;
     if (obj.access_token && obj.refresh_token) {
       fs.writeFileSync('./data/config.json', JSON.stringify(obj));
     }

@@ -20,16 +20,6 @@ class Futaba {
   }
 
   /**
-   * [API URLの設定変更]
-   * @param {Object} url [APIリクエスト先のURI]
-   * @param {String} url.host_auth [アクセストークン認証用のURL]
-   * @param {String} url.host_hot [WoT APIのURL]
-   * @param {String} url.host_cold [建物メタデータのURL]
-   * @param {String} url.host_common [データ交換用の特殊URL]
-   * @param {String} url.host_grpc [gRPC用の特殊URL]
-   */
-
-  /**
    * setAPIURL - [API URLの設定変更]
    *
    * @param  {String} target [APIリクエスト先のURI]
@@ -50,8 +40,8 @@ class Futaba {
       method: request_method,
       headers: {
         'Content-Type': "application/json",
-        'X-NEDO-CLIENT-ID': this.client_id,
-        'X-NEDO-ACCESS-TOKEN': this.access_token
+        'X-DTDPF-CLIENT-ID': this.client_id,
+        'X-DTDPF-ACCESS-TOKEN': this.access_token
       }
     };
 
@@ -112,24 +102,24 @@ class Futaba {
       method: "",
       headers: {
         'Content-Type': "application/json",
-        'X-NEDO-CLIENT-ID': obj.client_id,
-        'X-NEDO-CLIENT-SECRET': obj.client_secret,
+        'X-DTDPF-CLIENT-ID': obj.client_id,
+        'X-DTDPF-CLIENT-SECRET': obj.client_secret,
       }
     }
     if (obj.refresh_token) {
       request_header.method = "PATCH";
-      request_header.headers['X-NEDO-CLIENT-REFRESHTOKEN'] = obj.refresh_token;
-      request_header.headers['X-NEDO-GRANT-TYPE'] = "refresh_token";
+      request_header.headers['X-DTDPF-CLIENT-REFRESHTOKEN'] = obj.refresh_token;
+      request_header.headers['X-DTDPF-GRANT-TYPE'] = "refresh_token";
     } else {
       request_header.method = "POST";
-      request_header.headers['X-NEDO-GRANT-TYPE'] = "client_credentials";
+      request_header.headers['X-DTDPF-GRANT-TYPE'] = "client_credentials";
     }
     console.log(request_header);
     const response = await this.requestFutaba(request_header);
     this.client_id = obj.client_id;
     this.client_secret = obj.client_secret;
-    this.access_token = response.access_token;
-    this.refresh_token = response.refresh_token;
+    this.access_token = response.accessToken;
+    this.refresh_token = response.refreshToken;
 
     return response;
   }
