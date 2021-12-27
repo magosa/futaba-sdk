@@ -15,7 +15,7 @@ function checkArrayPrameter(object, item, value) {
  *
  * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
  * @param  {String} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
- * @param  {Object} model = nullv             検索対象モデルID 指定オブジェクト (指定方法は下記参照、AND で評価)
+ * @param  {Object} model = null              検索対象モデルID 指定オブジェクト (指定方法は下記参照、AND で評価)
  * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
