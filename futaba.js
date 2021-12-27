@@ -114,7 +114,7 @@ class Futaba {
       request_header.method = "POST";
       request_header.headers['X-DTDPF-GRANT-TYPE'] = "client_credentials";
     }
-    console.log(request_header);
+
     const response = await this.requestFutaba(request_header);
     this.client_id = obj.client_id;
     this.client_secret = obj.client_secret;
