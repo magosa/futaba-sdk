@@ -14,10 +14,10 @@ function checkArrayPrameter(object, item, value) {
 /**
  * generatePathObject - description
  *
- * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {String} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
+ * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+ * @param  {string} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
  * @param  {Object} model = null              検索対象モデルID 指定オブジェクト (指定方法は下記参照、AND で評価)
- * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+ * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
 function generatePathObject(root, path, model = null, include_metadata = false) {
@@ -39,9 +39,9 @@ function generatePathObject(root, path, model = null, include_metadata = false) 
 /**
  * generateQueryObject - description
  *
- * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {String} query                     ADT クエリ本文
- * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+ * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+ * @param  {string} query                     ADT クエリ本文
+ * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
 function generateQueryObject(root, query, include_metadata = false) {
@@ -61,9 +61,9 @@ function generateQueryObject(root, query, include_metadata = false) {
 /**
  * generateFilterObject - description
  *
- * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {String} filter                    クエリオブジェクト
- * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+ * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+ * @param  {string} filter                    クエリオブジェクト
+ * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
 function generateFilterObject(root, filter, include_metadata = false) {
@@ -83,15 +83,19 @@ function generateFilterObject(root, filter, include_metadata = false) {
 /**
  * generateSearchParameters - description
  *
- * @param  {(String | Array<String>)} values           description
- * @param  {String} condition = null description
- * @return {type}                  description
+ * @param  {string | string[]} values description
+ * @param  {string} condition = null  description
+ * @return {Object}                   description
  */
 function generateSearchParameters(values, condition = null) {
   let object={};
   checkArrayPrameter(object, "values", values);
   if (condition) {
-    object['condition'] = condition;
+    if (condition === "or" || condition === "and" || condition === "startswith") {
+      object['condition'] = condition;
+    }else {
+      console.error("Assign the appropriate value to the condition.")
+    }
   }
   return object;
 }

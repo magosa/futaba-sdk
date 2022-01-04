@@ -23,7 +23,7 @@ class Futaba {
   /**
    * setAPIURL - [API URLの設定変更]
    *
-   * @param  {String} target [APIリクエスト先のURI]
+   * @param  {string} target [APIリクエスト先のURI]
    */
   setAPIURL(target) {
     this.host_auth = target + '-dev-app-auth.azurewebsites.net';
@@ -51,9 +51,9 @@ class Futaba {
 
   /**
    * [Futabaへの共通リクエストモジュール]
-   * @param  {Object} request_header      [APIリクエストに必要なHTTPSヘッダー]
-   * @param  {Object} [request_body=null] [APIリクエスト時に送るリクエストボディ]
-   * @return {Promise}                     [description]
+   * @param  {object} request_header      [APIリクエストに必要なHTTPSヘッダー]
+   * @param  {object} [request_body=null] [APIリクエスト時に送るリクエストボディ]
+   * @return {promise}                     [description]
    */
   requestFutaba(request_header, request_body = null) {
     return new Promise((resolve, reject) => {
@@ -89,10 +89,10 @@ class Futaba {
 
   /**
    * [アクセストークンの発行/更新]
-   * @param  {Object}  obj [アクセストークン発行に必要な設定情報]
-   * @param {String} obj.client_id [サービサー毎に払い出されるID]
-   * @param {String} obj.refresh_token [アクセストークンの再発行に必要な文字列（アクセストークンの初回以外は必須）]
-   * @return {Promise}     [description]
+   * @param  {object}  obj [アクセストークン発行に必要な設定情報]
+   * @param {string} obj.client_id [サービサー毎に払い出されるID]
+   * @param {string} obj.refresh_token [アクセストークンの再発行に必要な文字列（アクセストークンの初回以外は必須）]
+   * @return {promise}     [description]
    */
   async getAccessToken(obj) {
     this.setAPIURL(obj.target_api);
@@ -127,11 +127,11 @@ class Futaba {
 
   /**
    * [既存のアクセストークンを直接設定]
-   * @param {Object} obj [アクセストークン発行に必要な設定情報]
-   * @param {String} obj.client_id [サービサー毎に払い出されるID]
-   * @param {String} obj.client_secret [サービサー毎に払い出されるシークレット文字列]
-   * @param {String} obj.access_token [発行から24時間有効なアクセストークン文字列]
-   * @param {String} obj.refresh_token [アクセストークンの再発行に必要な文字列（アクセストークンの初回以外は必須）]
+   * @param {object} obj [アクセストークン発行に必要な設定情報]
+   * @param {string} obj.client_id [サービサー毎に払い出されるID]
+   * @param {string} obj.client_secret [サービサー毎に払い出されるシークレット文字列]
+   * @param {string} obj.access_token [発行から24時間有効なアクセストークン文字列]
+   * @param {string} obj.refresh_token [アクセストークンの再発行に必要な文字列（アクセストークンの初回以外は必須）]
    */
   setAccessToken(obj) {
     this.setAPIURL(obj.target_api);
@@ -147,8 +147,8 @@ class Futaba {
   /**
    * async getTelemetryData - [テレメトリ取得]
    *
-   * @param  {Object} search_parameters [ツインの検索条件（path / query / filterの3方式）]
-   * @return {Promise}                  [ツインの検索条件をを指定して、ポイント毎に最新のテレメトリ値を取得する]
+   * @param  {object} search_parameters [ツインの検索条件（path / query / filterの3方式）]
+   * @return {promise}                  [ツインの検索条件をを指定して、ポイント毎に最新のテレメトリ値を取得する]
    */
   async getTelemetryData(search_parameters) {
     const path = "/api/digitaltwins/pointvalues";
@@ -160,8 +160,8 @@ class Futaba {
   /**
    * async getDigitalTwinData - [ツイン情報取得]
    *
-   * @param  {Object} search_parameters [ツインの検索条件（path / query / filterの3方式）]
-   * @return {Promise}                  [ツインの検索条件をを指定して、ポイント毎に最新のテレメトリ情報（メタデータ）を取得する]
+   * @param  {object} search_parameters [ツインの検索条件（path / query / filterの3方式）]
+   * @return {promise}                  [ツインの検索条件をを指定して、ポイント毎に最新のテレメトリ情報（メタデータ）を取得する]
    */
   async getDigitalTwinData(search_parameters) {
     const path = "/api/digitaltwins";
@@ -170,20 +170,59 @@ class Futaba {
     return await this.requestFutaba(request_header, search_parameters);
   }
 
-  async updateDigitalTwinData(update_parameters) {
+  /**
+   * async updateDigitalTwinData - description
+   *
+   * @param  {object} update_parameters description
+   * @param  {string} property          description
+   * @param  {string | object} value             description
+   * @return {promise}                   description
+   */
+  async updateDigitalTwinData(update_parameters, property, value) {
     const path = "/api/digitaltwins/batchupdate";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
+    update_parameters['property'] = property;
+    update_parameters['value'] = value;
 
     return await this.requestFutaba(request_header, update_parameters);
   }
 
-  async controlDigitalTwinData(control_parameters) {
+
+  /**
+   * async controlDigitalTwinData - [ポイント遠隔制御]
+   *
+   * @param  {string} root            [デジタルツインルート指定 (建物指定に相当)]
+   * @param  {string} dtid            [遠隔制御対象ツインID]
+   * @param  {number} value           [遠隔制御で送信する値]
+   * @param  {number} priority = null [遠隔制御で送信する優先度]
+   * @return {promise}                 [指定したポイントに対して、遠隔制御を行う]
+   */
+  async controlDigitalTwinData(root, dtid, value, priority = null) {
     const path = "/api/digitaltwins/remotecontrol";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
+    let values = {
+      "value": value
+    }
+    if (priority !== null) {
+      values['priority'] = priority;
+    }
+
+    const control_parameters = {
+      "root": root,
+      "dtId": dtid,
+      "values": values
+    }
 
     return await this.requestFutaba(request_header, control_parameters);
   }
 
+
+  /**
+   * async setTelemetryStream - description
+   *
+   * @param  {type} surveillance_parameters description
+   * @return {type}                         description
+   */
   async setTelemetryStream(surveillance_parameters) {
     const path = "/api/digitaltwins/telemetrystream/add";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
@@ -191,6 +230,13 @@ class Futaba {
     return await this.requestFutaba(request_header, surveillance_parameters);
   }
 
+
+  /**
+   * async deleteTelemetryStream - description
+   *
+   * @param  {type} search_parameters description
+   * @return {type}                   description
+   */
   async deleteTelemetryStream(search_parameters) {
     const path = "/api/digitaltwins/telemetrystream/delete";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
@@ -198,6 +244,12 @@ class Futaba {
     return await this.requestFutaba(request_header, search_parameters);
   }
 
+
+  /**
+   * async checkTelemetryStream - description
+   *
+   * @return {type}  description
+   */
   async checkTelemetryStream() {
     const path = "/api/digitaltwins/telemetrystream";
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
@@ -205,13 +257,20 @@ class Futaba {
     return await this.requestFutaba(request_header);
   }
 
-  async connectgRPCServer(proto_path) {
+
+  /**
+   * async getTelemetryStream - description
+   *
+   * @param  {type} proto_path description
+   * @return {type}            description
+   */
+  async getTelemetryStream(proto_path) {
     const REMOTE_SERVER = this.host_grpc + ":443";
     const package_definition = protoLoader.loadSync(
       proto_path, {
         keepCase: true,
-        longs: String,
-        enums: String,
+        longs: string,
+        enums: string,
         defaults: true,
         oneofs: true
       });
@@ -233,8 +292,8 @@ class Futaba {
   /**
    * async getThings - [WoT TD 取得]
    *
-   * @param  {String} bot_path [description]
-   * @return {Promise}         [ツインのパスを指定して Element ツインを検索し、TDを取得する]
+   * @param  {string} bot_path [description]
+   * @return {promise}         [ツインのパスを指定して Element ツインを検索し、TDを取得する]
    */
   async getThings(bot_path) {
     const path = "/api/things?path=" + encodeURIComponent(bot_path);
@@ -244,28 +303,28 @@ class Futaba {
   }
 
   /**
-   * async getThingsWithQuery - [WoT TD 取得]
+   * async getThingsByParameter - [WoT TD 取得]
    *
-   * @param  {Object} query_data [ADTクエリオブジェクト]
-   * @return {Promise}           [ADTクエリを指定して Element ツインを検索し、TDを取得する]
+   * @param  {object} search_parameters [ADTクエリオブジェクト]
+   * @return {promise}                  [ADTクエリを指定して Element ツインを検索し、TDを取得する]
    */
-  async getThingsWithQuery(query_data) {
+  async getThingsByParameter(search_parameters) {
     const path = "/api/things";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
 
-    return await this.requestFutaba(request_header, query_data);
+    return await this.requestFutaba(request_header, search_parameters);
   }
 
   /**
    * async getThingsProperties - [WoT Property取得 - TD内全取得]
    *
-   * @param  {Number} root_id             [Property 取得対象が含まれるルートID]
-   * @param  {String} tdid                [Property 取得対象の TD-ID]
-   * @param  {Boolean} use_id_key = false [レスポンスでキーに使用する項目の選択(false：プロパティ名(デフォルト) / true：ツインID)]
-   * @return {Promise}                    [指定したTD-IDに紐づく、全ポイントの最新値を取得する]
+   * @param  {number} root_id             [Property 取得対象が含まれるルートID]
+   * @param  {string} tdid                [Property 取得対象の TD-ID]
+   * @param  {boolean} use_id_key = false [レスポンスでキーに使用する項目の選択(false：プロパティ名(デフォルト) / true：ツインID)]
+   * @return {promise}                    [指定したTD-IDに紐づく、全ポイントの最新値を取得する]
    */
-  async getThingsProperties(rootid, tdid, use_id_key = false) {
-    const path = "/api/things/" + rootid + "/" + tdid + "/properties?useIdKey=" + use_id_key;
+  async getThingsProperties(root_id, tdid, use_id_key = false) {
+    const path = "/api/things/" + root_id + "/" + tdid + "/properties?useIdKey=" + use_id_key;
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
 
     return await this.requestFutaba(request_header);
@@ -274,14 +333,14 @@ class Futaba {
   /**
    * async getThingsProperty - [WoT Property取得 - 1 Property]
    *
-   * @param  {Number} rootid              [Property 取得対象が含まれるルートID]
-   * @param  {String} tdid                [Property 取得対象の TD-ID]
-   * @param  {String} property            [Property 取得対象の ポイントID・プロパティ名]
-   * @param  {Boolean} use_id_key = false [レスポンスでキーに使用する項目の選択(false：プロパティ名(デフォルト) / true：ツインID)]
-   * @return {Promise}                    [指定したTD-IDに紐づく指定ポイントの最新値を取得する]
+   * @param  {number} root_id             [Property 取得対象が含まれるルートID]
+   * @param  {string} tdid                [Property 取得対象の TD-ID]
+   * @param  {string} property            [Property 取得対象の ポイントID・プロパティ名]
+   * @param  {boolean} use_id_key = false [レスポンスでキーに使用する項目の選択(false：プロパティ名(デフォルト) / true：ツインID)]
+   * @return {promise}                    [指定したTD-IDに紐づく指定ポイントの最新値を取得する]
    */
-  async getThingsProperty(rootid, tdid, property, use_id_key = false) {
-    const path = "/api/things/" + rootid + "/" + tdid + "/properties/" + property + "?useIdKey=" + use_id_key;
+  async getThingsProperty(root_id, tdid, property, use_id_key = false) {
+    const path = "/api/things/" + root_id + "/" + tdid + "/properties/" + property + "?useIdKey=" + use_id_key;
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
 
     return await this.requestFutaba(options);
@@ -290,17 +349,24 @@ class Futaba {
   /**
    * async setThingsProperty - [WoT Property 書き込み]
    *
-   * @param  {Number} rootid    [Property 書き込み対象が含まれるるルートID]
-   * @param  {String} tdid      [Property 書き込み対象の TD-ID]
-   * @param  {String} property  [Property 書き込み対象の ツインID・プロパティ名]
-   * @param  {Object} edit_data [Property 書き込み制御内容]
-   * @return {Promise}          [指定したポイントに対して、遠隔制御を行う]
+   * @param  {number} root_id         [Property 書き込み対象が含まれるるルートID]
+   * @param  {string} tdid            [Property 書き込み対象の TD-ID]
+   * @param  {string} property        [Property 書き込み対象の ツインID・プロパティ名]
+   * @param  {number} value           [Property 書き込み制御内容]
+   * @param  {number} priority = null [Property 書き込み制御有線順位]
+   * @return {promise}                [指定したポイントに対して、遠隔制御を行う]
    */
-  async setThingsProperty(rootid, tdid, property, edit_data) {
-    const path = "/api/things/" + rootid + "/" + tdid + "/properties/" + property;
+  async setThingsProperty(root_id, tdid, property, value, priority = null) {
+    const path = "/api/things/" + root_id + "/" + tdid + "/properties/" + property;
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
+    let values = {
+      "value": value
+    }
+    if (priority !== null) {
+      values['priority'] = priority;
+    }
 
-    return await this.requestFutaba(request_header, edit_data);
+    return await this.requestFutaba(request_header, values);
   }
 
 
@@ -309,8 +375,8 @@ class Futaba {
   /**
    * async createTask - [モデル学習データ取得 タスク作成]
    *
-   * @param  {Object} task [description]
-   * @return {Promise}     [BOTパス・ADTクエリ・フィルター指定にてポイントツインを検索し、 モデル学習データを取得するタスクを作成する]
+   * @param  {object} task [description]
+   * @return {promise}     [BOTパス・ADTクエリ・フィルター指定にてポイントツインを検索し、 モデル学習データを取得するタスクを作成する]
    */
   async createTask(task) {
     const path = "/api/model/task";
@@ -322,11 +388,11 @@ class Futaba {
   /**
    * async getTaskProgress - [モデル学習データ取得 タスク詳細確認]
    *
-   * @param  {Number} task_id = null                [タスクを指定して実行履歴を取得する場合のタスクID指定、指定なしの場合は一覧取得となる]
-   * @param  {String} status = null                 [タスクを一覧取得する場合の、タスク状態によるフィルタリング (enable/disable/deleted)]
-   * @param  {String} create_datetime = null        [タスクを一覧取得する場合、指定日時以前に登録されたタスクを取得する]
-   * @param  {Boolean} include_request_info = false [タスクを一覧取得する場合に、登録時リクエスト情報の返却有無を指定する]
-   * @return {Promise}                              [クライアントシステムが登録した、モデル学習データ要求タスク登録一覧と、指定されたタスクの実行履歴を取得する]
+   * @param  {number} task_id = null                [タスクを指定して実行履歴を取得する場合のタスクID指定、指定なしの場合は一覧取得となる]
+   * @param  {string} status = null                 [タスクを一覧取得する場合の、タスク状態によるフィルタリング (enable/disable/deleted)]
+   * @param  {string} create_datetime = null        [タスクを一覧取得する場合、指定日時以前に登録されたタスクを取得する]
+   * @param  {boolean} include_request_info = false [タスクを一覧取得する場合に、登録時リクエスト情報の返却有無を指定する]
+   * @return {promise}                              [クライアントシステムが登録した、モデル学習データ要求タスク登録一覧と、指定されたタスクの実行履歴を取得する]
    */
   async getTaskProgress(task_id = null, status = null, create_datetime = null, include_request_info = false) {
     let option = "";
@@ -334,7 +400,7 @@ class Futaba {
       if (typeof task_id == "number") {
         option = option + "&task_id=" + task_id;
       } else if (typeof task_id == "string") {
-        option = option + "&task_id=" + Number(task_id);
+        option = option + "&task_id=" + number(task_id);
       } else {
         console.log("task_id must be a number!");
       }
@@ -356,9 +422,9 @@ class Futaba {
   /**
    * async changeTaskValidity - [モデル学習データ取得 タスク有効状態変更]
    *
-   * @param  {Number} task_id         [実行状態を変更する場合のタスクIDを指定]]
-   * @param  {Boolean} status = false [変更後のタスク状態 (true: enabled (有効)、false: disabled (一時停止))]
-   * @return {Promise}                [モデル学習データ要求タスク（単発スケジュール/定期スケジュール）のスケジュール実行の有効状態を変更する]
+   * @param  {number} task_id         [実行状態を変更する場合のタスクIDを指定]]
+   * @param  {boolean} status = false [変更後のタスク状態 (true: enabled (有効)、false: disabled (一時停止))]
+   * @return {promise}                [モデル学習データ要求タスク（単発スケジュール/定期スケジュール）のスケジュール実行の有効状態を変更する]
    */
   async changeTaskValidity(task_id, status = false) {
     const path = "/api/model/task";
@@ -374,8 +440,8 @@ class Futaba {
   /**
    * async deleteTask - [モデル学習データ取得 タスク削除]
    *
-   * @param  {Number} task_id [削除を行うタスクID]
-   * @return {Promise}        [指定されたモデル学習データ要求タスクの、 次回以降のスケジューリングを全て解除し、タスク状態を「削除済」に変更する]
+   * @param  {number} task_id [削除を行うタスクID]
+   * @return {promise}        [指定されたモデル学習データ要求タスクの、 次回以降のスケジューリングを全て解除し、タスク状態を「削除済」に変更する]
    */
   async deleteTask(task_id) {
     const path = "/api/model/task" + "?task_id=" + encodeURIComponent(task_id);
@@ -387,8 +453,8 @@ class Futaba {
   /**
    * async setWebhook - [モデル学習データ タスク完了通知 Webhook 登録]
    *
-   * @param  {String} url [Webhook 送信先 URL]
-   * @return {Promise}    [モデル学習データ要求タスク終了時の Webhook 送信先 URL 設定を登録する]
+   * @param  {string} url [Webhook 送信先 URL]
+   * @return {promise}    [モデル学習データ要求タスク終了時の Webhook 送信先 URL 設定を登録する]
    */
   async setWebhook(url) {
     const path = "/api/model/webhook";
@@ -403,7 +469,7 @@ class Futaba {
   /**
    * async deleteWebhook - [モデル学習データ タスク完了通知 Webhook 登録解除]
    *
-   * @return {Promise}  [モデル学習データ要求タスク終了時の Webhook 送信先 URL 設定を解除する]
+   * @return {promise}  [モデル学習データ要求タスク終了時の Webhook 送信先 URL 設定を解除する]
    */
   async deleteWebhook() {
     const path = "/api/model/webhook";
@@ -418,8 +484,8 @@ class Futaba {
   /**
    * async setSharedData - [共有データ追加]
    *
-   * @param  {Object} add_data [description]
-   * @return {Promise}         [データプラットフォームに、共有データを新規追加する]
+   * @param  {object} add_data [description]
+   * @return {promise}         [データプラットフォームに、共有データを新規追加する]
    */
   async setSharedData(add_data) {
     const path = "/api/commondata/add";
@@ -431,8 +497,8 @@ class Futaba {
   /**
    * async getSharedData - [共有データ検索]
    *
-   * @param  {Object} search_parameters [description]
-   * @return {Promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータ本文を取得する]
+   * @param  {object} search_parameters [description]
+   * @return {promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータ本文を取得する]
    */
   async getSharedData(search_parameters) {
     const path = "/api/commondata/search";
@@ -444,8 +510,8 @@ class Futaba {
   /**
    * async deleteSharedData - [共有データ削除]
    *
-   * @param  {Object} delete_parameters [description]
-   * @return {Promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータを削除する]
+   * @param  {object} delete_parameters [description]
+   * @return {promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータを削除する]
    */
   async deleteSharedData(delete_parameters) {
     const path = "/api/commondata/delete";
