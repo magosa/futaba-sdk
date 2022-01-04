@@ -1,7 +1,5 @@
 {
   "target_api": "futaba2",
-  "client_id": "00005",
-  "client_secret": "ETB0s",
-  "access_token": "tNe5+0OQkWEjXi14ubRwSttN/NpHuTG7EoCqnH3GfzB0sJ6hguxCtCNzvcHnMokB",
-  "refresh_token": "Y3ewSFyGh43KwkZwPd4V7xJlAkoq381spWWBIKsLs6dhTKkxsbQE7lO1w1XR6+Wu"
+  "client_id": "00000",
+  "client_secret": "xxxxx"
 }
