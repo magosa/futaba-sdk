@@ -1,5 +1,6 @@
 const https = require('https');
-
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
 
 class Futaba {
   /**
@@ -190,7 +191,7 @@ class Futaba {
     return await this.requestFutaba(request_header, surveillance_parameters);
   }
 
-  async deleteTelemetryStream() {
+  async deleteTelemetryStream(search_parameters) {
     const path = "/api/digitaltwins/telemetrystream/delete";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
 
@@ -201,7 +202,29 @@ class Futaba {
     const path = "/api/digitaltwins/telemetrystream";
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
 
-    return await this.requestFutaba(request_header, surveillance_parameters);
+    return await this.requestFutaba(request_header);
+  }
+
+  async connectgRPCServer(proto_path) {
+    const REMOTE_SERVER = this.host_grpc + ":443";
+    const package_definition = protoLoader.loadSync(
+      proto_path, {
+        keepCase: true,
+        longs: String,
+        enums: String,
+        defaults: true,
+        oneofs: true
+      });
+    const proto_descriptor = grpc.loadPackageDefinition(package_definition);
+    const telemetry_stream = proto_descriptor.SBT.DTDPF.API.protos.telemetryStreamClient;
+    const ts_client = new telemetry_stream.StreamClientService(
+      REMOTE_SERVER,
+      grpc.credentials.createInsecure()
+    );
+
+    let stream = ts_client.ConnectTelemetryStream();
+
+    return stream;
   }
 
 

@@ -10,8 +10,9 @@ function checkArrayPrameter(object, item, value) {
   return object;
 }
 
+
 /**
- * makePathObject - description
+ * generatePathObject - description
  *
  * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
  * @param  {String} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
@@ -19,7 +20,7 @@ function checkArrayPrameter(object, item, value) {
  * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
-function makePathObject(root, path, model = null, include_metadata = false) {
+function generatePathObject(root, path, model = null, include_metadata = false) {
   let object = {
     "type": "path",
     "path": path
@@ -36,14 +37,14 @@ function makePathObject(root, path, model = null, include_metadata = false) {
 }
 
 /**
- * makeQueryObject - description
+ * generateQueryObject - description
  *
  * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
  * @param  {String} query                     ADT クエリ本文
  * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
-function makeQueryObject(root, query, include_metadata = false) {
+function generateQueryObject(root, query, include_metadata = false) {
   let object = {
     "type": "query",
     "query": query
@@ -58,14 +59,14 @@ function makeQueryObject(root, query, include_metadata = false) {
 
 
 /**
- * makeFilterObject - description
+ * generateFilterObject - description
  *
  * @param  {(String | Array<String>)} root    デジタルツインルート指定 (建物指定に相当) の配列
  * @param  {String} filter                    クエリオブジェクト
  * @param  {Boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
  * @return {Object}                           description
  */
-function makeFilterObject(root, filter, include_metadata = false) {
+function generateFilterObject(root, filter, include_metadata = false) {
   let object = {
     "type": "filter",
     "filter": filter
@@ -80,13 +81,13 @@ function makeFilterObject(root, filter, include_metadata = false) {
 
 
 /**
- * makeSearchParameters - description
+ * generateSearchParameters - description
  *
  * @param  {(String | Array<String>)} values           description
  * @param  {String} condition = null description
  * @return {type}                  description
  */
-function makeSearchParameters(values, condition = null) {
+function generateSearchParameters(values, condition = null) {
   let object={};
   checkArrayPrameter(object, "values", values);
   if (condition) {
@@ -96,7 +97,7 @@ function makeSearchParameters(values, condition = null) {
 }
 
 
-exports.makePathObject = makePathObject;
-exports.makeQueryObject = makeQueryObject;
-exports.makeFilterObject = makeFilterObject;
-exports.makeSearchParameters = makeSearchParameters;
+exports.generatePathObject = generatePathObject;
+exports.generateQueryObject = generateQueryObject;
+exports.generateFilterObject = generateFilterObject;
+exports.generateSearchParameters = generateSearchParameters;
