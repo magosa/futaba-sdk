@@ -22,8 +22,8 @@ function checkArrayPrameter(object, item, value) {
  */
 function generatePathObject(root, path, model = null, include_metadata = false) {
   let object = {
-    "type": "path",
-    "path": path
+    type: "path",
+    path: path
   };
   checkArrayPrameter(object, "root", root);
   if (model) {
@@ -46,8 +46,8 @@ function generatePathObject(root, path, model = null, include_metadata = false) 
  */
 function generateQueryObject(root, query, include_metadata = false) {
   let object = {
-    "type": "query",
-    "query": query
+    type: "query",
+    query: query
   };
   checkArrayPrameter(object, "root", root);
   if (include_metadata) {
@@ -68,8 +68,8 @@ function generateQueryObject(root, query, include_metadata = false) {
  */
 function generateFilterObject(root, filter, include_metadata = false) {
   let object = {
-    "type": "filter",
-    "filter": filter
+    type: "filter",
+    filter: filter
   };
   checkArrayPrameter(object, "root", root);
   if (include_metadata) {
@@ -88,12 +88,12 @@ function generateFilterObject(root, filter, include_metadata = false) {
  * @return {Object}                   description
  */
 function generateSearchParameters(values, condition = null) {
-  let object={};
+  let object = {};
   checkArrayPrameter(object, "values", values);
   if (condition) {
     if (condition === "or" || condition === "and" || condition === "startswith") {
       object['condition'] = condition;
-    }else {
+    } else {
       console.error("Assign the appropriate value to the condition.")
     }
   }

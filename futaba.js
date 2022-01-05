@@ -484,12 +484,19 @@ class Futaba {
   /**
    * async setSharedData - [共有データ追加]
    *
-   * @param  {object} add_data [description]
-   * @return {promise}         [データプラットフォームに、共有データを新規追加する]
+   * @param  {number} data_type_id      [共有データタイプID]
+   * @param  {string | number} root     [デジタルツインルート名 または デジタルツインルートID]
+   * @param  {string | string[]} values [登録データJson文字列の配列 または 登録データJson文字列]
+   * @return {promise}                  [データプラットフォームに、共有データを新規追加する]
    */
-  async setSharedData(add_data) {
+  async setSharedData(data_type_id, root, values) {
     const path = "/api/commondata/add";
     const request_header = this.makeRequestHeader(this.host_common, path, "POST");
+    const add_data = {
+      dataTypeId: data_type_id,
+      root: root,
+      values: values
+    }
 
     return await this.requestFutaba(request_header, add_data);
   }
@@ -497,25 +504,43 @@ class Futaba {
   /**
    * async getSharedData - [共有データ検索]
    *
-   * @param  {object} search_parameters [description]
-   * @return {promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータ本文を取得する]
+   * @param  {number} data_type_id  [共有データタイプID]
+   * @param  {string | number} root [デジタルツインルート名 または デジタルツインルートID]
+   * @param  {object} filter        [共有データクエリオブジェクト]
+   * @return {promise}              [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータ本文を取得する]
    */
-  async getSharedData(search_parameters) {
+  async getSharedData(data_type_id, root, filter = null) {
     const path = "/api/commondata/search";
-    const request_header = this.makeRequestHeader(this.host_common, path, "GET");
+    const request_header = this.makeRequestHeader(this.host_common, path, "POST");
+    let search_parameters = {
+      dataTypeId: data_type_id,
+      root: root
+    }
+    if (filter) {
+      search_parameters['filter'] = filter
+    }
 
     return await this.requestFutaba(request_header, search_parameters);
   }
 
   /**
-   * async deleteSharedData - [共有データ削除]
+   * async deleteSharedData - description
    *
-   * @param  {object} delete_parameters [description]
-   * @return {promise}                  [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータを削除する]
+   * @param  {number} data_type_id  [共有データタイプID]
+   * @param  {string | number} root [デジタルツインルート名 または デジタルツインルートID]
+   * @param  {object} filter        [共有データクエリオブジェクト]
+   * @return {promise}              [データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータを削除する]
    */
-  async deleteSharedData(delete_parameters) {
+  async deleteSharedData(data_type_id, root, filter = null) {
     const path = "/api/commondata/delete";
     const request_header = this.makeRequestHeader(this.host_common, path, "POST");
+    let delete_parameters = {
+      dataTypeId: data_type_id,
+      root: root
+    }
+    if (filter) {
+      delete_parameters['filter'] = filter
+    }
 
     return await this.requestFutaba(request_header, delete_parameters);
   }

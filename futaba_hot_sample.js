@@ -62,7 +62,7 @@ async function main() {
     model: futility.generateSearchParameters(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"]),
     dtId: futility.generateSearchParameters(["R90_000001", "R90_000002"])
   }
-  const request_body_2_3 = futility.generateFilterObject("R90/research", filter_data_2, ture);
+  const request_body_2_3 = futility.generateFilterObject("R90/research", filter_data_2, true);
   const digitaltwin_search_parameters = request_body_2_1;
 
   client.getDigitalTwinData(digitaltwin_search_parameters)
@@ -138,7 +138,7 @@ async function main() {
 
 
   // 8.ストリーミング登録データ取得(仕様確認中)
-  // client.getTelemetryStream()
+  // client.getTelemetryStream(__dirname + "/data/telemetryStreamClient.proto")
   //   .then(res => {
   //     res.on("data", (data) => {
   //       console.dir(data.telemetries, dir_conf);
@@ -185,6 +185,7 @@ async function main() {
   // 5.WoT Property書き込み
   client.setThingsProperty(1, "398897d193674abf9200ac59ddc8c749", "Control", 26.2, 40)
     .then(res => console.dir(res, dir_conf));
+
 }
 
 
