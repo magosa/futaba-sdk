@@ -1,7 +1,6 @@
 /*Futaba librarryを利用したスクリプト*/
 
 const futaba = require('./futaba.js');
-const futility = require('./futaba-utility.js')
 const fs = require('fs');
 
 let client = new futaba();

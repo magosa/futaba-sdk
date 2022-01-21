@@ -1,107 +1,327 @@
-function checkArrayPrameter(object, item, value) {
-  if (typeof value === "object") {
-    object[item] = value;
-  } else if (typeof value === "string") {
-    object[item] = [value];
-  } else {
-    console.log("Parameters must be string or string array!");
+class FutabaUtility {
+  constructor() {
+    this.root_building = "";
+    this.file_options = {
+      file_type: "parquet",
+      compress_type: "snappy"
+    };
+    this.download_folder = "./download/";
+    this.filter_objcet = {};
   }
 
-  return object;
-}
-
-
-/**
- * generatePathObject - description
- *
- * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {string} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
- * @param  {Object} model = null              検索対象モデルID 指定オブジェクト (指定方法は下記参照、AND で評価)
- * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
- * @return {Object}                           description
- */
-function generatePathObject(root, path, model = null, include_metadata = false) {
-  let object = {
-    type: "path",
-    path: path
-  };
-  checkArrayPrameter(object, "root", root);
-  if (model) {
-    object['model'] = model;
-  }
-  if (include_metadata) {
-    object['includeMetadata'] = include_metadata;
-  }
-
-  return object;
-}
-
-/**
- * generateQueryObject - description
- *
- * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {string} query                     ADT クエリ本文
- * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
- * @return {Object}                           description
- */
-function generateQueryObject(root, query, include_metadata = false) {
-  let object = {
-    type: "query",
-    query: query
-  };
-  checkArrayPrameter(object, "root", root);
-  if (include_metadata) {
-    object['includeMetadata'] = include_metadata;
-  }
-
-  return object;
-}
-
-
-/**
- * generateFilterObject - description
- *
- * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
- * @param  {string} filter                    クエリオブジェクト
- * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
- * @return {Object}                           description
- */
-function generateFilterObject(root, filter, include_metadata = false) {
-  let object = {
-    type: "filter",
-    filter: filter
-  };
-  checkArrayPrameter(object, "root", root);
-  if (include_metadata) {
-    object['includeMetadata'] = include_metadata;
-  }
-
-  return object;
-}
-
-
-/**
- * generateSearchParameters - description
- *
- * @param  {string | string[]} values description
- * @param  {string} condition = null  description
- * @return {Object}                   description
- */
-function generateSearchParameters(values, condition = null) {
-  let object = {};
-  checkArrayPrameter(object, "values", values);
-  if (condition) {
-    if (condition === "or" || condition === "and" || condition === "startswith") {
-      object['condition'] = condition;
+  alterArrayPrameter(value) {
+    let item = [];
+    if (Array.isArray(value)) {
+      item = value;
+    } else if (typeof value === "string") {
+      item.push(value);
     } else {
-      console.error("Assign the appropriate value to the condition.")
+      console.error("Parameters must be string or string array!");
+    }
+    return item;
+  }
+
+  generateSearchParameters(values, condition = null) {
+    let object = {
+      values: this.alterArrayPrameter(values)
+    };
+    if (condition) {
+      if (condition === "or" || condition === "and" || condition === "startswith") {
+        object['condition'] = condition;
+      } else {
+        console.error("Assign the appropriate value to the condition.")
+      }
+    }
+    return object;
+  }
+
+  setTargetBuilding(building_array) {
+    this.root_building = this.alterArrayPrameter(building_array);
+  }
+
+  setFileOptions(file_type, compress_type) {
+    if (file_type) {
+      this.file_options.file_type = file_type
+      this.file_options.compress_type = "snappy"
+      switch (file_type) {
+        case 'parquet':
+          switch (compress_type) {
+            case 'gzip':
+              this.file_options.compress_type = "gzip"
+              break;
+            default:
+              console.info("There is a mistake in the compress_type.")
+              console.info("compress_type is automatically replaced with snappy.")
+              this.file_options.compress_type = "snappy"
+          }
+          break;
+        case 'orc':
+          switch (compress_type) {
+            case 'zlib':
+              this.file_options.compress_type = "zlib"
+              break;
+            default:
+              console.info("There is a mistake in the compress_type.")
+              console.info("compress_type is automatically replaced with snappy.")
+              this.file_options.compress_type = "snappy"
+          }
+          break;
+        case 'csv':
+          break;
+        case 'delta':
+          break;
+        default:
+          console.info("There is a mistake in the file_type.")
+          console.info("File options are automatically replaced with defaults.")
+          this.file_options.file_type = "parquet"
+          this.file_options.compress_type = "snappy"
+      }
     }
   }
-  return object;
+
+  setDownloadFolderPath(folder_path) {
+    this.download_folder = folder_path;
+  }
+
+  generateParameterWithPath(path, model = null, include_metadata = false) {
+    let object = {
+      root: this.root_building,
+      type: "path",
+      path: path
+    };
+    if (model) {
+      object['model'] = model;
+    }
+    if (include_metadata) {
+      object['includeMetadata'] = include_metadata;
+    }
+
+    return object;
+  }
+
+  generateParameterWithQuery(query, include_metadata = false) {
+    let object = {
+      root: this.root_building,
+      type: "query",
+      query: query
+    };
+    if (include_metadata) {
+      object['includeMetadata'] = include_metadata;
+    }
+
+    return object;
+  }
+
+  setFilterOfTwinTitle(search_parameters, comparison_method = null) {
+    this.filter_objcet['title'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  setFilterOfGlobalId(search_parameters, comparison_method = null) {
+    this.filter_objcet['globalId'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  setFilterOfTwinTag(search_parameters, comparison_method = null) {
+    this.filter_objcet['tags'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  setFilterOfTwinPath(search_parameters, comparison_method = null) {
+    this.filter_objcet['path'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  setFilterOfTwinModelId(search_parameters, comparison_method = null) {
+    this.filter_objcet['model'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  setFilterOfDtId(search_parameters, comparison_method = null) {
+    this.filter_objcet['dtId'] = this.generateSearchParameters(search_parameters, comparison_method)
+    return this;
+  }
+
+  generateParameterWithFilter(filter = null, include_metadata = false) {
+    let object = {
+      root: this.root_building,
+      type: "filter"
+    };
+
+    if (filter) {
+      object['filter'] = filter;
+    } else {
+      object['filter'] = this.filter_objcet;
+    }
+
+    if (include_metadata) {
+      object['includeMetadata'] = include_metadata;
+    }
+
+    return object;
+  }
+
+
+  generateTaskObject(exec_type, points, option_process = null) {
+    let object = {
+      execType: exec_type,
+      root: this.root_building,
+      fileType: this.file_options.file_type,
+    }
+
+    if (this.file_options.file_type === 'parquet' || this.file_options.file_type === 'orc') {
+      object['compressType'] = this.file_options.compress_type;
+    }
+
+    if ('root' in points) {
+      delete points.root;
+    }else if ('includeMetadata' in points) {
+      delete points.includeMetadata;
+    }
+    object['points'] = points;
+
+    if (option_process) {
+      object['optionProcess'] = option_process;
+    }
+
+    return object;
+  }
+
+  generateImmediatelyTask(start_date, end_date, points, option_process = null) {
+    let i_task = this.generateTaskObject(1, points, option_process)
+    i_task['startDate'] = start_date;
+    i_task['endDate'] = end_date;
+
+    return i_task;
+  }
+
+  generateReserveTask(execute_datetime, start_date, end_date, points, option_process = null) {
+    let r_task = this.generateTaskObject(2, points, option_process)
+    r_task['execDatetime'] = execute_datetime;
+    r_task['startDate'] = start_date;
+    r_task['endDate'] = end_date;
+
+    return r_task;
+  }
+
+  generateScheduleTask(cron_schedule, start_datetime, end_datetime, going_back_date, data_starting_time, duration_time, points, option_process = null) {
+    let s_task = this.generateTaskObject(3, points, option_process)
+    s_task['schedule'] = cron_schedule;
+    s_task['scheduleStartDatetime'] = start_datetime;
+    s_task['scheduleEndDatetime'] = end_datetime;
+    s_task['dataStartDaysBefore'] = going_back_date;
+    s_task['dataStartHour'] = data_starting_time;
+    s_task['dataDurationHours'] = duration_time;
+
+    return s_task;
+  }
 }
 
-
-exports.generatePathObject = generatePathObject;
-exports.generateQueryObject = generateQueryObject;
-exports.generateFilterObject = generateFilterObject;
-exports.generateSearchParameters = generateSearchParameters;
+// function checkArrayPrameter(object, item, value) {
+//   if (typeof value === "object") {
+//     object[item] = value;
+//   } else if (typeof value === "string") {
+//     object[item] = [value];
+//   } else {
+//     console.log("Parameters must be string or string array!");
+//   }
+//
+//   return object;
+// }
+//
+//
+// /**
+//  * generatePathObject - description
+//  *
+//  * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+//  * @param  {string} path                      検索対象パス (root のパスに結合、末尾が /* のパスは前方一致検索)
+//  * @param  {Object} model = null              検索対象モデルID 指定オブジェクト (指定方法は下記参照、AND で評価)
+//  * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+//  * @return {Object}                           description
+//  */
+// function generatePathObject(root, path, model = null, include_metadata = false) {
+//   let object = {
+//     type: "path",
+//     path: path
+//   };
+//   checkArrayPrameter(object, "root", root);
+//   if (model) {
+//     object['model'] = model;
+//   }
+//   if (include_metadata) {
+//     object['includeMetadata'] = include_metadata;
+//   }
+//
+//   return object;
+// }
+//
+// /**
+//  * generateQueryObject - description
+//  *
+//  * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+//  * @param  {string} query                     ADT クエリ本文
+//  * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+//  * @return {Object}                           description
+//  */
+// function generateQueryObject(root, query, include_metadata = false) {
+//   let object = {
+//     type: "query",
+//     query: query
+//   };
+//   checkArrayPrameter(object, "root", root);
+//   if (include_metadata) {
+//     object['includeMetadata'] = include_metadata;
+//   }
+//
+//   return object;
+// }
+//
+//
+// /**
+//  * generateFilterObject - description
+//  *
+//  * @param  {string | string[]} root           デジタルツインルート指定 (建物指定に相当) の配列
+//  * @param  {string} filter                    クエリオブジェクト
+//  * @param  {boolean} include_metadata = false システムメタデータ項目のレスポンス有無 (デフォルト：false)
+//  * @return {Object}                           description
+//  */
+// function generateFilterObject(root, filter, include_metadata = false) {
+//   let object = {
+//     type: "filter",
+//     filter: filter
+//   };
+//   checkArrayPrameter(object, "root", root);
+//   if (include_metadata) {
+//     object['includeMetadata'] = include_metadata;
+//   }
+//
+//   return object;
+// }
+//
+//
+// /**
+//  * generateSearchParameters - description
+//  *
+//  * @param  {string | string[]} values description
+//  * @param  {string} condition = null  description
+//  * @return {Object}                   description
+//  */
+// function generateSearchParameters(values, condition = null) {
+//   let object = {};
+//   checkArrayPrameter(object, "values", values);
+//   if (condition) {
+//     if (condition === "or" || condition === "and" || condition === "startswith") {
+//       object['condition'] = condition;
+//     } else {
+//       console.error("Assign the appropriate value to the condition.")
+//     }
+//   }
+//   return object;
+// }
+//
+//
+// exports.generatePathObject = generatePathObject;
+// exports.generateQueryObject = generateQueryObject;
+// exports.generateFilterObject = generateFilterObject;
+// exports.generateSearchParameters = generateSearchParameters;
+module.exports = FutabaUtility;
