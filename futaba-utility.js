@@ -83,6 +83,7 @@ class FutabaUtility {
 
   setDownloadFolderPath(folder_path) {
     this.download_folder = folder_path;
+    return this;
   }
 
   generateParameterWithPath(path, model = null, include_metadata = false) {
