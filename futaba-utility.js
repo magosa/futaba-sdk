@@ -37,9 +37,10 @@ class FutabaUtility {
 
   setTargetBuilding(building_array) {
     this.root_building = this.alterArrayPrameter(building_array);
+    return this;
   }
 
-  setFileOptions(file_type, compress_type) {
+  setFileOptions(file_type, compress_type="snappy") {
     if (file_type) {
       this.file_options.file_type = file_type
       this.file_options.compress_type = "snappy"
@@ -77,6 +78,7 @@ class FutabaUtility {
           this.file_options.compress_type = "snappy"
       }
     }
+    return this;
   }
 
   setDownloadFolderPath(folder_path) {
