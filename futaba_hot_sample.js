@@ -203,8 +203,8 @@ async function main() {
     .setFilterOfTwinModelId(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"])
     .setFilterOfDtId(["R90_000001", "R90_000002"])
     .generateParameterWithFilter();
-  const stream_registration_parameters = request_body_w_2_1;
-  client.getThingsByParameter()
+  const wot_search_parameters = request_body_w_2_1;
+  client.getThingsByParameter(wot_search_parameters)
     .then(res => console.dir(res, dir_conf));
 
 

@@ -13,7 +13,7 @@ class Futaba {
     this.host_hot = "";
     this.host_cold = "";
     this.host_common = "";
-    this.host_grpc = "";
+    this.host_stream = "";
     this.client_id = "";
     this.client_secret = "";
     this.access_token = "";
@@ -30,7 +30,7 @@ class Futaba {
     this.host_hot = target + '-dev-app-hot.azurewebsites.net';
     this.host_cold = target + '-dev-app-cold.azurewebsites.net';
     this.host_common = target + '-dev-app-common.azurewebsites.net';
-    this.host_grpc = target + '-dev-app-stream.azurewebsites.net';
+    this.host_stream = target + '-dev-app-stream.azurewebsites.net';
   }
 
   makeRequestHeader(request_host, request_path, request_method) {
@@ -171,12 +171,12 @@ class Futaba {
   }
 
   /**
-   * async updateDigitalTwinData - description
+   * async updateDigitalTwinData - [ツイン更新]
    *
-   * @param  {object} update_parameters description
-   * @param  {string} property          description
-   * @param  {string | object} value             description
-   * @return {promise}                   description
+   * @param  {object} update_parameters [更新対象のツイン検索条件（path / query / filterの3方式）]
+   * @param  {string} property          [更新対象のプロパティ]
+   * @param  {string | object} value    [更新値]
+   * @return {promise}                  [ツインのパスを指定して検索を行い、抽出された全てのツインに対して、登録内容を更新する]
    */
   async updateDigitalTwinData(update_parameters, property, value) {
     const path = "/api/digitaltwins/batchupdate";
@@ -201,16 +201,16 @@ class Futaba {
     const path = "/api/digitaltwins/remotecontrol";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
     let values = {
-      "value": value
+      value: value
     }
     if (priority !== null) {
       values['priority'] = priority;
     }
 
     const control_parameters = {
-      "root": root,
-      "dtId": dtid,
-      "values": values
+      root: root,
+      dtId: dtid,
+      values: values
     }
 
     return await this.requestFutaba(request_header, control_parameters);
@@ -218,10 +218,10 @@ class Futaba {
 
 
   /**
-   * async setTelemetryStream - description
+   * async setTelemetryStream - [テレメトリストリーム ポイント登録]
    *
-   * @param  {type} surveillance_parameters description
-   * @return {type}                         description
+   * @param  {object} surveillance_parameters [対象となるストリームポイントのツイン検索条件（path / query / filterの3方式）]
+   * @return {promise}                        [ストリーミングデータとして受信するポイントを、検索して登録する]
    */
   async setTelemetryStream(surveillance_parameters) {
     const path = "/api/digitaltwins/telemetrystream/add";
@@ -232,10 +232,10 @@ class Futaba {
 
 
   /**
-   * async deleteTelemetryStream - description
+   * async deleteTelemetryStream - [テレメトリストリーム ポイント解除]
    *
-   * @param  {type} search_parameters description
-   * @return {type}                   description
+   * @param  {object} search_parameters [対象となるストリームポイントのツイン検索条件（path / query / filterの3方式）]
+   * @return {promise}                  [ストリーミングデータとして受信するポイントを、検索して解除する]
    */
   async deleteTelemetryStream(search_parameters) {
     const path = "/api/digitaltwins/telemetrystream/delete";
@@ -246,9 +246,9 @@ class Futaba {
 
 
   /**
-   * async checkTelemetryStream - description
+   * async checkTelemetryStream - [テレメトリストリーム 登録状況取得]
    *
-   * @return {type}  description
+   * @return {promise}  [ストリーミングデータとして受信しているポイントの登録状況を一覧取得する]
    */
   async checkTelemetryStream() {
     const path = "/api/digitaltwins/telemetrystream";
@@ -259,13 +259,13 @@ class Futaba {
 
 
   /**
-   * async getTelemetryStream - description
+   * async getTelemetryStream - [ストリーミング接続 RPC]
    *
-   * @param  {type} proto_path description
-   * @return {type}            description
+   * @param  {string} proto_path Protocol Bufferファイルパス
+   * @return {type}              テレメトリストリーム ポイント登録API で登録済みのポイントの テレメトリ最新値を、gRPC を使用してリアルタイムに受信する
    */
   async getTelemetryStream(proto_path) {
-    const REMOTE_SERVER = this.host_grpc + ":443";
+    const path = this.host_stream + ":443";
     const package_definition = protoLoader.loadSync(
       proto_path, {
         keepCase: true,
@@ -274,14 +274,15 @@ class Futaba {
         defaults: true,
         oneofs: true
       });
-    const proto_descriptor = grpc.loadPackageDefinition(package_definition);
-    const telemetry_stream = proto_descriptor.SBT.DTDPF.API.protos.telemetryStreamClient;
-    const ts_client = new telemetry_stream.StreamClientService(
-      REMOTE_SERVER,
-      grpc.credentials.createInsecure()
-    );
+    const proto_descriptor = grpc.loadPackageDefinition(package_definition).SBT.DTDPF.API.protos;
+    const telemetry_stream = proto_descriptor.telemetryStreamClient;
+    const ts_client = new telemetry_stream.StreamClientService(path, grpc.credentials.createInsecure());
 
-    let stream = ts_client.ConnectTelemetryStream();
+    let metadata = new grpc.Metadata();
+    metadata.add('X-DTDPF-CLIENT-ID', this.client_id);
+    metadata.add('X-DTDPF-ACCESS-TOKEN', this.access_token)
+
+    let stream = ts_client.ConnectTelemetryStream({}, metadata);
 
     return stream;
   }
@@ -292,7 +293,7 @@ class Futaba {
   /**
    * async getThings - [WoT TD 取得]
    *
-   * @param  {string} bot_path [description]
+   * @param  {string} bot_path [TD取得対象のツインのパス]
    * @return {promise}         [ツインのパスを指定して Element ツインを検索し、TDを取得する]
    */
   async getThings(bot_path) {
@@ -358,9 +359,9 @@ class Futaba {
    */
   async setThingsProperty(root_id, tdid, property, value, priority = null) {
     const path = "/api/things/" + root_id + "/" + tdid + "/properties/" + property;
-    const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
+    const request_header = this.makeRequestHeader(this.host_hot, path, "PUT");
     let values = {
-      "value": value
+      value: value
     }
     if (priority !== null) {
       values['priority'] = priority;
@@ -398,11 +399,11 @@ class Futaba {
     let option = "";
     if (task_id !== null) {
       if (typeof task_id == "number") {
-        option = option + "&task_id=" + task_id;
-      } else if (typeof task_id == "string") {
-        option = option + "&task_id=" + number(task_id);
+        option = option + "&task_id=" + Math.trunc(task_id);
+      } else if (typeof task_id == "string" && !isNaN(task_id)) {
+        option = option + "&task_id=" + parseInt(task_id, 10);
       } else {
-        console.log("task_id must be a number!");
+        console.log("task_id must be a integer!");
       }
     }
     if (status !== null) {
@@ -422,7 +423,7 @@ class Futaba {
   /**
    * async changeTaskValidity - [モデル学習データ取得 タスク有効状態変更]
    *
-   * @param  {number} task_id         [実行状態を変更する場合のタスクIDを指定]]
+   * @param  {number} task_id         [実行状態を変更する場合のタスクIDを指定]
    * @param  {boolean} status = false [変更後のタスク状態 (true: enabled (有効)、false: disabled (一時停止))]
    * @return {promise}                [モデル学習データ要求タスク（単発スケジュール/定期スケジュール）のスケジュール実行の有効状態を変更する]
    */
@@ -524,7 +525,7 @@ class Futaba {
   }
 
   /**
-   * async deleteSharedData - description
+   * async deleteSharedData - [共有データ削除]
    *
    * @param  {number} data_type_id  [共有データタイプID]
    * @param  {string | number} root [デジタルツインルート名 または デジタルツインルートID]
