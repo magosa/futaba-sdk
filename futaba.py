@@ -15,14 +15,14 @@ class Futaba:
         self.access_token = ''
         self.refresh_token = ''
 
-    def setAPIURL(target):
+    def setAPIURL(self, target):
         self.host_auth = '{}-dev-app-auth.azurewebsites.net'.format(target)
         self.host_hot = '{}-dev-app-hot.azurewebsites.net'.format(target)
         self.host_cold = '{}-dev-app-cold.azurewebsites.net'.format(target)
         self.host_common = '{}-dev-app-common.azurewebsites.net'.format(target)
         self.host_stream = '{}-dev-app-stream.azurewebsites.net'.format(target)
 
-    def makeRequestHeader(request_url, request_method):
+    def makeRequestHeader(self, request_url, request_method):
         headers = {
             'url': request_url,
             'method': request_method,
