@@ -1,4 +1,5 @@
 import futaba
+import futaba-utility
 import json
 
 json_open = open('./data/config.json', 'r')
