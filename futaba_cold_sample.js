@@ -35,9 +35,9 @@ async function main() {
    */
 
   let r90 = new futility();
-  r90.setTargetBuilding(["R90/research", "R90/east"]);
-  r90.setFileOptions("test", "parquet", "gzip");
-  r90.setDownloadFolderPath(__dirname + '/download/');
+  r90.setTargetBuilding(["R90/research", "R90/east"])
+    .setFileOptions("test", "parquet", "gzip")
+    .setDownloadFolderPath(__dirname + '/download/');
 
   // 1.タスク作成
 
@@ -56,8 +56,9 @@ async function main() {
     value: "30"
   };
 
-  // 1-1 フィルター指定.
-  const points_1_1_filter = r90.setFilterOfTwinTitle(["ElementA", "ElementB"])
+  // 1-1 フィルター指定
+  const points_1_1_filter = r90.initializeFilterObject()
+    .setFilterOfTwinTitle(["ElementA", "ElementB"])
     .setFilterOfTwinTag(["tagA", "tagC"], "and")
     .setFilterOfTwinPath(["/A", "/B/*"])
     .setFilterOfTwinModelId(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"])
@@ -92,9 +93,8 @@ async function main() {
 
 
   const task_parameters = request_body_1_1;
-  console.dir(task_parameters, dir_conf);
-  // client.createTask(task_parameters)
-  //   .then(res => console.dir(res, dir_conf));
+  client.createTask(task_parameters)
+    .then(res => console.dir(res, dir_conf));
 
 
   // 2.タスク詳細確認

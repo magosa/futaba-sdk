@@ -35,7 +35,7 @@ async function main() {
 
   let r90 = new futility();
   r90.setTargetBuilding("R90/research")
-  r90.setDownloadFolderPath(__dirname + '/download/');
+    .setDownloadFolderPath(__dirname + '/download/');
 
   // 1.テレメトリ取得
   const model_1_1 = r90.generateSearchParameters(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"]);
@@ -81,18 +81,6 @@ async function main() {
 
 
   // 2.ツイン情報取得
-  const request_body_2_1 = futility.generatePathObject("R90/research", "/reasearch_1FL/*", futility.generateSearchParameters("dtmi:point:bacnetPoint;1"), true);
-  const request_body_2_2 = futility.generateQueryObject("R90/research", "SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)", true);
-  const filter_data_2 = {
-    title: futility.generateSearchParameters(["ElementA", "ElementB"]),
-    globalId: futility.generateSearchParameters(["aaa", "bbb"]),
-    tags: futility.generateSearchParameters(["tagA", "tagC"], "and"),
-    path: futility.generateSearchParameters(["/A/*", "/B"]),
-    model: futility.generateSearchParameters(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"]),
-    dtId: futility.generateSearchParameters(["R90_000001", "R90_000002"])
-  }
-  const request_body_2_3 = futility.generateFilterObject("R90/research", filter_data_2, true);
-
   const model_2_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1");
   const request_body_2_1 = r90.generateParameterWithPath("/research_1FL/*", model_2_1, true);
   const request_body_2_2 = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)", true);
