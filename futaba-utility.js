@@ -2,6 +2,7 @@ class FutabaUtility {
   constructor() {
     this.root_building = "";
     this.file_options = {
+      file_name: null,
       file_type: "parquet",
       compress_type: "snappy"
     };
@@ -26,7 +27,7 @@ class FutabaUtility {
       values: this.alterArrayPrameter(values)
     };
     if (condition) {
-      if (condition === "or" || condition === "and" || condition === "startswith") {
+      if (condition == "or" || condition == "and" || condition == "startswith") {
         object['condition'] = condition;
       } else {
         console.error("Assign the appropriate value to the condition.")
@@ -40,43 +41,45 @@ class FutabaUtility {
     return this;
   }
 
-  setFileOptions(file_type, compress_type="snappy") {
-    if (file_type) {
-      this.file_options.file_type = file_type
-      this.file_options.compress_type = "snappy"
-      switch (file_type) {
-        case 'parquet':
-          switch (compress_type) {
-            case 'gzip':
-              this.file_options.compress_type = "gzip"
-              break;
-            default:
-              console.info("There is a mistake in the compress_type.")
-              console.info("compress_type is automatically replaced with snappy.")
-              this.file_options.compress_type = "snappy"
-          }
-          break;
-        case 'orc':
-          switch (compress_type) {
-            case 'zlib':
-              this.file_options.compress_type = "zlib"
-              break;
-            default:
-              console.info("There is a mistake in the compress_type.")
-              console.info("compress_type is automatically replaced with snappy.")
-              this.file_options.compress_type = "snappy"
-          }
-          break;
-        case 'csv':
-          break;
-        case 'delta':
-          break;
-        default:
-          console.info("There is a mistake in the file_type.")
-          console.info("File options are automatically replaced with defaults.")
-          this.file_options.file_type = "parquet"
+  setFileOptions(file_name = null, file_type = "parquet", compress_type = "snappy") {
+    if (file_name && typeof file_name === 'string' && file_name.length > 0) {
+      this.file_options.file_name = file_name
+    } else {
+      console.info("There is a mistake in the file_name.")
+      console.info("file_name is automatically replaced.")
+      this.file_options.file_name = null
+    }
+    this.file_options.file_type = file_type
+    switch (file_type) {
+      case 'parquet':
+        if (compress_type == 'gzip') {
+          this.file_options.compress_type = "gzip"
+        } else {
+          console.info("There is a mistake in the compress_type.")
+          console.info("compress_type is automatically replaced with snappy.")
           this.file_options.compress_type = "snappy"
-      }
+        }
+        break;
+      case 'orc':
+        if (compress_type == 'zlib') {
+          this.file_options.compress_type = "zlib"
+        } else {
+          console.info("There is a mistake in the compress_type.")
+          console.info("compress_type is automatically replaced with snappy.")
+          this.file_options.compress_type = "snappy"
+        }
+        break;
+      case 'csv':
+        this.file_options.compress_type = null
+        break;
+      case 'delta':
+        this.file_options.compress_type = null
+        break;
+      default:
+        console.info("There is a mistake in the file_type.")
+        console.info("File options are automatically replaced with defaults.")
+        this.file_options.file_type = "parquet"
+        this.file_options.compress_type = "snappy"
     }
     return this;
   }
@@ -113,6 +116,11 @@ class FutabaUtility {
     }
 
     return object;
+  }
+
+  initializeFilterObject() {
+    this.filter_objcet = {};
+    return this;
   }
 
   setFilterOfTwinTitle(search_parameters, comparison_method = null) {
@@ -154,7 +162,7 @@ class FutabaUtility {
     if (filter) {
       object['filter'] = filter;
     } else {
-      object['filter'] = this.filter_objcet;
+      console.error("The correct filter object is not defined.");
     }
 
     if (include_metadata) {
@@ -169,16 +177,21 @@ class FutabaUtility {
     let object = {
       execType: exec_type,
       root: this.root_building,
-      fileType: this.file_options.file_type,
+      fileType: this.file_options.file_type
     }
 
-    if (this.file_options.file_type === 'parquet' || this.file_options.file_type === 'orc') {
+    if (this.file_options.file_name) {
+      object['fileName'] = this.file_options.file_name;
+    }
+
+    if (this.file_options.file_type == 'parquet' || this.file_options.file_type == 'orc') {
       object['compressType'] = this.file_options.compress_type;
     }
 
     if ('root' in points) {
       delete points.root;
-    }else if ('includeMetadata' in points) {
+    }
+    if ('includeMetadata' in points) {
       delete points.includeMetadata;
     }
     object['points'] = points;

@@ -36,7 +36,7 @@ async function main() {
 
   let r90 = new futility();
   r90.setTargetBuilding(["R90/research", "R90/east"]);
-  r90.setFileOptions("parquet", "gzip");
+  r90.setFileOptions("test", "parquet", "gzip");
   r90.setDownloadFolderPath(__dirname + '/download/');
 
   // 1.タスク作成
