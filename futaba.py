@@ -162,8 +162,8 @@ class Futaba:
           'value': value
         }
         if priority is not None:
-          values['priority'] = priority
-        const control_parameters = {
+            values['priority'] = priority
+        control_parameters = {
           'root': root,
           'dtId': dtid,
           'values': values
