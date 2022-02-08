@@ -11,8 +11,8 @@ client = futaba.Futaba()
 def updateToken():
     token = client.getAccessToken(obj)
     with open('./data/config.json', 'w') as f:
-        obj['access_token'] = token['access_token']
-        obj['refresh_token'] = token['refresh_token']
+        obj['access_token'] = token['accessToken']
+        obj['refresh_token'] = token['refreshToken']
         json.dump(obj, f, indent=2)
     print(token)
 

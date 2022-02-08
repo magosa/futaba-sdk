@@ -74,8 +74,8 @@ class Futaba:
             response = self.requestFutaba(request_header)
             self.client_id = obj['client_id']
             self.client_secret = obj['client_secret']
-            self.access_token = response['access_token']
-            self.refresh_token = response['refresh_token']
+            self.access_token = response['accessToken']
+            self.refresh_token = response['refreshToken']
             return response
 
     """
@@ -108,7 +108,7 @@ class Futaba:
     """
     def getTelemetryData(self, search_parameters):
         path = "https://{}/api/digitaltwins/pointvalues".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, search_parameters)
 
     """
@@ -122,7 +122,7 @@ class Futaba:
     """
     def getDigitalTwinData(self, search_parameters):
         path = "https://{}/api/digitaltwins".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, search_parameters)
 
     """
@@ -138,7 +138,7 @@ class Futaba:
     """
     def updateDigitalTwinData(self, update_parameters, property, value):
         path = "https://{}/api/digitaltwins/batchupdate".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         update_parameters['property'] = property
         update_parameters['value'] = value
         return self.requestFutaba(request_header, update_parameters)
@@ -157,7 +157,7 @@ class Futaba:
     """
     def controlDigitalTwinData(self, root, dtid, value, priority=None):
         path = "https://{}/api/digitaltwins/remotecontrol".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         values = {
           'value': value
         }
@@ -181,7 +181,7 @@ class Futaba:
     """
     def setTelemetryStream(self, surveillance_parameters):
         path = "https://{}/api/digitaltwins/telemetrystream/add".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, surveillance_parameters)
 
     """
@@ -195,7 +195,7 @@ class Futaba:
     """
     def deleteTelemetryStream(self, search_parameters):
         path = "https://{}/api/digitaltwins/telemetrystream/delete".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, search_parameters)
 
     """
@@ -206,7 +206,7 @@ class Futaba:
     """
     def checkTelemetryStream(self):
         path = "https://{}/api/digitaltwins/telemetrystream".format(self.host_hot)
-        request_header = makeRequestHeader(path,"GET")
+        request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
     """
@@ -238,7 +238,7 @@ class Futaba:
     def getThings(self, bot_path):
         path = "https://{0}/api/things?path={1}".format(
             self.host_hot, urllib.parse.quote(bot_path, safe=''))
-        request_header = makeRequestHeader(path,"GET")
+        request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
     """
@@ -252,7 +252,7 @@ class Futaba:
     """
     def getThingsByParameter(self, search_parameters):
         url = "https://{}/api/things".format(self.host_hot)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, search_parameters)
 
     """
@@ -269,7 +269,7 @@ class Futaba:
     def getThingsProperties(self, root_id, tdid, use_id_key=False):
         url = "https://{0}/api/things/{1}/{2}/properties?useIdKey={3}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(use_id_key)))
-        request_header = makeRequestHeader(path,"GET")
+        request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
     """
@@ -284,10 +284,10 @@ class Futaba:
     Returns:
         dict: 指定したTD-IDに紐づく指定ポイントの最新値を取得する
     """
-    def getThingsProperty(self, root_id, tdid, property, use_id_key = false):
+    def getThingsProperty(self, root_id, tdid, property, use_id_key=False):
         url = "https://{0}/api/things/{1}/{2}/properties/{3}?useIdKey={4}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''), urllib.parse.quote(str(use_id_key)))
-        request_header = makeRequestHeader(path,"GET")
+        request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
     """
@@ -306,7 +306,7 @@ class Futaba:
     def setThingsProperty(self, root_id, tdid, property, value, priority=None):
         url = "https://{0}/api/things/{1}/{2}/properties/{3}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''))
-        request_header = makeRequestHeader(path,"PUT")
+        request_header = self.makeRequestHeader(path,"PUT")
         values = {
           'value': value
         }
@@ -328,7 +328,7 @@ class Futaba:
     """
     def createTask(self, task):
         path = "https://{}/api/model/task".format(self.host_cold)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, task)
 
     """
@@ -362,7 +362,7 @@ class Futaba:
             option = option + "&createDatetime=" + urllib.parse.quote(create_datetime)
         option = option + "&includeRequestInfo=" + str(include_request_info)
         path = "https://{0}/api/model/task?{1}".format("cold", option[1:])
-        request_header = makeRequestHeader(path,"GET")
+        request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
     """
@@ -377,7 +377,7 @@ class Futaba:
     """
     def changeTaskValidity(self, task_id, status=False):
         path = "https://{}/api/model/task".format(self.host_cold)
-        request_header = makeRequestHeader(path,"PATCH")
+        request_header = self.makeRequestHeader(path,"PATCH")
         task = {
             'task_id': task_id,
             'enabled': status
@@ -395,7 +395,7 @@ class Futaba:
     """
     def deleteTask(self, task_id):
         path = "https://{}/api/model/task?task_id={}".format(self.host_cold, str(int(task_id)))
-        request_header = makeRequestHeader(path,"DELETE")
+        request_header = self.makeRequestHeader(path,"DELETE")
         return self.requestFutaba(request_header)
 
     """
@@ -409,7 +409,7 @@ class Futaba:
     """
     def setWebhook(self, url):
         path = "https://{}/api/model/webhook".format(self.host_cold)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         webhook = {
             'webhook_url': url,
         }
@@ -423,7 +423,7 @@ class Futaba:
     """
     def deleteWebhook(self):
         path = "https://{}/api/model/webhook".format(self.host_cold)
-        request_header = makeRequestHeader(path,"DELETE")
+        request_header = self.makeRequestHeader(path,"DELETE")
         return self.requestFutaba(request_header)
 
 
@@ -442,7 +442,7 @@ class Futaba:
     """
     def setSharedData(self, data_type_id, root, values):
         url = "https://{}/api/commondata/add".format(self.host_common)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         add_data = {
             'dataTypeId': data_type_id,
             'root': root,
@@ -463,7 +463,7 @@ class Futaba:
     """
     def getSharedData(self, data_type_id, root, filter=None):
         url = "https://{}/api/commondata/search".format(self.host_common)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         search_parameters = {
             'dataTypeId': data_type_id,
             'root': root
@@ -485,7 +485,7 @@ class Futaba:
     """
     def deleteSharedData(self, data_type_id, root, filter=None):
         url = "https://{}/api/commondata/delete".format(self.host_common)
-        request_header = makeRequestHeader(path,"POST")
+        request_header = self.makeRequestHeader(path,"POST")
         delete_parameters = {
           'dataTypeId': data_type_id,
           'root': root

@@ -1,5 +1,6 @@
 import os
 import futaba
+import futaba_utility
 import json
 
 json_open = open('./data/config.json', 'r')
@@ -10,15 +11,15 @@ client = futaba.Futaba()
 def updateToken():
     token = client.getAccessToken(obj)
     with open('./data/config.json', 'w') as f:
-        obj['access_token'] = token['access_token']
-        obj['refresh_token'] = token['refresh_token']
+        obj['access_token'] = token['accessToken']
+        obj['refresh_token'] = token['refreshToken']
         json.dump(obj, f, indent=2)
     print(token)
 
 
 def main():
     # トークンの発行・更新
-    #updateToken()
+    # updateToken()
 
     # 既存トークンのセット
     client.setAccessToken(obj)
@@ -64,6 +65,7 @@ def main():
     # points_1_1_filter = generateParameterWithFilter(obj)
 
     telemetry_search_parameters = request_body_1_1
+    print(json.dumps(telemetry_search_parameters, indent=2))
     response_1 = client.getTelemetryData(telemetry_search_parameters)
     print(json.dumps(response_1, indent=2))
 
@@ -133,7 +135,7 @@ def main():
 
 
     # 6.ストリーミング解除
-    model_6_1 = r90.generateSearchParameters("dtmi:point:bacnet", "startswith"))
+    model_6_1 = r90.generateSearchParameters("dtmi:point:bacnet", "startswith")
     request_body_6_1 = r90.generateParameterWithPath("/research_1FL/*", model_6_1)
     request_body_6_2 = r90.generateParameterWithQuery("SELECT T FROM digitaltwins T WHERE IS_DEFINED(T.m_pointId)")
     request_body_6_3 = r90.initializeFilterObject(

@@ -135,8 +135,8 @@ class FutabaUtility:
         if filter is not None:
             object['filter'] = filter
         else:
-            print("The correct filter object is not defined.", file=sys.stderr)
-            sys.exit(1)
+            print("Use the filter object of the instance.")
+            object['filter'] = self.filter_objcet
         if include_metadata:
             object['includeMetadata'] = include_metadata
         return object
