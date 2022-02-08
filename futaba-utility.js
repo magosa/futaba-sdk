@@ -162,7 +162,8 @@ class FutabaUtility {
     if (filter) {
       object['filter'] = filter;
     } else {
-      console.error("The correct filter object is not defined.");
+      console.info("Use the filter object of the instance.");
+      object['filter'] = this.filter_objcet;
     }
 
     if (include_metadata) {
