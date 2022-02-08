@@ -220,7 +220,7 @@ class Futaba:
 
     """
     def getTelemetryStream(self, proto_path):
-        path = this.host_stream + ":443"
+        path = self.host_stream + ":443"
         return
 
 
@@ -251,7 +251,7 @@ class Futaba:
         dict: ADTクエリを指定して Element ツインを検索し、TDを取得する
     """
     def getThingsByParameter(self, search_parameters):
-        url = "https://{}/api/things".format(self.host_hot)
+        path = "https://{}/api/things".format(self.host_hot)
         request_header = self.makeRequestHeader(path,"POST")
         return self.requestFutaba(request_header, search_parameters)
 
@@ -267,7 +267,7 @@ class Futaba:
         dict: 指定したTD-IDに紐づく、全ポイントの最新値を取得する
     """
     def getThingsProperties(self, root_id, tdid, use_id_key=False):
-        url = "https://{0}/api/things/{1}/{2}/properties?useIdKey={3}".format(
+        path = "https://{0}/api/things/{1}/{2}/properties?useIdKey={3}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(use_id_key)))
         request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
@@ -285,7 +285,7 @@ class Futaba:
         dict: 指定したTD-IDに紐づく指定ポイントの最新値を取得する
     """
     def getThingsProperty(self, root_id, tdid, property, use_id_key=False):
-        url = "https://{0}/api/things/{1}/{2}/properties/{3}?useIdKey={4}".format(
+        path = "https://{0}/api/things/{1}/{2}/properties/{3}?useIdKey={4}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''), urllib.parse.quote(str(use_id_key)))
         request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
@@ -304,7 +304,7 @@ class Futaba:
         dict: 指定したポイントに対して、遠隔制御を行う
     """
     def setThingsProperty(self, root_id, tdid, property, value, priority=None):
-        url = "https://{0}/api/things/{1}/{2}/properties/{3}".format(
+        path = "https://{0}/api/things/{1}/{2}/properties/{3}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''))
         request_header = self.makeRequestHeader(path,"PUT")
         values = {

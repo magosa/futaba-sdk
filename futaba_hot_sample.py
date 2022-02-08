@@ -71,8 +71,8 @@ def main():
 
     # 2.ツイン情報取得
     model_2_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1")
-    request_body_2_1 = r90.generateParameterWithPath("/research_1FL/*", model_2_1, true)
-    request_body_2_2 = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)", true)
+    request_body_2_1 = r90.generateParameterWithPath("/research_1FL/*", model_2_1, True)
+    request_body_2_2 = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)", True)
     request_body_2_3 = r90.initializeFilterObject(
     ).setFilterOfTwinTitle(["ElementA", "ElementB"]
     ).setFilterOfGlobalId(["aaa", "bbb"]
@@ -80,7 +80,7 @@ def main():
     ).setFilterOfTwinPath(["/A/*", "/B"]
     ).setFilterOfTwinModelId(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"]
     ).setFilterOfDtId(["R90_000001", "R90_000002"]
-    ).generateParameterWithFilter(null, true);
+    ).generateParameterWithFilter(None, True);
 
     digitaltwin_search_parameters = request_body_2_1
     response_2 = client.getDigitalTwinData(digitaltwin_search_parameters)
@@ -103,7 +103,7 @@ def main():
     digitaltwin_update_parameters = request_body_3_1
     update_property = "minimum"
     update_value = "10.5"
-    response_3 = updateDigitalTwinData(digitaltwin_update_parameters, update_property, update_value)
+    response_3 = client.updateDigitalTwinData(digitaltwin_update_parameters, update_property, update_value)
     print(json.dumps(response_3, indent=2))
 
 
@@ -157,7 +157,7 @@ def main():
 
 
     # 8.ストリーミング登録データ取得(仕様確認中)
-    response_8 = client.getTelemetryStream(os.path.dirname(__file__) + "/data/telemetryStreamClient.proto")
+    # response_8 = client.getTelemetryStream(os.path.dirname(__file__) + "/data/telemetryStreamClient.proto")
 
 
 
@@ -169,7 +169,7 @@ def main():
 
 
     # 2.WoT TD取得
-    request_body_w_2_1 = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE T.tag.TagA = true")
+    request_body_w_2_1 = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE T.tag.TagA = True")
     request_body_w_2_2 = r90.initializeFilterObject(
     ).setFilterOfTwinTitle(["ElementA", "ElementB"]
     ).setFilterOfGlobalId(["aaa", "bbb"]
