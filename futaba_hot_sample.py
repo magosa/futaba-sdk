@@ -19,10 +19,10 @@ def updateToken():
 
 def main():
     # トークンの発行・更新
-    # updateToken()
+    updateToken()
 
     # 既存トークンのセット
-    client.setAccessToken(obj)
+    # client.setAccessToken(obj)
 
     # デジタルツインAPI サンプル
 
@@ -65,7 +65,6 @@ def main():
     # points_1_1_filter = generateParameterWithFilter(obj)
 
     telemetry_search_parameters = request_body_1_1
-    print(json.dumps(telemetry_search_parameters, indent=2))
     response_1 = client.getTelemetryData(telemetry_search_parameters)
     print(json.dumps(response_1, indent=2))
 

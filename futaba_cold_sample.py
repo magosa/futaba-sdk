@@ -19,10 +19,10 @@ def updateToken():
 
 def main():
     # トークンの発行・更新
-    #updateToken()
+    updateToken()
 
     # 既存トークンのセット
-    client.setAccessToken(obj)
+    # client.setAccessToken(obj)
 
     # モデル学習データAPI サンプル
 
