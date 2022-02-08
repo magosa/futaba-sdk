@@ -71,7 +71,7 @@ class FutabaUtility:
             print("File options are automatically replaced with defaults.")
             self.file_options['file_type'] = "parquet"
             self.file_options['compress_type'] = "snappy"
-        return
+        return self
 
     def setDownloadFolderPath(self, folder_path):
         self.download_folder = folder_path
