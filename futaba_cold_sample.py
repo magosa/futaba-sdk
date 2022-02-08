@@ -19,10 +19,10 @@ def updateToken():
 
 def main():
     # トークンの発行・更新
-    # updateToken()
+    updateToken()
 
     # 既存トークンのセット
-    client.setAccessToken(obj)
+    # client.setAccessToken(obj)
 
     # モデル学習データAPI サンプル
 
@@ -84,8 +84,8 @@ def main():
     request_body_1_1 = r90.generateImmediatelyTask("2020-06-01T12:00+09:00", "2020-06-04T12:00+09:00", points_1_1, option_1_1)
 
     task_parameters = request_body_1_1
-    # response_1_1 = client.createTask(task_parameters)
-    # print(json.dumps(response_1_1, indent=2))
+    response_1_1 = client.createTask(task_parameters)
+    print(json.dumps(response_1_1, indent=2))
 
     # 2.タスク詳細確認
     response_2 = client.getTaskProgress(None, "enable", "2020-05-01T12:00+09:00", True)
