@@ -98,7 +98,7 @@ async function main() {
 
 
   // 2.タスク詳細確認
-  client.getTaskProgress(null, enable, "2020-05-01T12:00+09:00", true)
+  client.getTaskProgress(null, "enable", "2020-05-01T12:00+09:00", true)
     .then(res => console.dir(res, dir_conf));
 
   // 3.タスク有効状態変更
