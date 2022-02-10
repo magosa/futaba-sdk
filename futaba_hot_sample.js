@@ -14,19 +14,19 @@ const dir_conf = {
 
 async function main() {
   // トークンの発行・更新
-  // await client.getAccessToken(obj)
-  //   .then(res => {
-  //     obj.access_token = res.accessToken;
-  //     obj.refresh_token = res.refreshToken;
-  //     if (obj.access_token && obj.refresh_token) {
-  //       fs.writeFileSync('./data/config.json', JSON.stringify(obj));
-  //     }
-  //     console.log(res);
-  //   });
+  await client.getAccessToken(obj)
+    .then(res => {
+      obj.access_token = res.accessToken;
+      obj.refresh_token = res.refreshToken;
+      if (obj.access_token && obj.refresh_token) {
+        fs.writeFileSync('./data/config.json', JSON.stringify(obj));
+      }
+      console.log(res);
+    });
 
 
   //既存トークンのセット
-  client.setAccessToken(obj);
+  // client.setAccessToken(obj);
 
 
   /**
@@ -183,7 +183,7 @@ client.checkTelemetryStream()
  */
 
 // 1.WoT TD取得
-client.getThings("R90/research/reasearch_1FL//*")
+client.getThings("R90/research/reasearch_1FL/*")
   .then(res => console.dir(res, dir_conf));
 
 
