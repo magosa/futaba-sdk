@@ -35,7 +35,6 @@ class Futaba:
         return headers
 
     def requestFutaba(self, request_header, request_body=None):
-        print(request_body)
         req = requests.request(method=request_header['method'],
                                url=request_header['url'],
                                headers=request_header['headers'],
