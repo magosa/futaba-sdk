@@ -269,8 +269,8 @@ class Futaba {
     const package_definition = protoLoader.loadSync(
       proto_path, {
         keepCase: true,
-        longs: string,
-        enums: string,
+        longs: String,
+        enums: String,
         defaults: true,
         oneofs: true
       });
@@ -344,7 +344,7 @@ class Futaba {
     const path = "/api/things/" + root_id + "/" + tdid + "/properties/" + property + "?useIdKey=" + use_id_key;
     const request_header = this.makeRequestHeader(this.host_hot, path, "GET");
 
-    return await this.requestFutaba(options);
+    return await this.requestFutaba(request_header);
   }
 
   /**
@@ -367,7 +367,11 @@ class Futaba {
       values['priority'] = priority;
     }
 
-    return await this.requestFutaba(request_header, values);
+    let options = {
+      values: values
+    }
+
+    return await this.requestFutaba(request_header, options);
   }
 
 
