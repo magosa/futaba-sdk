@@ -201,7 +201,8 @@ class Futaba {
     const path = "/api/digitaltwins/remotecontrol";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
     let values = {
-      value: value
+      value: value,
+      priority: 40
     }
     if (priority !== null) {
       values['priority'] = priority;
@@ -361,7 +362,8 @@ class Futaba {
     const path = "/api/things/" + root_id + "/" + tdid + "/properties/" + property;
     const request_header = this.makeRequestHeader(this.host_hot, path, "PUT");
     let values = {
-      value: value
+      value: value,
+      priority: 40
     }
     if (priority !== null) {
       values['priority'] = priority;
