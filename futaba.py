@@ -159,7 +159,8 @@ class Futaba:
         path = "https://{}/api/digitaltwins/remotecontrol".format(self.host_hot)
         request_header = self.makeRequestHeader(path,"POST")
         values = {
-          'value': value
+          'value': value,
+          'priority': 40
         }
         if priority is not None:
             values['priority'] = priority
@@ -308,7 +309,8 @@ class Futaba:
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''))
         request_header = self.makeRequestHeader(path,"PUT")
         values = {
-          'value': value
+          'value': value,
+          'priority': 40
         }
         if priority is not None:
           values['priority'] = priority
