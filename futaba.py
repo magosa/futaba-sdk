@@ -155,15 +155,13 @@ class Futaba:
     Returns:
         dict: 指定したポイントに対して、遠隔制御を行う
     """
-    def controlDigitalTwinData(self, root, dtid, value, priority=None):
+    def controlDigitalTwinData(self, root, dtid, value, priority=40):
         path = "https://{}/api/digitaltwins/remotecontrol".format(self.host_hot)
         request_header = self.makeRequestHeader(path,"POST")
         values = {
           'value': value,
-          'priority': 40
+          'priority': priority
         }
-        if priority is not None:
-            values['priority'] = priority
         control_parameters = {
           'root': root,
           'dtId': dtid,
@@ -304,21 +302,17 @@ class Futaba:
     Returns:
         dict: 指定したポイントに対して、遠隔制御を行う
     """
-    def setThingsProperty(self, root_id, tdid, property, value, priority=None):
+    def setThingsProperty(self, root_id, tdid, property, value, priority=40):
         path = "https://{0}/api/things/{1}/{2}/properties/{3}".format(
                 self.host_hot, urllib.parse.quote(str(root_id)), urllib.parse.quote(str(tdid), safe=''), urllib.parse.quote(str(property), safe=''))
         request_header = self.makeRequestHeader(path,"PUT")
         values = {
-          'value': value,
-          'priority': 40
+          'values': {
+            'value': value,
+            'priority': priority
+          }
         }
-        if priority is not None:
-          values['priority'] = priority
-
-        options = {
-          'values': values
-        }
-        return self.requestFutaba(request_header, options)
+        return self.requestFutaba(request_header, values)
 
 
     ''' モデル学習データ取得API '''
@@ -364,10 +358,10 @@ class Futaba:
 
         if status is not None:
             option = option + "&status=" + urllib.parse.quote(status)
-        if task_id is not None:
+        if create_datetime is not None:
             option = option + "&createDatetime=" + urllib.parse.quote(create_datetime)
         option = option + "&includeRequestInfo=" + str(include_request_info)
-        path = "https://{0}/api/model/task?{1}".format("cold", option[1:])
+        path = "https://{0}/api/model/task?{1}".format(self.host_cold, option[1:])
         request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
 
