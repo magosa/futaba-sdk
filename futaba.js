@@ -405,9 +405,9 @@ class Futaba {
     let option = "";
     if (task_id !== null) {
       if (typeof task_id == "number") {
-        option = option + "&task_id=" + Math.trunc(task_id);
+        option = option + "&taskId=" + Math.trunc(task_id);
       } else if (typeof task_id == "string" && !isNaN(task_id)) {
-        option = option + "&task_id=" + parseInt(task_id, 10);
+        option = option + "&taskId=" + parseInt(task_id, 10);
       } else {
         console.log("task_id must be a integer!");
       }
