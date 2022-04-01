@@ -347,10 +347,10 @@ class Futaba:
         option = ""
         if task_id is not None:
             if type(task_id) is int:
-                option = option + "&task_id=" + str(task_id)
+                option = option + "&taskId=" + str(task_id)
             elif type(task_id) is str or type(task_id) is float:
                     try:
-                        option = option + "&task_id=" + str(int(task_id))
+                        option = option + "&taskId=" + str(int(task_id))
                     except ValueError:
                         print("task_id must be a integer!")
             else:
@@ -360,7 +360,8 @@ class Futaba:
             option = option + "&status=" + urllib.parse.quote(status)
         if create_datetime is not None:
             option = option + "&createDatetime=" + urllib.parse.quote(create_datetime)
-        option = option + "&includeRequestInfo=" + str(include_request_info)
+        if include_request_info:
+            option = option + "&includeRequestInfo=" + str(include_request_info)
         path = "https://{0}/api/model/task?{1}".format(self.host_cold, option[1:])
         request_header = self.makeRequestHeader(path,"GET")
         return self.requestFutaba(request_header)
