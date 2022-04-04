@@ -352,9 +352,9 @@ class Futaba:
                     try:
                         option = option + "&taskId=" + str(int(task_id))
                     except ValueError:
-                        print("task_id must be a integer!")
+                        print("Task ID must be a integer!")
             else:
-                print("task_id must be a integer!")
+                print("Task ID must be a integer!")
 
         if status is not None:
             option = option + "&status=" + urllib.parse.quote(status)
@@ -380,7 +380,7 @@ class Futaba:
         path = "https://{}/api/model/task".format(self.host_cold)
         request_header = self.makeRequestHeader(path,"PATCH")
         task = {
-            'task_id': task_id,
+            'taskId': task_id,
             'enabled': status
         }
         return self.requestFutaba(request_header, task)
@@ -395,7 +395,7 @@ class Futaba:
         type: description
     """
     def deleteTask(self, task_id):
-        path = "https://{}/api/model/task?task_id={}".format(self.host_cold, str(int(task_id)))
+        path = "https://{}/api/model/task?taskId={}".format(self.host_cold, str(int(task_id)))
         request_header = self.makeRequestHeader(path,"DELETE")
         return self.requestFutaba(request_header)
 
