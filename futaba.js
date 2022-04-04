@@ -409,7 +409,7 @@ class Futaba {
       } else if (typeof task_id == "string" && !isNaN(task_id)) {
         option = option + "&taskId=" + parseInt(task_id, 10);
       } else {
-        console.log("task_id must be a integer!");
+        console.log("Task ID must be a integer!");
       }
     }
     if (status !== null) {
@@ -437,7 +437,7 @@ class Futaba {
     const path = "/api/model/task";
     const request_header = this.makeRequestHeader(this.host_cold, path, "PATCH");
     const task = {
-      task_id: task_id,
+      taskId: task_id,
       enabled: status
     }
 
@@ -451,7 +451,7 @@ class Futaba {
    * @return {promise}        [指定されたモデル学習データ要求タスクの、 次回以降のスケジューリングを全て解除し、タスク状態を「削除済」に変更する]
    */
   async deleteTask(task_id) {
-    const path = "/api/model/task" + "?task_id=" + encodeURIComponent(task_id);
+    const path = "/api/model/task" + "?taskId=" + encodeURIComponent(task_id);
     const request_header = this.makeRequestHeader(this.host_cold, path, "DELETE");
 
     return await this.requestFutaba(request_header);
