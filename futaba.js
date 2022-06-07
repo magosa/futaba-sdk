@@ -418,7 +418,7 @@ class Futaba {
     if (create_datetime !== null) {
       option = option + "&createDatetime=" + encodeURIComponent(create_datetime)
     }
-    if (create_datetime !== null) {
+    if (include_request_info) {
       option = option + "&includeRequestInfo=" + include_request_info
     }
 
