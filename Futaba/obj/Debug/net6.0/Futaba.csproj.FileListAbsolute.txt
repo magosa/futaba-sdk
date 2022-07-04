@@ -1,0 +1,12 @@
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\bin\Debug\net6.0\Futaba.deps.json
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\bin\Debug\net6.0\Futaba.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\bin\Debug\net6.0\Futaba.pdb
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.csproj.AssemblyReference.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.AssemblyInfoInputs.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.AssemblyInfo.cs
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.csproj.CoreCompileInputs.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\refint\Futaba.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\Futaba.pdb
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\Futaba\obj\Debug\net6.0\ref\Futaba.dll

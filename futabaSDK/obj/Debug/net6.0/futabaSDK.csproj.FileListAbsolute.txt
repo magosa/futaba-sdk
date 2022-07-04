@@ -1,0 +1,15 @@
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\bin\Debug\net6.0\futabaSDK.exe
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\bin\Debug\net6.0\futabaSDK.deps.json
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\bin\Debug\net6.0\futabaSDK.runtimeconfig.json
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\bin\Debug\net6.0\futabaSDK.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\bin\Debug\net6.0\futabaSDK.pdb
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.csproj.AssemblyReference.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.AssemblyInfoInputs.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.AssemblyInfo.cs
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.csproj.CoreCompileInputs.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\refint\futabaSDK.dll
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.pdb
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\futabaSDK.genruntimeconfig.cache
+C:\Users\1600028\Desktop\Development\C#\futabaSDK\futabaSDK\obj\Debug\net6.0\ref\futabaSDK.dll
