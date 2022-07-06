@@ -34,7 +34,7 @@ async function main() {
    */
 
   let r90 = new futility();
-  r90.setTargetBuilding("Shinsuna/TKCentralSouth")
+    r90.setTargetBuilding(["R90/research", "R90/east"])
     .setDownloadFolderPath(__dirname + '/download/');
 
   // 1.テレメトリ取得
@@ -72,13 +72,9 @@ async function main() {
   //     "values": ["R90_000001", "R90_000002"]
   //   }
   // }
-  const request_body_1_3 = generateParameterWithFilter(filter_data_1)
+  // const request_body_1_3 = generateParameterWithFilter(filter_data_1)
 
   const telemetry_search_parameters = request_body_1_1;
-
-  const telemetry_search_parameters = r90.initializeFilterObject()
-    .setFilterOfDtId(["TGX_002911"])
-    .generateParameterWithFilter();
 
   client.getTelemetryData(telemetry_search_parameters)
     .then(res => console.dir(res, dir_conf));
