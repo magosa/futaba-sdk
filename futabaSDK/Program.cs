@@ -246,6 +246,27 @@ namespace FutabaSDK
 
         }
 
+        private static async Task Sample_7()
+        {
+            Console.WriteLine(await client.checkTelemetryStream());
+        }
+
+        private static async Task WoT_Sample_1()
+        {
+            Console.WriteLine(await client.getThings("R90/research/reasearch_1FL//*"));
+        }
+
+        private static async Task WoT_Sample_2_1()
+        {
+            Dictionary<string, object> wot_search_parameters = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE T.tag.TagA = True");
+            Console.WriteLine(await client.getThingsByParameter(wot_search_parameters));
+        }
+
+        private static async Task WoT_Sample_2_2()
+        {
+            Console.WriteLine(await client.getThings("R90/research/reasearch_1FL//*"));
+        }
+
         static async Task Main(string[] args)
         {
             r90.setTargetBuilding(new string[] { "R90/research", "R90/east" })

@@ -218,7 +218,7 @@ namespace FutabaLibrary.Core
             return await Request(requestMessage);
         }
 
-        public async Task<string> getThingsByParameter(string search_parameters)
+        public async Task<string> getThingsByParameter(Dictionary<string, object> search_parameters)
         {
             string path = $"https://{this.host_hot}/api/things";
             string jsonString = JsonSerializer.Serialize(search_parameters);
