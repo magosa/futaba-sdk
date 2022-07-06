@@ -50,7 +50,7 @@ namespace FutabaSDK
 
         private static async Task Sample_1_3()
         {
-            r90.initializeFilterObject()
+            Dictionary<string, object> telemetry_search_parameters = r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
                 .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
                 .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
@@ -58,7 +58,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
 
             //メソッドチェーンを使わない場合はコチラ
             //Dictionary<string, object> obj = new Dictionary<string, object>()
@@ -89,7 +88,7 @@ namespace FutabaSDK
 
         private static async Task Sample_2_3()
         {
-            r90.initializeFilterObject()
+            Dictionary<string, object> telemetry_search_parameters = r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
                 .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
                 .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
@@ -97,7 +96,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
 
             //メソッドチェーンを使わない場合はコチラ
             //Dictionary<string, object> obj = new Dictionary<string, object>()
@@ -132,7 +130,7 @@ namespace FutabaSDK
 
         private static async Task Sample_3_3()
         {
-            r90.initializeFilterObject()
+            Dictionary<string, object> telemetry_search_parameters = r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
                 .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
                 .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
@@ -140,7 +138,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
 
             //メソッドチェーンを使わない場合はコチラ
             //Dictionary<string, object> obj = new Dictionary<string, object>()
@@ -181,7 +178,7 @@ namespace FutabaSDK
 
         private static async Task Sample_5_3()
         {
-            r90.initializeFilterObject()
+            Dictionary<string, object> telemetry_search_parameters = r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
                 .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
                 .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
@@ -189,7 +186,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
 
             //メソッドチェーンを使わない場合はコチラ
             //Dictionary<string, object> obj = new Dictionary<string, object>()
@@ -221,7 +217,7 @@ namespace FutabaSDK
 
         private static async Task Sample_6_3()
         {
-            r90.initializeFilterObject()
+            Dictionary<string, object> telemetry_search_parameters = r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
                 .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
                 .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
@@ -229,7 +225,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
 
             //メソッドチェーンを使わない場合はコチラ
             //Dictionary<string, object> obj = new Dictionary<string, object>()
@@ -264,7 +259,30 @@ namespace FutabaSDK
 
         private static async Task WoT_Sample_2_2()
         {
-            Console.WriteLine(await client.getThings("R90/research/reasearch_1FL//*"));
+            Dictionary<string, object> wot_search_parameters = r90.initializeFilterObject()
+                .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
+                .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
+                .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
+                .setFilterOfTwinPath(new string[] { "/A/*", "/B" })
+                .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
+                .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
+                .generateParameterWithFilter();
+            Console.WriteLine(await client.getThingsByParameter(wot_search_parameters));
+        }
+
+        private static async Task WoT_Sample_3()
+        {
+            Console.WriteLine(await client.getThingsProperties(1, "398897d193674abf9200ac59ddc8c749"));
+        }
+
+        private static async Task WoT_Sample_4()
+        {
+            Console.WriteLine(await client.getThingsProperty(1, "398897d193674abf9200ac59ddc8c749", "Status"));
+        }
+
+        private static async Task WoT_Sample_5()
+        {
+            Console.WriteLine(await client.setThingsProperty(1, "398897d193674abf9200ac59ddc8c749", "brightness", 26.2f));
         }
 
         static async Task Main(string[] args)
