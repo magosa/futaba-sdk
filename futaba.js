@@ -418,7 +418,9 @@ class Futaba {
     if (create_datetime !== null) {
       option = option + "&createDatetime=" + encodeURIComponent(create_datetime)
     }
-    option = option + "&includeRequestInfo=" + include_request_info
+    if (include_request_info) {
+      option = option + "&includeRequestInfo=" + include_request_info
+    }
 
     const path = "/api/model/task?" + option.slice(-(option.length - 1));
     const request_header = this.makeRequestHeader(this.host_cold, path, "GET");
