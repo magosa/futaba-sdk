@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj": {}
+    "C:\\Users\\1600028\\Desktop\\Development\\futaba_v2\\C#\\Futaba\\Futaba.csproj": {}
   },
   "projects": {
-    "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj": {
+    "C:\\Users\\1600028\\Desktop\\Development\\futaba_v2\\C#\\Futaba\\Futaba.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj",
+        "projectUniqueName": "C:\\Users\\1600028\\Desktop\\Development\\futaba_v2\\C#\\Futaba\\Futaba.csproj",
         "projectName": "Futaba",
-        "projectPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj",
+        "projectPath": "C:\\Users\\1600028\\Desktop\\Development\\futaba_v2\\C#\\Futaba\\Futaba.csproj",
         "packagesPath": "C:\\Users\\1600028\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\obj\\",
+        "outputPath": "C:\\Users\\1600028\\Desktop\\Development\\futaba_v2\\C#\\Futaba\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\1600028\\AppData\\Roaming\\NuGet\\NuGet.Config",

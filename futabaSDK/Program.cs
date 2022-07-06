@@ -35,20 +35,20 @@ namespace FutabaSDK
             }
         }
 
-        private static async Task Sample1_1()
+        private static async Task Sample_1_1()
         {
             Dictionary<string, object> model_1_1 = r90.generateSearchParameters(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" });
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithPath("/research_1FL/*", model_1_1);
             Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
         }
 
-        private static async Task Sample1_2()
+        private static async Task Sample_1_2()
         {
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithQuery("SELECT T FROM digitaltwins T WHERE IS_DEFINED(T.m_pointId)");
             Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
         }
 
-        private static async Task Sample1_3()
+        private static async Task Sample_1_3()
         {
             r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
@@ -74,20 +74,20 @@ namespace FutabaSDK
             Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
         }
 
-        private static async Task Sample2_1()
+        private static async Task Sample_2_1()
         {
             Dictionary<string, object> model_2_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1");
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithPath("/research_1FL/*", model_2_1);
             Console.WriteLine(await client.getDigitalTwinData(telemetry_search_parameters));
         }
 
-        private static async Task Sample2_2()
+        private static async Task Sample_2_2()
         {
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)", true);
             Console.WriteLine(await client.getDigitalTwinData(telemetry_search_parameters));
         }
 
-        private static async Task Sample2_3()
+        private static async Task Sample_2_3()
         {
             r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
@@ -113,7 +113,7 @@ namespace FutabaSDK
             Console.WriteLine(await client.getDigitalTwinData(telemetry_search_parameters));
         }
 
-        private static async Task Sample3_1()
+        private static async Task Sample_3_1()
         {
             Dictionary<string, object> model_3_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1");
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithPath("/research_1FL/*", model_3_1);
@@ -122,7 +122,7 @@ namespace FutabaSDK
             Console.WriteLine(await client.updateDigitalTwinData(telemetry_search_parameters, update_property, update_value));
         }
 
-        private static async Task Sample3_2()
+        private static async Task Sample_3_2()
         {
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)");
             string update_property = "minimum";
@@ -130,7 +130,7 @@ namespace FutabaSDK
             Console.WriteLine(await client.updateDigitalTwinData(telemetry_search_parameters, update_property, update_value));
         }
 
-        private static async Task Sample3_3()
+        private static async Task Sample_3_3()
         {
             r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
@@ -158,7 +158,7 @@ namespace FutabaSDK
             Console.WriteLine(await client.updateDigitalTwinData(telemetry_search_parameters, update_property, update_value));
         }
 
-        private async Task Sample4()
+        private async Task Sample_4()
         {
             string control_dtid = "R90_000001";
             float control_value = 26.2f;
@@ -166,20 +166,20 @@ namespace FutabaSDK
             Console.WriteLine(await client.controlDigitalTwinData(r90.root_building[0], control_dtid, control_value, control_priority));
         }
 
-        private static async Task Sample5_1()
+        private static async Task Sample_5_1()
         {
             Dictionary<string, object> model_5_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1");
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithPath("/research_1FL/*", model_5_1);
-            Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
+            Console.WriteLine(await client.setTelemetryStream(telemetry_search_parameters));
         }
 
-        private static async Task Sample5_2()
+        private static async Task Sample_5_2()
         {
             Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithQuery("SELECT * FROM digitaltwins T WHERE IS_DEFINED(T.tag.TagA)");
-            Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
+            Console.WriteLine(await client.setTelemetryStream(telemetry_search_parameters));
         }
 
-        private static async Task Sample5_3()
+        private static async Task Sample_5_3()
         {
             r90.initializeFilterObject()
                 .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
@@ -202,9 +202,50 @@ namespace FutabaSDK
             //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
             //};
             //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
-            Console.WriteLine(await client.getTelemetryData(telemetry_search_parameters));
+            Console.WriteLine(await client.setTelemetryStream(telemetry_search_parameters));
 
         }
+
+        private static async Task Sample_6_1()
+        {
+            Dictionary<string, object> model_6_1 = r90.generateSearchParameters("dtmi:point:bacnetPoint;1", "startswith");
+            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithPath("/research_1FL/*", model_6_1);
+            Console.WriteLine(await client.deleteTelemetryStream(telemetry_search_parameters));
+        }
+
+        private static async Task Sample_6_2()
+        {
+            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithQuery("SELECT T FROM digitaltwins T WHERE IS_DEFINED(T.m_pointId)");
+            Console.WriteLine(await client.deleteTelemetryStream(telemetry_search_parameters));
+        }
+
+        private static async Task Sample_6_3()
+        {
+            r90.initializeFilterObject()
+                .setFilterOfTwinTitle(new string[] { "ElementA", "ElementB" })
+                .setFilterOfGlobalId(new string[] { "aaa", "bbb" })
+                .setFilterOfTwinTag(new string[] { "tagA", "tagC" }, "and")
+                .setFilterOfTwinPath(new string[] { "/A/*", "/B" })
+                .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
+                .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
+                .generateParameterWithFilter();
+            Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter();
+
+            //メソッドチェーンを使わない場合はコチラ
+            //Dictionary<string, object> obj = new Dictionary<string, object>()
+            //{
+            //    { "title", new Dictionary<string, object>(){ { "values", new string[] { "ElementA", "ElementB" } } } },
+            //    { "globalId", new Dictionary<string, object>(){ { "values", new string[] { "aaa", "bbb" } } } },
+            //    { "tags", new Dictionary<string, object>(){ { "values", new string[] { "tagA", "tagC" } }, { "condition", "and" } } },
+            //    { "path", new Dictionary<string, object>(){ { "values", new string[] { "/A", "/B/*" } } } },
+            //    { "model", new Dictionary<string, object>(){ { "values", new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" } } } },
+            //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
+            //};
+            //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
+            Console.WriteLine(await client.deleteTelemetryStream(telemetry_search_parameters));
+
+        }
+
         static async Task Main(string[] args)
         {
             r90.setTargetBuilding(new string[] { "R90/research", "R90/east" })
