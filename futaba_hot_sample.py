@@ -164,7 +164,7 @@ def main():
     # WoT API サンプル
 
     # 1.WoT TD取得
-    response_w_1 = client.getThings("R90/research/reasearch_1FL//*")
+    response_w_1 = client.getThings("R90/research/reasearch_1FL/*")
     print(json.dumps(response_w_1, indent=2))
 
 
