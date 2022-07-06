@@ -147,7 +147,7 @@ def main():
     ).generateParameterWithFilter()
 
     stream_registration_parameters = request_body_6_1
-    response_6 = client.setTelemetryStream(stream_registration_parameters)
+    response_6 = client.deleteTelemetryStream(stream_registration_parameters)
     print(json.dumps(response_6, indent=2))
 
 
@@ -195,7 +195,7 @@ def main():
 
 
     # 5.WoT Property書き込み
-    response_w_5 = client.setThingsProperty(1, "398897d193674abf9200ac59ddc8c749", "Control", 26.2, 40)
+    response_w_5 = client.setThingsProperty(1, "398897d193674abf9200ac59ddc8c749", "brightness", 26.2)
     print(json.dumps(response_w_5, indent=2))
 
 
