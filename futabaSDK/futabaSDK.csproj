@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Futaba\Futaba.csproj" />
+  </ItemGroup>
+
 </Project>

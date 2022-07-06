@@ -3,7 +3,7 @@ using System.Net;
 using System.Text.Json;
 using System.Web;
 
-namespace Futaba
+namespace FutabaLibrary.Core
 {
     public class Futaba
     {
@@ -146,6 +146,17 @@ namespace Futaba
         }
 
         public async Task<string> updateDigitalTwinData(Dictionary<string, object> update_parameters, string property, string value)
+        {
+            string path = $"https://{this.host_hot}/api/digitaltwins/batchupdate";
+            update_parameters["property"] = property;
+            update_parameters["value"] = value;
+            string jsonString = JsonSerializer.Serialize(update_parameters);
+            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
+            requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
+            return await Request(requestMessage);
+        }
+
+        public async Task<string> updateDigitalTwinData(Dictionary<string, object> update_parameters, string property, bool value)
         {
             string path = $"https://{this.host_hot}/api/digitaltwins/batchupdate";
             update_parameters["property"] = property;

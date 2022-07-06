@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "Futaba/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Futaba.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Futaba.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Futaba/1.0.0": {
+      "type": "project",
+      "path": "../Futaba/Futaba.csproj",
+      "msbuildProject": "../Futaba/Futaba.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "Futaba >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\1600028\\.nuget\\packages\\": {}
@@ -13,11 +32,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futabaSDK\\futabaSDK\\futabaSDK.csproj",
+      "projectUniqueName": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\futabaSDK\\futabaSDK.csproj",
       "projectName": "futabaSDK",
-      "projectPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futabaSDK\\futabaSDK\\futabaSDK.csproj",
+      "projectPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\futabaSDK\\futabaSDK.csproj",
       "packagesPath": "C:\\Users\\1600028\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futabaSDK\\futabaSDK\\obj\\",
+      "outputPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\futabaSDK\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\1600028\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -33,7 +52,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj": {
+              "projectPath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Futaba
+namespace FutabaLibrary.Utility
 {
     public class FutabaUtility
     {
-        string[] root_building;
+        public string[] root_building { get; set; }
         Dictionary<string, string?> file_options = new Dictionary<string, string?>()
         {
             { "file_name", null },
             { "file_type", "parquet" },
             { "compress_type", "snappy" }
         };
-        string download_folder = "./download/";
-        Dictionary<string, object> filter_objcet = new Dictionary<string, object>();
+        public string download_folder = "./download/";
+        private Dictionary<string, object> filter_objcet = new Dictionary<string, object>();
 
-        private Dictionary<string, object> generateSearchParameters(string value, string? condition = null)
+        public Dictionary<string, object> generateSearchParameters(string value, string? condition = null)
         {
             Dictionary<string, object> obj = new Dictionary<string, object>()
             {
@@ -40,7 +40,7 @@ namespace Futaba
             return obj;
         }
 
-        private Dictionary<string, object> generateSearchParameters(string[] value, string? condition = null)
+        public Dictionary<string, object> generateSearchParameters(string[] value, string? condition = null)
         {
             Dictionary<string, object> obj = new Dictionary<string, object>()
             {
@@ -244,7 +244,7 @@ namespace Futaba
             return this;
         }
 
-        public Dictionary<string, object> generateParameterWithFilter(string? filter = null, bool include_metadata = false)
+        public Dictionary<string, object> generateParameterWithFilter(Dictionary<string, object>? filter = null, bool include_metadata = false)
         {
             Dictionary<string, object> obj = new Dictionary<string, object>(){
                 { "root", this.root_building },

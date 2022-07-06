@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R/qT9Gt+JZMrRXLy6R25Sa0QU9yfjpGNapPWrLykQIJwDIORWoF/I3TsfGoVklDacGC3IBY6sYX7y/NsgIPUNA==",
+  "dgSpecHash": "WErJs9bPZII/pDvMJM2sV1bGkLX44d8Q7sTd4yzUHhUgobvvEfjyVBB3ltzJVZirK/IGUiaqzyPT7BOT6BJr9Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futabaSDK\\Futaba\\Futaba.csproj",
+  "projectFilePath": "C:\\Users\\1600028\\Desktop\\Development\\C#\\futaba-sdk-C#\\Futaba\\Futaba.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

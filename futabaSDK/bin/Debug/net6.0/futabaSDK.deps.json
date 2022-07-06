@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "futabaSDK/1.0.0": {
+        "dependencies": {
+          "Futaba": "1.0.0"
+        },
         "runtime": {
           "futabaSDK.dll": {}
+        }
+      },
+      "Futaba/1.0.0": {
+        "runtime": {
+          "Futaba.dll": {}
         }
       }
     }
   },
   "libraries": {
     "futabaSDK/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Futaba/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
