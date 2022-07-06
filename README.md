@@ -24,6 +24,7 @@ npm install
 
 ```Javascript:config.json
 {
+  "target_api":"futaba2",
   "client_id": "ID assigned by administrator",
   "client_secret": "Secret assigned by administrator"
 }
@@ -38,21 +39,6 @@ npm install
 ```Javascript:futaba_hot_sample.js
 const futaba = require('./futaba.js');
 let client = new futaba();
-```
-
-### 接続先APIのドメイン指定
-
-***"setHostURL"*** 関数の引数にJSONオブジェクトとして4つのAPI（auth, hot, cold, ext）のドメインを渡します。
-
-```Javascript:futaba_hot_sample.js
-let url = {};
-url['host_auth'] = 'cgll-dev-app-auth.azurewebsites.net';
-url['host_hot'] = 'cgll-dev-app-hot.azurewebsites.net';
-url['host_cold'] = 'cgll-dev-app-cold.azurewebsites.net';
-url['host_ext'] = 'cgll-dev-app-extapi.azurewebsites.net';
-
-// API URLの設定
-client.setHostURL(url);
 ```
 
 ### アクセストークンの発効・更新
