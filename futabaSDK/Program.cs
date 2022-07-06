@@ -96,18 +96,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-
-            //メソッドチェーンを使わない場合はコチラ
-            //Dictionary<string, object> obj = new Dictionary<string, object>()
-            //{
-            //    { "title", new Dictionary<string, object>(){ { "values", new string[] { "ElementA", "ElementB" } } } },
-            //    { "globalId", new Dictionary<string, object>(){ { "values", new string[] { "aaa", "bbb" } } } },
-            //    { "tags", new Dictionary<string, object>(){ { "values", new string[] { "tagA", "tagC" } }, { "condition", "and" } } },
-            //    { "path", new Dictionary<string, object>(){ { "values", new string[] { "/A", "/B/*" } } } },
-            //    { "model", new Dictionary<string, object>(){ { "values", new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" } } } },
-            //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
-            //};
-            //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
             Console.WriteLine(await client.getDigitalTwinData(telemetry_search_parameters));
         }
 
@@ -138,18 +126,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-
-            //メソッドチェーンを使わない場合はコチラ
-            //Dictionary<string, object> obj = new Dictionary<string, object>()
-            //{
-            //    { "title", new Dictionary<string, object>(){ { "values", new string[] { "ElementA", "ElementB" } } } },
-            //    { "globalId", new Dictionary<string, object>(){ { "values", new string[] { "aaa", "bbb" } } } },
-            //    { "tags", new Dictionary<string, object>(){ { "values", new string[] { "tagA", "tagC" } }, { "condition", "and" } } },
-            //    { "path", new Dictionary<string, object>(){ { "values", new string[] { "/A", "/B/*" } } } },
-            //    { "model", new Dictionary<string, object>(){ { "values", new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" } } } },
-            //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
-            //};
-            //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
             string update_property = "minimum";
             string update_value = "10.5";
             Console.WriteLine(await client.updateDigitalTwinData(telemetry_search_parameters, update_property, update_value));
@@ -186,18 +162,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-
-            //メソッドチェーンを使わない場合はコチラ
-            //Dictionary<string, object> obj = new Dictionary<string, object>()
-            //{
-            //    { "title", new Dictionary<string, object>(){ { "values", new string[] { "ElementA", "ElementB" } } } },
-            //    { "globalId", new Dictionary<string, object>(){ { "values", new string[] { "aaa", "bbb" } } } },
-            //    { "tags", new Dictionary<string, object>(){ { "values", new string[] { "tagA", "tagC" } }, { "condition", "and" } } },
-            //    { "path", new Dictionary<string, object>(){ { "values", new string[] { "/A", "/B/*" } } } },
-            //    { "model", new Dictionary<string, object>(){ { "values", new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" } } } },
-            //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
-            //};
-            //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
             Console.WriteLine(await client.setTelemetryStream(telemetry_search_parameters));
 
         }
@@ -225,18 +189,6 @@ namespace FutabaSDK
                 .setFilterOfTwinModelId(new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" })
                 .setFilterOfDtId(new string[] { "R90_000001", "R90_000002" })
                 .generateParameterWithFilter();
-
-            //メソッドチェーンを使わない場合はコチラ
-            //Dictionary<string, object> obj = new Dictionary<string, object>()
-            //{
-            //    { "title", new Dictionary<string, object>(){ { "values", new string[] { "ElementA", "ElementB" } } } },
-            //    { "globalId", new Dictionary<string, object>(){ { "values", new string[] { "aaa", "bbb" } } } },
-            //    { "tags", new Dictionary<string, object>(){ { "values", new string[] { "tagA", "tagC" } }, { "condition", "and" } } },
-            //    { "path", new Dictionary<string, object>(){ { "values", new string[] { "/A", "/B/*" } } } },
-            //    { "model", new Dictionary<string, object>(){ { "values", new string[] { "dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1" } } } },
-            //    { "dtId", new Dictionary<string, object>(){ { "values", new string[] { "R90_000001", "R90_000002" } } } }
-            //};
-            //Dictionary<string, object> telemetry_search_parameters = r90.generateParameterWithFilter(obj);
             Console.WriteLine(await client.deleteTelemetryStream(telemetry_search_parameters));
 
         }
@@ -290,6 +242,7 @@ namespace FutabaSDK
             r90.setTargetBuilding(new string[] { "R90/research", "R90/east" })
                 .setDownloadFolderPath("./download");
             await initializeToken(true);
+            await Sample_1_3();
         }
     }
 }

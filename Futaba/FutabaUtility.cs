@@ -22,7 +22,7 @@ namespace FutabaLibrary.Utility
         {
             Dictionary<string, object> obj = new Dictionary<string, object>()
             {
-                { "value", new string[]{ value } }
+                { "values", new string[]{ value } }
             };
             if (condition != null)
             {
@@ -44,7 +44,7 @@ namespace FutabaLibrary.Utility
         {
             Dictionary<string, object> obj = new Dictionary<string, object>()
             {
-                { "value", value }
+                { "values", value }
             };
             if (condition != null)
             {
