@@ -26,16 +26,32 @@ void AFutabaActor::Tick(float DeltaTime)
 
 }
 
-void AFutabaActor::AddCommonHeaders(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request)
+void AFutabaActor::SetAPIURL(FString target)
 {
+    AFutabaActor::HostAuth = target + "-dev-app-auth.azurewebsites.net";
+    AFutabaActor::HostHot = target + "-dev-app-hot.azurewebsites.net";
+    AFutabaActor::HostCold = target + "-dev-app-cold.azurewebsites.net";
+    AFutabaActor::HostCommon = target + "-dev-app-extapi.azurewebsites.net";
+    AFutabaActor::HostStream = target + "-dev-app-stream.azurewebsites.net";
+}
+
+TSharedRef<IHttpRequest, ESPMode::ThreadSafe> AFutabaActor::MakeRequestHeader(FString request_url, FString request_method)
+{
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
+    Request->SetURL(request_url);
+    Request->SetVerb(request_method);
     Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-    Request->SetHeader(TEXT("X-NEDO-CLIENT-ID"), AFutabaActor::ClientId);
-    Request->SetHeader(TEXT("X-NEDO-ACCESS-TOKEN"), AFutabaActor::AccessToken);
+    Request->SetHeader(TEXT("X-DTDPF-CLIENT-ID"), AFutabaActor::ClientId);
+    Request->SetHeader(TEXT("X-DTDPF-ACCESS-TOKEN"), AFutabaActor::AccessToken);
+
+    return Request;
 }
 
 FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus)
 {
     const FString JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/" + ConfigFilePath);
+    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, JsonFullPath);
+
     FString Message = "";
     FutabaStatus = FutabaRequestStatus::User_Error;
 
@@ -59,6 +75,8 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
 
     if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
     {
+        AFutabaActor::SetAPIURL(JsonObject->GetStringField("target_api"));
+
         // Create HTTP Request
         TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
         Request->SetURL("https://" + AFutabaActor::HostAuth + "/api/token");
@@ -66,18 +84,18 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
         if (!JsonObject->GetStringField("refresh_token").IsEmpty())
         {
             Request->SetVerb("PATCH");
-            Request->SetHeader(TEXT("X-NEDO-CLIENT-REFRESHTOKEN"), JsonObject->GetStringField("refresh_token"));
-            Request->SetHeader(TEXT("X-NEDO-GRANT-TYPE"), TEXT("refresh_token"));
+            Request->SetHeader(TEXT("X-DTDPF-CLIENT-REFRESHTOKEN"), JsonObject->GetStringField("refresh_token"));
+            Request->SetHeader(TEXT("X-DTDPF-GRANT-TYPE"), TEXT("refresh_token"));
         }
         else
         {
             Request->SetVerb("POST");
-            Request->SetHeader(TEXT("X-NEDO-GRANT-TYPE"), TEXT("client_credentials"));
+            Request->SetHeader(TEXT("X-DTDPF-GRANT-TYPE"), TEXT("client_credentials"));
         }
 
         Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-        Request->SetHeader(TEXT("X-NEDO-CLIENT-ID"), JsonObject->GetStringField("client_id"));
-        Request->SetHeader(TEXT("X-NEDO-CLIENT-SECRET"), JsonObject->GetStringField("client_secret"));
+        Request->SetHeader(TEXT("X-DTDPF-CLIENT-ID"), JsonObject->GetStringField("client_id"));
+        Request->SetHeader(TEXT("X-DTDPF-CLIENT-SECRET"), JsonObject->GetStringField("client_secret"));
 
         // Response from API
         TSharedPtr<FJsonObject> ResponseJson;
@@ -89,10 +107,11 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
             {
                 AFutabaActor::ClientId = JsonObject->GetStringField("client_id");
                 AFutabaActor::ClientSecret = JsonObject->GetStringField("client_secret");
-                AFutabaActor::AccessToken = ResponseJson->GetStringField("access_token");
-                AFutabaActor::RefreshToken = ResponseJson->GetStringField("refresh_token");
+                AFutabaActor::AccessToken = ResponseJson->GetStringField("accessToken");
+                AFutabaActor::RefreshToken = ResponseJson->GetStringField("refreshToken");
 
                 TSharedPtr<FJsonObject> Buffer = MakeShareable(new FJsonObject);
+                Buffer->SetStringField("target_api", JsonObject->GetStringField("target_api"));
                 Buffer->SetStringField("client_id", AFutabaActor::ClientId);
                 Buffer->SetStringField("client_secret", AFutabaActor::ClientSecret);
                 Buffer->SetStringField("access_token", AFutabaActor::AccessToken);
@@ -124,20 +143,13 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
 }
 
 
-void AFutabaActor::SetHostURL(FString prefix)
-{
-    AFutabaActor::HostAuth = prefix + "-dev-app-auth.azurewebsites.net";
-    AFutabaActor::HostHot = prefix + "-dev-app-hot.azurewebsites.net";
-    AFutabaActor::HostCold = prefix + "-dev-app-cold.azurewebsites.net";
-    AFutabaActor::HostExt = prefix + "-dev-app-extapi.azurewebsites.net";
-}
-
 void AFutabaActor::ShowConfiguration()
 {
     GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Blue, AFutabaActor::HostAuth);
     GEngine->AddOnScreenDebugMessage(2, 5.0f, FColor::Blue, AFutabaActor::HostHot);
     GEngine->AddOnScreenDebugMessage(3, 5.0f, FColor::Blue, AFutabaActor::HostCold);
-    GEngine->AddOnScreenDebugMessage(4, 5.0f, FColor::Blue, AFutabaActor::HostExt);
+    GEngine->AddOnScreenDebugMessage(4, 5.0f, FColor::Blue, AFutabaActor::HostCommon);
+    GEngine->AddOnScreenDebugMessage(4, 5.0f, FColor::Blue, AFutabaActor::HostStream);
     GEngine->AddOnScreenDebugMessage(5, 5.0f, FColor::Blue, AFutabaActor::ClientId);
     GEngine->AddOnScreenDebugMessage(6, 5.0f, FColor::Blue, AFutabaActor::ClientSecret);
     GEngine->AddOnScreenDebugMessage(7, 5.0f, FColor::Blue, AFutabaActor::AccessToken);
@@ -168,6 +180,7 @@ void AFutabaActor::SetAccessTokenByConfigFile(FString ConfigFilePath)
 
         if (JsonObject->HasField("access_token") && JsonObject->HasField("refresh_token"))
         {
+            AFutabaActor::SetAPIURL(JsonObject->GetStringField("target_api"));
             AFutabaActor::ClientId = JsonObject->GetStringField("client_id");
             AFutabaActor::ClientSecret = JsonObject->GetStringField("client_secret");
             AFutabaActor::AccessToken = JsonObject->GetStringField("access_token");
@@ -184,8 +197,13 @@ void AFutabaActor::SetAccessTokenByConfigFile(FString ConfigFilePath)
     }
 }
 
-void AFutabaActor::SetAccessToken(FString Id, FString Secret, FString Access_Token, FString Refresh_Token)
+void AFutabaActor::SetAccessToken(FString Target, FString Id, FString Secret, FString Access_Token, FString Refresh_Token)
 {
+    if (!Target.IsEmpty())
+    {
+        AFutabaActor::SetAPIURL(Target);
+    }
+
     if (!Id.IsEmpty())
     {
         AFutabaActor::ClientId = Id;
@@ -208,96 +226,64 @@ void AFutabaActor::SetAccessToken(FString Id, FString Secret, FString Access_Tok
 
 }
 
-void AFutabaActor::GetMetadata(FString bot_path)
+void AFutabaActor::GetMetadagetTelemetryDatata(FString search_parameters)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata?path=" + bot_path);
-    Request->SetVerb("GET");
-    AddCommonHeaders(Request);
+    FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/pointvalues";
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+    Request->SetContentAsString(search_parameters);
     Request->ProcessRequest();
 }
-
-void AFutabaActor::GetMetadataWithQuery(FString query_data)
-{
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata");
-    Request->SetVerb("POST");
-    AddCommonHeaders(Request);
-    Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
-    Request->SetContentAsString(query_data);
-    Request->ProcessRequest();
-}
-
-void AFutabaActor::SetMetadataProperty(FString edit_data_json_string)
-{
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/metadata");
-    Request->SetVerb("PUT");
-    AddCommonHeaders(Request);
-    Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
-    Request->SetContentAsString(edit_data_json_string);
-    Request->ProcessRequest();
-}
-
 
 void AFutabaActor::GetThings(FString bot_path)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things?path=" + bot_path);
-    Request->SetVerb("GET");
-    AddCommonHeaders(Request);
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things?path=" + bot_path;
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
     Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsWithQuery(FString query_data)
+void AFutabaActor::GetThingsByParameter(FString search_parameters)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things");
-    Request->SetVerb("POST");
-    AddCommonHeaders(Request);
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things";
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
-    Request->SetContentAsString(query_data);
+    Request->SetContentAsString(search_parameters);
     Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsProperties(FString tdid)
+void AFutabaActor::GetThingsProperties(FString root_id, FString tdid, bool use_id_key)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/properties");
-    Request->SetVerb("GET");
-    AddCommonHeaders(Request);
+    FString useidkey = use_id_key ? TEXT("true") : TEXT("false");
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + root_id + "/" + tdid + "/properties?useIdKey=" + useidkey;
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
     Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsProperty(FString tdid, FString pointid)
+void AFutabaActor::GetThingsProperty(FString root_id, FString tdid, FString property, bool use_id_key)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/properties/" + pointid);
-    Request->SetVerb("GET");
-    AddCommonHeaders(Request);
+    FString useidkey = use_id_key ? TEXT("true") : TEXT("false");
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + root_id + "/" + tdid + "/properties/" + property + "?useIdKey=" + useidkey;
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
     Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsPropertiesWithAlias(FString tdid)
+void AFutabaActor::SetThingsProperty(FString root_id, FString tdid, FString property, FString value, FString priority)
 {
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + "/propertiesEx");
-    Request->SetVerb("GET");
-    AddCommonHeaders(Request);
-    Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
-    Request->ProcessRequest();
-}
+    TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
+    values->SetStringField("value", value);
+    if (priority.Len() > 0)
+    {
+        values->SetStringField("priority", priority);
+    }
+    FString edit_data;
+    TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&edit_data);
+    FJsonSerializer::Serialize(values.ToSharedRef(), JsonWriter);
 
-void AFutabaActor::SetThingsProperty(FString tdid, FString pointid, FString edit_data)
-{
-    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
-    Request->SetURL("https://" + AFutabaActor::HostHot + "/api/things/" + tdid + L"/properties/" + pointid);
-    Request->SetVerb("PUT");
-    AddCommonHeaders(Request);
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + root_id + "/" + tdid + "/properties/" + property;
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
     Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
     Request->SetContentAsString(edit_data);
     Request->ProcessRequest();

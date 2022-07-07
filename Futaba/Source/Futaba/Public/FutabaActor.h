@@ -31,7 +31,7 @@ public:
 
 	FHttpModule* Http;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba", meta = (DisplayName = "Prefix"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba", meta = (DisplayName = "TargetAPI"))
 		FString  ConnectionTarget = "cgll";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba")
@@ -59,7 +59,7 @@ public:
 
 	//Auth API
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SetHostURL(FString prefix);
+		void SetAPIURL(FString target);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void ShowConfiguration();
@@ -71,36 +71,32 @@ public:
 		void SetAccessTokenByConfigFile(FString ConfigFilePath);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SetAccessToken(FString Id, FString Secret, FString Access_Token, FString Refresh_Token);
+		void SetAccessToken(FString Target, FString Id, FString Secret, FString Access_Token, FString Refresh_Token);
 
-	//Hot API
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetMetadata(FString bot_path);
+	//Degital Twin API
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetMetadataWithQuery(FString query_data);
+		void GetMetadagetTelemetryDatata(FString search_parameters);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SetMetadataProperty(FString edit_data);
 
+	//Web of Things API
+	
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void GetThings(FString bot_path);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsWithQuery(FString query_data);
+		void GetThingsByParameter(FString search_parameters);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsProperties(FString tdid);
+		void GetThingsProperties(FString root_id, FString tdid, bool use_id_key = false);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsPropertiesWithAlias(FString tdid);
+		void GetThingsProperty(FString root_id, FString tdid, FString property, bool use_id_key = false);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SetThingsProperty(FString tdid, FString pointid, FString edit_data);
+		void SetThingsProperty(FString root_id, FString tdid, FString property, FString value, FString priority = "");
 
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsProperty(FString tdid, FString pointid);
 
 	UPROPERTY(BlueprintAssignable, Category = "futaba")
 		FFutabaOnEventDispather OnEventDispather;
@@ -111,12 +107,14 @@ public:
 
 
 private:
-	FString HostAuth = "cgll-dev-app-auth.azurewebsites.net";
-	FString HostHot = "cgll-dev-app-hot.azurewebsites.net";
-	FString HostCold = "cgll-dev-app-cold.azurewebsites.net";
-	FString HostExt = "cgll-dev-app-extapi.azurewebsites.net";
+	FString HostAuth = "";
+	FString HostHot = "";
+	FString HostCold = "";
+	FString HostCommon = "";
+	FString HostStream = "";
+
 
 	FJsonObject RequestFutaba(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
-	void AddCommonHeaders(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> MakeRequestHeader(FString request_url, FString request_method);
 
 };

@@ -1,0 +1,13 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.Futaba.cpp.obj": [
+			"Futaba.cpp.obj",
+			"FutabaActor.cpp.obj"
+		],
+		"Module.Futaba.gen.cpp.obj": [
+			"Futaba.init.gen.cpp.obj",
+			"FutabaActor.gen.cpp.obj"
+		]
+	}
+}
