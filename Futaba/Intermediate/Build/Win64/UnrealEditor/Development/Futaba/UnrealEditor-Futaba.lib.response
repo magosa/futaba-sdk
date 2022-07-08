@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-Futaba.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\1600028\Desktop\Development\UE5\FutabaSDK\Intermediate\Build\Win64\FutabaSDKEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"C:\Users\1600028\Desktop\Development\UE5\FutabaSDK\Plugins\Futaba\Intermediate\Build\Win64\UnrealEditor\Development\Futaba\Module.Futaba.cpp.obj"
+"C:\Users\1600028\Desktop\Development\UE5\FutabaSDK\Plugins\Futaba\Intermediate\Build\Win64\UnrealEditor\Development\Futaba\Module.Futaba.gen.cpp.obj"
+"C:\Users\1600028\Desktop\Development\UE5\FutabaSDK\Plugins\Futaba\Intermediate\Build\Win64\UnrealEditor\Development\Futaba\Default.rc2.res"
+/OUT:"C:\Users\1600028\Desktop\Development\UE5\FutabaSDK\Plugins\Futaba\Intermediate\Build\Win64\UnrealEditor\Development\Futaba\UnrealEditor-Futaba.lib"

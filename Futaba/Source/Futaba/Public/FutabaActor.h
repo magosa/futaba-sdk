@@ -8,10 +8,6 @@
 #include "HttpManager.h"
 #include "FutabaActor.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFutabaOnEventDispather);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHttpRequestCompleted, bool, bSuccessful, int32, ResponseCode, const FString&, Response);
-
 UENUM(BlueprintType)
 enum class FutabaRequestStatus : uint8
 {
@@ -20,51 +16,46 @@ enum class FutabaRequestStatus : uint8
 	Platform_Error
 };
 
+
 UCLASS()
 class FUTABA_API AFutabaActor : public AActor
 {
 	GENERATED_BODY()
 
-public:
+public:	
 	// Sets default values for this actor's properties
 	AFutabaActor();
 
-	FHttpModule* Http;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFutabaOnEventDispather);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba", meta = (DisplayName = "TargetAPI"))
-		FString  ConnectionTarget = "cgll";
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHttpRequestCompleted, bool, bSuccessful, int32, ResponseCode, const FString&, Response);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba")
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba", meta = (DisplayName = "Prefix"))
+		FString  ConnectionTarget = "futaba2";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
 		FString  ClientId;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
 		FString  ClientSecret;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
 		FString  AccessToken;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Futaba")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
 		FString  RefreshToken;
 
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	void HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//Auth API
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void SetAPIURL(FString target);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void ShowConfiguration();
 
-	UFUNCTION(BlueprintCallable, Category = "futaba", Meta = (ExpandEnumAsExecs = "FutabaStatus"))
+	UFUNCTION(BlueprintCallable, Category = "futaba", Meta = (ExpandEnumAsExecs = "FutabaStatus", ConfigFilePath = "./data/config.json"))
 		FString GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
@@ -80,7 +71,7 @@ public:
 
 
 	//Web of Things API
-	
+
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void GetThings(FString bot_path);
 
@@ -104,15 +95,19 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "futaba")
 		FOnHttpRequestCompleted OnRequestCompleted;
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+	void HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
-private:
+private:	
+	FHttpModule* Http;
 	FString HostAuth = "";
 	FString HostHot = "";
 	FString HostCold = "";
 	FString HostCommon = "";
 	FString HostStream = "";
-
 
 	FJsonObject RequestFutaba(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> MakeRequestHeader(FString request_url, FString request_method);

@@ -6,25 +6,26 @@
 // Sets default values
 AFutabaActor::AFutabaActor()
 {
-    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = true;
-    Http = &FHttpModule::Get();
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	Http = &FHttpModule::Get();
 
 }
 
 // Called when the game starts or when spawned
 void AFutabaActor::BeginPlay()
 {
-    Super::BeginPlay();
-
+	Super::BeginPlay();
+	
 }
 
 // Called every frame
 void AFutabaActor::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);
 
 }
+
 
 void AFutabaActor::SetAPIURL(FString target)
 {

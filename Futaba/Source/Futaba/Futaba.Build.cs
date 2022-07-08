@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Some copyright should be here...
 
 using UnrealBuildTool;
 
@@ -38,7 +38,7 @@ public class Futaba : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"Http",
+				"HTTP",
 				"Json",
 				"JsonUtilities",
 				// ... add private dependencies that you statically link with here ...	
