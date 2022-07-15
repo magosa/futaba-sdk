@@ -50,8 +50,16 @@ TSharedRef<IHttpRequest, ESPMode::ThreadSafe> AFutabaActor::MakeRequestHeader(FS
 
 FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus)
 {
-    const FString JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/" + ConfigFilePath);
-    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, JsonFullPath);
+    FString JsonFullPath;
+
+    if (ConfigFilePath.Len() > 0)
+    {
+        JsonFullPath = ConfigFilePath;
+    }
+    else
+    {
+        JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+    }
 
     FString Message = "";
     FutabaStatus = FutabaRequestStatus::User_Error;
@@ -102,7 +110,7 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
         TSharedPtr<FJsonObject> ResponseJson;
         Request->OnProcessRequestComplete().BindLambda([&](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
             Message = Response->GetContentAsString();
-            TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+            TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Message);
             // Jsonオブジェクトをデシリアライズ
             if (bWasSuccessful && Response->GetResponseCode() >= 200 && Response->GetResponseCode() < 300 && FJsonSerializer::Deserialize(Reader, ResponseJson))
             {
@@ -143,6 +151,73 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
     return Message;
 }
 
+void AFutabaActor::GetAccessTokenLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString ConfigFilePath, FutabaRequestStatus& FutabaStatus, int32& statusCode, FString& contentString)
+{
+    FString JsonFullPath;
+
+    if (ConfigFilePath.Len() > 0)
+    {
+        JsonFullPath = ConfigFilePath;
+    }
+    else
+    {
+        JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+    }
+
+    FString Message = "";
+    FutabaStatus = FutabaRequestStatus::User_Error;
+
+    auto LoadError = [&JsonFullPath, &FutabaStatus, &Message]()
+    {
+        Message = "Failed load json file";
+        UE_LOG(LogTemp, Error, TEXT("Failed LoadJson : %s"), *JsonFullPath);
+        return nullptr;
+    };
+
+    FString loadFileString;
+    if (FFileHelper::LoadFileToString(loadFileString, *JsonFullPath) == false)
+    {
+        Message = "Failed convert json file to FString";
+        LoadError();
+    }
+
+    const auto JsonReader = TJsonReaderFactory<TCHAR>::Create(loadFileString);
+    TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+
+    if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
+    {
+        AFutabaActor::SetAPIURL(JsonObject->GetStringField("target_api"));
+
+        // Create HTTP Request
+        TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::Http->CreateRequest();
+        Request->SetURL("https://" + AFutabaActor::HostAuth + "/api/token");
+
+        if (!JsonObject->GetStringField("refresh_token").IsEmpty())
+        {
+            Request->SetVerb("PATCH");
+            Request->SetHeader(TEXT("X-DTDPF-CLIENT-REFRESHTOKEN"), JsonObject->GetStringField("refresh_token"));
+            Request->SetHeader(TEXT("X-DTDPF-GRANT-TYPE"), TEXT("refresh_token"));
+        }
+        else
+        {
+            Request->SetVerb("POST");
+            Request->SetHeader(TEXT("X-DTDPF-GRANT-TYPE"), TEXT("client_credentials"));
+        }
+
+        Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+        Request->SetHeader(TEXT("X-DTDPF-CLIENT-ID"), JsonObject->GetStringField("client_id"));
+        Request->SetHeader(TEXT("X-DTDPF-CLIENT-SECRET"), JsonObject->GetStringField("client_secret"));
+        this->ClientId = JsonObject->GetStringField("client_id");
+        this->ClientSecret = JsonObject->GetStringField("client_secret");
+        if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+        {
+            FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+            LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestTokenManager(LatentInfo, Request, this->AccessToken, this->RefreshToken, FutabaStatus, statusCode, contentString));
+        }
+        GEngine->AddOnScreenDebugMessage(10, 5.0f, FColor::Silver, this->AccessToken);
+    }
+}
 
 void AFutabaActor::ShowConfiguration()
 {
@@ -155,6 +230,34 @@ void AFutabaActor::ShowConfiguration()
     GEngine->AddOnScreenDebugMessage(6, 5.0f, FColor::Blue, AFutabaActor::ClientSecret);
     GEngine->AddOnScreenDebugMessage(7, 5.0f, FColor::Blue, AFutabaActor::AccessToken);
     GEngine->AddOnScreenDebugMessage(8, 5.0f, FColor::Blue, AFutabaActor::RefreshToken);
+}
+
+void AFutabaActor::SaveConfiguration(FString ConfigFilePath)
+{
+    FString JsonFullPath;
+
+    if (ConfigFilePath.Len() > 0)
+    {
+        JsonFullPath = ConfigFilePath;
+    }
+    else
+    {
+        JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+    }
+    TSharedPtr<FJsonObject> Buffer = MakeShareable(new FJsonObject);
+    Buffer->SetStringField("target_api", AFutabaActor::ConnectionTarget);
+    Buffer->SetStringField("client_id", AFutabaActor::ClientId);
+    Buffer->SetStringField("client_secret", AFutabaActor::ClientSecret);
+    Buffer->SetStringField("access_token", AFutabaActor::AccessToken);
+    Buffer->SetStringField("refresh_token", AFutabaActor::RefreshToken);
+
+    // Create writer for file out
+    FString jsonString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+
+    // Write json object into FString
+    FJsonSerializer::Serialize(Buffer.ToSharedRef(), Writer);
+    FFileHelper::SaveStringToFile(jsonString, *JsonFullPath);
 }
 
 void AFutabaActor::SetAccessTokenByConfigFile(FString ConfigFilePath)
@@ -253,6 +356,19 @@ void AFutabaActor::GetThingsByParameter(FString search_parameters)
     Request->ProcessRequest();
 }
 
+void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString search_parameters, bool& isSuccess, int32& statusCode, FString& jsonString)
+{
+    FString path = "https://" + AFutabaActor::HostHot + "/api/things";
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+    Request->SetContentAsString(search_parameters);
+    isSuccess = false;
+    if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+    {
+        FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+        LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, isSuccess, statusCode, jsonString));
+    }
+}
+
 void AFutabaActor::GetThingsProperties(FString root_id, FString tdid, bool use_id_key)
 {
     FString useidkey = use_id_key ? TEXT("true") : TEXT("false");
@@ -301,4 +417,88 @@ void AFutabaActor::HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponse
         AFutabaActor::OnRequestCompleted.Broadcast(false, Response->GetResponseCode(), Response->GetContentAsString());
     }
 
+}
+
+
+FRequestTokenManager::FRequestTokenManager(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& accessToken, FString& refreshToken, FutabaRequestStatus& status, int32& statusCode, FString& contentString) : m_LatentInfo(LatentInfo)
+{
+    accessTokenPtr = &accessToken;
+    refreshTokenPtr = &refreshToken;
+    statusPtr = &status;
+    statusCodePtr = &statusCode;
+    contentStringPtr = &contentString;
+    Request->OnProcessRequestComplete().BindRaw(this, &FRequestTokenManager::OnResponseReceived);
+    Request->ProcessRequest();
+}
+
+void FRequestTokenManager::UpdateOperation(FLatentResponse& Response)
+{
+    Response.FinishAndTriggerIf(isCompleted, FRequestTokenManager::m_LatentInfo.ExecutionFunction, FRequestTokenManager::m_LatentInfo.Linkage, FRequestTokenManager::m_LatentInfo.CallbackTarget);
+}
+
+void FRequestTokenManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+    *statusPtr = FutabaRequestStatus::User_Error;
+    int32 statusCode = Response->GetResponseCode();
+    *statusCodePtr = statusCode;
+    FString ContentAsString = Response->GetContentAsString();
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<> > Reader = TJsonReaderFactory<>::Create(ContentAsString);
+    // Jsonオブジェクトをデシリアライズ
+    if (FJsonSerializer::Deserialize(Reader, JsonObject))
+    {
+        *contentStringPtr = ContentAsString;
+        GEngine->AddOnScreenDebugMessage(10, 5.0f, FColor::Silver, ContentAsString);
+        if (bWasSuccessful && statusCode >= 200 && statusCode < 300)
+        {
+            *accessTokenPtr = JsonObject->GetStringField("accessToken");
+            *refreshTokenPtr = JsonObject->GetStringField("refreshToken");
+            *statusPtr = FutabaRequestStatus::Success;
+        }
+        else if (statusCode >= 500)
+        {
+            *statusPtr = FutabaRequestStatus::Platform_Error;
+        }
+        else
+        {
+            *statusPtr = FutabaRequestStatus::User_Error;
+        }
+    }
+    isCompleted = true;
+}
+
+
+
+
+FRequestAction::FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, bool& success, int32& statusCode, FString& jsonString) : m_LatentInfo(LatentInfo)
+{
+    jsonStringPtr = &jsonString;
+    successPtr = &success;
+    statusCodePtr = &statusCode;
+    Request->OnProcessRequestComplete().BindRaw(this, &FRequestAction::OnResponseReceived);
+    Request->ProcessRequest();
+}
+
+void FRequestAction::UpdateOperation(FLatentResponse& Response)
+{
+    Response.FinishAndTriggerIf(isCompleted, FRequestAction::m_LatentInfo.ExecutionFunction, FRequestAction::m_LatentInfo.Linkage, FRequestAction::m_LatentInfo.CallbackTarget);
+}
+
+void FRequestAction::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+    *successPtr = false;
+    *statusCodePtr = Response->GetResponseCode();
+    FString ContentAsString = Response->GetContentAsString();
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<> > Reader = TJsonReaderFactory<>::Create(ContentAsString);
+    // Jsonオブジェクトをデシリアライズ
+    if (FJsonSerializer::Deserialize(Reader, JsonObject))
+    {
+        *jsonStringPtr = ContentAsString;
+        if (EHttpResponseCodes::IsOk(Response->GetResponseCode()))
+        {
+            *successPtr = true;
+        }
+    }
+    isCompleted = true;
 }

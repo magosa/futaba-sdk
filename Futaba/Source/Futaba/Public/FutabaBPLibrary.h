@@ -29,7 +29,7 @@ class UFutabaBPLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (Keywords = "Futaba utility"), Category = "FutabaUtility")
 		static FString GenerateSearchParameters(TArray<FString> items, TEnumAsByte<SearchParametersCondition> logic);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (Keywords = "Futaba utility"), Category = "FutabaUtility")
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (Keywords = "Futaba utility", AdvancedDisplay = 3), Category = "FutabaUtility")
 		static FString GenerateParameterWithFilter(FString TargetBuilding, bool IncludeMetadata, FString TwinTitleFilter, FString GlobalIdFilter, FString TwinTagFilter, FString TwinPathFilter, FString TwinModelIdFilter, FString DtIdFilter);
 
 };

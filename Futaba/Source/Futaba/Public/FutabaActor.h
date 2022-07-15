@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LatentActions.h"
+#include "Engine/LatentActionManager.h"
 #include "GameFramework/Actor.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
 #include "HttpManager.h"
@@ -15,7 +17,6 @@ enum class FutabaRequestStatus : uint8
 	User_Error,
 	Platform_Error
 };
-
 
 UCLASS()
 class FUTABA_API AFutabaActor : public AActor
@@ -35,10 +36,10 @@ public:
 		FString  ConnectionTarget = "futaba2";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
-		FString  ClientId;
+		FString  ClientId = "00000";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
-		FString  ClientSecret;
+		FString  ClientSecret = "xxxxx";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "futaba")
 		FString  AccessToken;
@@ -55,8 +56,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void ShowConfiguration();
 
-	UFUNCTION(BlueprintCallable, Category = "futaba", Meta = (ExpandEnumAsExecs = "FutabaStatus", ConfigFilePath = "./data/config.json"))
+	UFUNCTION(BlueprintCallable, Category = "futaba")
+		void SaveConfiguration(FString ConfigFilePath);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba", Meta = (ExpandEnumAsExecs = "FutabaStatus"))
 		FString GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba", meta = (DisplayName = "Get Access Token Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+		void GetAccessTokenLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString ConfigFilePath, FutabaRequestStatus& FutabaStatus, int32& statusCode, FString& contentString);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void SetAccessTokenByConfigFile(FString ConfigFilePath);
@@ -77,6 +84,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void GetThingsByParameter(FString search_parameters);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba", meta = (DisplayName = "Get Things by Parameter Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString search_parameters, bool& isSuccess, int32& statusCode, FString& jsonString);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba")
 		void GetThingsProperties(FString root_id, FString tdid, bool use_id_key = false);
@@ -109,7 +119,40 @@ private:
 	FString HostCommon = "";
 	FString HostStream = "";
 
-	FJsonObject RequestFutaba(TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request);
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> MakeRequestHeader(FString request_url, FString request_method);
 
+};
+
+class FRequestTokenManager : public FPendingLatentAction
+{
+	FLatentActionInfo m_LatentInfo;
+	FString* accessTokenPtr;
+	FString* refreshTokenPtr;
+	FutabaRequestStatus* statusPtr;
+	int32* statusCodePtr;
+	FString* contentStringPtr;
+	bool isCompleted = false;
+
+public:
+	FRequestTokenManager(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& accessToken, FString& refreshToken, FutabaRequestStatus& status, int32& statusCode, FString& jsonString);
+	virtual void UpdateOperation(FLatentResponse& Response) override;
+
+	// HTTP通信を行ってレスポンスが返ってきた際のイベント処理
+	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+};
+
+class FRequestAction : public FPendingLatentAction
+{
+	FLatentActionInfo m_LatentInfo;
+	int32* statusCodePtr;
+	FString* jsonStringPtr;
+	bool* successPtr;
+	bool isCompleted = false;
+
+public:
+	FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, bool& success, int32& statusCode, FString& jsonString);
+	virtual void UpdateOperation(FLatentResponse& Response) override;
+
+	// HTTP通信を行ってレスポンスが返ってきた際のイベント処理
+	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };

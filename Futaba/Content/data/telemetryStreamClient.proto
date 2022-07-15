@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package SBT.DTDPF.API.protos.telemetryStreamClient;
+
+import "google/protobuf/empty.proto";
+
+service StreamClientService {
+
+  // テレメトリストリーミングに接続するメソッド
+  // RPC リクエストヘッダに ClientId と AccessToken を通常のAPIリクエストと同様に格納する
+  //
+  // (例)
+  // "X-DTDPF-CLIENT-ID": "00001"
+  // "X-DTDPF-ACCESS-TOKEN": "tNe5+0OQkWEjXi14ubRwSna0HBYP+fbacUWCTTQKgpb54fcZkbjl6lX56ZDvzG/e"
+  //
+  rpc ConnectTelemetryStream (google.protobuf.Empty) returns (stream TelemetryStreamResponse);
+
+}
+
+
+// レスポンスオブジェクト
+message TelemetryStreamResponse {
+
+  // テレメトリ配列
+  repeated TelemetryStreamItem telemetries = 1;
+
+}
+
+// テレメトリオブジェクト
+message TelemetryStreamItem {
+
+  // デジタルツインルートID
+  int32 root = 1;
+
+  // ツインID
+  string dtId = 2;
+
+  // テレメトリ本文バイト列
+  bytes telemetryBody = 3;
+
+  // テレメトリ時刻(ISO8601)
+  string eventTime = 4;
+
+  // 添付データ ダウンロード SAS URI
+  string contentUrl = 5;
+
+  // 添付データ SHA256 ハッシュ
+  string contentHash = 6;
+}
