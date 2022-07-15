@@ -156,17 +156,6 @@ namespace FutabaLibrary.Core
             return await Request(requestMessage);
         }
 
-        public async Task<string> updateDigitalTwinData(Dictionary<string, object> update_parameters, string property, bool value)
-        {
-            string path = $"https://{this.host_hot}/api/digitaltwins/batchupdate";
-            update_parameters["property"] = property;
-            update_parameters["value"] = value;
-            string jsonString = JsonSerializer.Serialize(update_parameters);
-            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
-            requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
-            return await Request(requestMessage);
-        }
-
         public async Task<string> controlDigitalTwinData(string root, string dtid, float value, int priority = 40)
         {
             string path = $"https://{this.host_hot}/api/digitaltwins/remotecontrol";
