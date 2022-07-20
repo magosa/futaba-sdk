@@ -155,7 +155,7 @@ class Futaba:
     Returns:
         dict: 指定したポイントに対して、遠隔制御を行う
     """
-    def controlDigitalTwinData(self, root, dtid, value, priority=40):
+    def setTelemetryData(self, root, dtid, value, priority=40):
         path = "https://{}/api/digitaltwins/remotecontrol".format(self.host_hot)
         request_header = self.makeRequestHeader(path,"POST")
         values = {

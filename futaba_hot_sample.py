@@ -111,7 +111,7 @@ def main():
     control_dtid = "R90_000001"
     control_value = 26.2
     control_priority = 40
-    response_4 = client.controlDigitalTwinData("R90/research", control_dtid, control_value, control_priority)
+    response_4 = client.setTelemetryData("R90/research", control_dtid, control_value, control_priority)
     print(json.dumps(response_4, indent=2))
 
 
