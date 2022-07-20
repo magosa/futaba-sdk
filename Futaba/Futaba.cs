@@ -250,13 +250,27 @@ namespace FutabaLibrary.Core
             return await Request(requestMessage);
         }
 
-        public async Task<string> setThingsProperty(int root_id, string tdid, string property, float value, int priority = 40)
+        public async Task<string> setThingsProperty(int root_id, string tdid, string property, float value, int? priority = null)
         {
             string path = $"https://{this.host_hot}/api/things/{root_id}/{HttpUtility.UrlEncode(tdid)}/properties/{HttpUtility.UrlEncode(property)}";
-            Dictionary<string, object> values = new Dictionary<string, object>()
+            Dictionary<string, object> values = new Dictionary<string, object>() { { "value", value } };
+            if (priority != null)
             {
-                {"value", value},
-                {"priority", priority}
+                values["priority"] = priority;
+            };
+            string jsonString = JsonSerializer.Serialize(values);
+            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Put);
+            requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
+            return await Request(requestMessage);
+        }
+
+        public async Task<string> setThingsProperty(int root_id, string tdid, string property, string value, int? priority = null)
+        {
+            string path = $"https://{this.host_hot}/api/things/{root_id}/{HttpUtility.UrlEncode(tdid)}/properties/{HttpUtility.UrlEncode(property)}";
+            Dictionary<string, object> values = new Dictionary<string, object>() { { "value", value } };
+            if (priority != null)
+            {
+                values["priority"] = priority;
             };
             string jsonString = JsonSerializer.Serialize(values);
             HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Put);
