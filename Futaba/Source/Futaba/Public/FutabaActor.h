@@ -50,59 +50,82 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
+	//Token Management API & Functions
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
 		void SetAPIURL(FString target);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void ShowConfiguration();
-
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SaveConfiguration(FString ConfigFilePath);
-
-	UFUNCTION(BlueprintCallable, Category = "futaba", Meta = (ExpandEnumAsExecs = "FutabaStatus"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management", Meta = (ExpandEnumAsExecs = "FutabaStatus"))
 		FString GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba", meta = (DisplayName = "Get Access Token Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
-		void GetAccessTokenLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString ConfigFilePath, FutabaRequestStatus& FutabaStatus, int32& statusCode, FString& contentString);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management", meta = (DisplayName = "Get Access Token Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+		void GetAccessTokenLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString ConfigFilePath, FString& contentString, int32& statusCode, FutabaRequestStatus& futabaStatus);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
 		void SetAccessTokenByConfigFile(FString ConfigFilePath);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
 		void SetAccessToken(FString Target, FString Id, FString Secret, FString Access_Token, FString Refresh_Token);
 
-	//Degital Twin API
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
+		void ShowConfiguration();
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetMetadagetTelemetryDatata(FString search_parameters);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
+		void SaveConfiguration(FString ConfigFilePath);
+
+	//Digital Twin API
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void GetTelemetryData(FString searchParameters);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void GetDigitalTwinData(FString searchParameters);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void UpdateDigitalTwinData(FString updateParameters, FString property, FString value);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (float)"))
+		void SetTelemetryDataFloat(FString targetBuilding, FString dtid, float value, int priority);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (string)"))
+		void SetTelemetryDataString(FString targetBuilding, FString dtid, FString value, int priority);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void SetTelemetryStream(FString surveillanceParameters);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void DeleteTelemetryStream(FString searchParameters);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API")
+		void CheckTelemetryStream();
 
 
 	//Web of Things API
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThings(FString bot_path);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
+		void GetThings(FString botPath);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsByParameter(FString search_parameters);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
+		void GetThingsByParameter(FString searchParameters);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba", meta = (DisplayName = "Get Things by Parameter Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
-		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString search_parameters, bool& isSuccess, int32& statusCode, FString& jsonString);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Get Things by Parameter Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, bool& isSuccess, int32& statusCode, FString& jsonString);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsProperties(FString root_id, FString tdid, bool use_id_key = false);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
+		void GetThingsProperties(FString rootId, FString tdId, bool useIdKey = false);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void GetThingsProperty(FString root_id, FString tdid, FString property, bool use_id_key = false);
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
+		void GetThingsProperty(FString rootId, FString tdId, FString property, bool useIdKey = false);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba")
-		void SetThingsProperty(FString root_id, FString tdid, FString property, FString value, FString priority = "");
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
+		void SetThingsProperty(FString rootId, FString tdId, FString property, FString value, FString priority = "");
 
 
 
-	UPROPERTY(BlueprintAssignable, Category = "futaba")
+	UPROPERTY(BlueprintAssignable, Category = "futaba|Event")
 		FFutabaOnEventDispather OnEventDispather;
 
-	UPROPERTY(BlueprintAssignable, Category = "futaba")
+	UPROPERTY(BlueprintAssignable, Category = "futaba|Event")
 		FOnHttpRequestCompleted OnRequestCompleted;
 
 protected:
