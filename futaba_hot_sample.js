@@ -121,11 +121,11 @@ async function main() {
 
 
   // 4.ポイント遠隔制御
-  const control_dtid = "TGX_002923";
-  const control_value = 10;
-  const control_priority = 16;
+  const control_dtid = "R90_000001";
+  const control_value = 26.2;
+  const control_priority = 40;
 
-  client.controlDigitalTwinData("Shinsuna/TKCentralSouth", control_dtid, control_value, control_priority)
+  client.setTelemetryData("R90/research", control_dtid, control_value, control_priority)
     .then(res => console.dir(res, dir_conf));
 
 

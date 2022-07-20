@@ -189,7 +189,7 @@ class Futaba {
 
 
   /**
-   * async controlDigitalTwinData - [ポイント遠隔制御]
+   * async setTelemetryData - [ポイント遠隔制御]
    *
    * @param  {string} root            [デジタルツインルート指定 (建物指定に相当)]
    * @param  {string} dtid            [遠隔制御対象ツインID]
@@ -197,7 +197,7 @@ class Futaba {
    * @param  {number} priority = null [遠隔制御で送信する優先度]
    * @return {promise}                 [指定したポイントに対して、遠隔制御を行う]
    */
-  async controlDigitalTwinData(root, dtid, value, priority = null) {
+  async setTelemetryData(root, dtid, value, priority = null) {
     const path = "/api/digitaltwins/remotecontrol";
     const request_header = this.makeRequestHeader(this.host_hot, path, "POST");
     let values = {
