@@ -136,7 +136,7 @@ namespace FutabaSDK
             string control_dtid = "R90_000001";
             float control_value = 26.2f;
             int control_priority = 40;
-            Console.WriteLine(await client.controlDigitalTwinData(r90.root_building[0], control_dtid, control_value, control_priority));
+            Console.WriteLine(await client.setTelemetryData(r90.root_building[0], control_dtid, control_value, control_priority));
         }
 
         private static async Task Sample_5_1()

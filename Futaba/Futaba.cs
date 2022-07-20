@@ -156,7 +156,7 @@ namespace FutabaLibrary.Core
             return await Request(requestMessage);
         }
 
-        public async Task<string> controlDigitalTwinData(string root, string dtid, float value, int? priority = null)
+        public async Task<string> setTelemetryData(string root, string dtid, float value, int? priority = null)
         {
             string path = $"https://{this.host_hot}/api/digitaltwins/remotecontrol";
             Dictionary<string, object> values = new Dictionary<string, object>(){{"value", value}};
@@ -175,7 +175,7 @@ namespace FutabaLibrary.Core
             requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
             return await Request(requestMessage);
         }
-        public async Task<string> controlDigitalTwinData(string root, string dtid, string value, int? priority = null)
+        public async Task<string> setTelemetryData(string root, string dtid, string value, int? priority = null)
         {
             string path = $"https://{this.host_hot}/api/digitaltwins/remotecontrol";
             Dictionary<string, object> values = new Dictionary<string, object>() { { "value", value } };
