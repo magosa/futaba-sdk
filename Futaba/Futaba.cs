@@ -156,13 +156,32 @@ namespace FutabaLibrary.Core
             return await Request(requestMessage);
         }
 
-        public async Task<string> controlDigitalTwinData(string root, string dtid, float value, int priority = 40)
+        public async Task<string> controlDigitalTwinData(string root, string dtid, float value, int? priority = null)
         {
             string path = $"https://{this.host_hot}/api/digitaltwins/remotecontrol";
-            Dictionary<string, object> values = new Dictionary<string, object>()
+            Dictionary<string, object> values = new Dictionary<string, object>(){{"value", value}};
+            if (priority != null)
             {
-                {"value", value},
-                {"priority", priority}
+                values["priority"] = priority;
+            };
+            Dictionary<string, object> control_parameters = new Dictionary<string, object>()
+            {
+                {"root", root},
+                {"dtId", dtid},
+                {"values", values}
+            };
+            string jsonString = JsonSerializer.Serialize(control_parameters);
+            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
+            requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
+            return await Request(requestMessage);
+        }
+        public async Task<string> controlDigitalTwinData(string root, string dtid, string value, int? priority = null)
+        {
+            string path = $"https://{this.host_hot}/api/digitaltwins/remotecontrol";
+            Dictionary<string, object> values = new Dictionary<string, object>() { { "value", value } };
+            if (priority != null)
+            {
+                values["priority"] = priority;
             };
             Dictionary<string, object> control_parameters = new Dictionary<string, object>()
             {
