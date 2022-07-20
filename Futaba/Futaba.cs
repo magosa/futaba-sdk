@@ -209,6 +209,7 @@ namespace FutabaLibrary.Core
             string path = $"https://{this.host_hot}/api/digitaltwins/telemetrystream/delete";
             string jsonString = JsonSerializer.Serialize(search_parameters);
             HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
+            requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
             return await Request(requestMessage);
         }
 
