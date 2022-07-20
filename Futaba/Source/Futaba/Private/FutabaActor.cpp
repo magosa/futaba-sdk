@@ -48,6 +48,8 @@ TSharedRef<IHttpRequest, ESPMode::ThreadSafe> AFutabaActor::MakeRequestHeader(FS
 	return Request;
 }
 
+//Configuration Management API
+
 FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus)
 {
 	FString JsonFullPath;
@@ -328,6 +330,9 @@ void AFutabaActor::SaveConfiguration(FString ConfigFilePath)
 	FFileHelper::SaveStringToFile(jsonString, *JsonFullPath);
 }
 
+
+//Digital Twin API
+
 void AFutabaActor::GetTelemetryData(FString searchParameters)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/pointvalues";
@@ -378,7 +383,7 @@ void AFutabaActor::SetTelemetryDataFloat(FString targetBuilding, FString dtid, f
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
 	TSharedPtr<FJsonObject> valueJson = MakeShareable(new FJsonObject());
 	valueJson->SetNumberField("value", value);
-	if (FString::FromInt(priority).Len() > 0)
+	if (priority > 0)
 	{
 		valueJson->SetNumberField("priority", priority);
 	}
@@ -403,7 +408,7 @@ void AFutabaActor::SetTelemetryDataString(FString targetBuilding, FString dtid, 
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
 	TSharedPtr<FJsonObject> valueJson = MakeShareable(new FJsonObject());
 	valueJson->SetStringField("value", value);
-	if (FString::FromInt(priority).Len() > 0)
+	if (priority > 0)
 	{
 		valueJson->SetNumberField("priority", priority);
 	}
@@ -447,6 +452,9 @@ void AFutabaActor::CheckTelemetryStream()
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
 }
+
+
+//Web of Things API
 
 void AFutabaActor::GetThings(FString botPath)
 {
@@ -496,13 +504,13 @@ void AFutabaActor::GetThingsProperty(FString rootId, FString tdId, FString prope
 	Request->ProcessRequest();
 }
 
-void AFutabaActor::SetThingsProperty(FString rootId, FString tdId, FString property, FString value, FString priority)
+void AFutabaActor::SetThingsPropertyFloat(FString rootId, FString tdId, FString property, float value, int priority)
 {
 	TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
-	values->SetStringField("value", value);
-	if (priority.Len() > 0)
+	values->SetNumberField("value", value);
+	if (priority > 0)
 	{
-		values->SetStringField("priority", priority);
+		values->SetNumberField("priority", priority);
 	}
 	FString edit_data;
 	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&edit_data);
@@ -514,6 +522,165 @@ void AFutabaActor::SetThingsProperty(FString rootId, FString tdId, FString prope
 	Request->SetContentAsString(edit_data);
 	Request->ProcessRequest();
 }
+
+void AFutabaActor::SetThingsPropertyString(FString rootId, FString tdId, FString property, FString value, int priority)
+{
+	TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
+	values->SetStringField("value", value);
+	if (priority > 0)
+	{
+		values->SetNumberField("priority", priority);
+	}
+	FString edit_data;
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&edit_data);
+	FJsonSerializer::Serialize(values.ToSharedRef(), JsonWriter);
+
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + rootId + "/" + tdId + "/properties/" + property;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->SetContentAsString(edit_data);
+	Request->ProcessRequest();
+}
+
+
+//Building dataset API
+
+void AFutabaActor::CreateTask(FString task)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->SetContentAsString(task);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::GetTaskProgress(int taskId, FString status, FString createDatetime, bool includeRequestInfo)
+{
+	FString option = "";
+	if (taskId > 0) { option = option + "&taskId=" + FString::FromInt(taskId); }
+	if (status.Len() > 0) { option = option + "&status=" + status; }
+	if (createDatetime.Len() > 0) { option = option + "&createDatetime=" + createDatetime; }
+	FString requestInfo = includeRequestInfo ? TEXT("true") : TEXT("false");
+	option = option + "&includeRequestInfo=" + requestInfo;
+	option.RemoveAt(0, 1);
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task?" + FGenericPlatformHttp::UrlEncode(option);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::ChangeTaskValidity(int taskId, bool status)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task";
+	TSharedPtr<FJsonObject> task = MakeShareable(new FJsonObject());
+	task->SetNumberField("taskId", taskId);
+	task->SetBoolField("enabled", status);
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "PATCH");
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(task.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteTask(int taskId)
+{	
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task?taskId=" + FString::FromInt(taskId);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::SetWebhook(FString url)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/webhook";
+	TSharedPtr<FJsonObject> webhook = MakeShareable(new FJsonObject());
+	webhook->SetStringField("webhook_url", url);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(webhook.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteWebhook()
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/webhook";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+
+//Data share API
+
+void AFutabaActor::SetSharedData(FString dataTypeId, FString targetBuilding, FString values)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/add";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	shareData->SetStringField("values", values);
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::GetSharedData(FString dataTypeId, FString targetBuilding, FString filter)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/search";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	if (filter.Len() > 0) { shareData->SetStringField("filter", filter); }
+	
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteSharedData(FString dataTypeId, FString targetBuilding, FString filter)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/delete";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	if (filter.Len() > 0) { shareData->SetStringField("filter", filter); }
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
+	Request->ProcessRequest();
+}
+
+
+//Http Request Complete Event
 
 void AFutabaActor::HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
@@ -528,6 +695,10 @@ void AFutabaActor::HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponse
 
 }
 
+
+
+
+//Latent Functions
 
 FRequestTokenManager::FRequestTokenManager(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& accessToken, FString& refreshToken, FutabaRequestStatus& status, int32& statusCode, FString& contentString) : m_LatentInfo(LatentInfo)
 {

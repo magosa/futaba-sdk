@@ -50,7 +50,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//Token Management API & Functions
+	//Configuration Management API
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
 		void SetAPIURL(FString target);
@@ -58,7 +58,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management", Meta = (ExpandEnumAsExecs = "FutabaStatus"))
 		FString GetAccessToken(FString ConfigFilePath, FutabaRequestStatus& FutabaStatus);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management", meta = (DisplayName = "Get Access Token Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management", meta = (DisplayName = "Get Access Token <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
 		void GetAccessTokenLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString ConfigFilePath, FString& contentString, int32& statusCode, FutabaRequestStatus& futabaStatus);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Configuration Management")
@@ -108,7 +108,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
 		void GetThingsByParameter(FString searchParameters);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Get Things by Parameter Latent", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Get Things by Parameter <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
 		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, bool& isSuccess, int32& statusCode, FString& jsonString);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
@@ -117,10 +117,47 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
 		void GetThingsProperty(FString rootId, FString tdId, FString property, bool useIdKey = false);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
-		void SetThingsProperty(FString rootId, FString tdId, FString property, FString value, FString priority = "");
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (float)"))
+		void SetThingsPropertyFloat(FString rootId, FString tdId, FString property, float value, int priority);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (string)"))
+		void SetThingsPropertyString(FString rootId, FString tdId, FString property, FString value, int priority);
 
 
+	//Building dataset API
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void CreateTask(FString task);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void GetTaskProgress(int taskId, FString status, FString createDatetime, bool includeRequestInfo);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void ChangeTaskValidity(int taskId, bool status);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void DeleteTask(int taskId);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void SetWebhook(FString url);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Building dataset API")
+		void DeleteWebhook();
+
+
+	//Data share API
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Data share API")
+		void SetSharedData(FString dataTypeId, FString targetBuilding, FString values);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Data share API")
+		void GetSharedData(FString dataTypeId, FString targetBuilding, FString filter);
+
+	UFUNCTION(BlueprintCallable, Category = "futaba|Data share API")
+		void DeleteSharedData(FString dataTypeId, FString targetBuilding, FString filter);
+
+
+	//Event Node
 
 	UPROPERTY(BlueprintAssignable, Category = "futaba|Event")
 		FFutabaOnEventDispather OnEventDispather;
