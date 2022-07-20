@@ -366,7 +366,7 @@ namespace FutabaLibrary.Core
             };
             if (filter != null) { search_parameters["filter"] = filter; }
             string jsonString = JsonSerializer.Serialize(search_parameters);
-            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Get);
+            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
             requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
             return await Request(requestMessage);
         }
@@ -381,7 +381,7 @@ namespace FutabaLibrary.Core
             };
             if (filter != null) { delete_parameters["filter"] = filter; }
             string jsonString = JsonSerializer.Serialize(delete_parameters);
-            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Get);
+            HttpRequestMessage requestMessage = makeRequestHeader(path, HttpMethod.Post);
             requestMessage.Content = new StringContent(jsonString, Encoding.UTF8, @"application/json");
             return await Request(requestMessage);
         }
