@@ -109,7 +109,7 @@ public:
 		void GetThingsByParameter(FString searchParameters);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Get Things by Parameter <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
-		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, bool& isSuccess, int32& statusCode, FString& jsonString);
+		void GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& status, int32& statusCode);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API")
 		void GetThingsProperties(FString rootId, FString tdId, bool useIdKey = false);
@@ -206,11 +206,11 @@ class FRequestAction : public FPendingLatentAction
 	FLatentActionInfo m_LatentInfo;
 	int32* statusCodePtr;
 	FString* jsonStringPtr;
-	bool* successPtr;
+	FutabaRequestStatus* statusPtr;
 	bool isCompleted = false;
 
 public:
-	FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, bool& success, int32& statusCode, FString& jsonString);
+	FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FutabaRequestStatus& status, int32& statusCode, FString& jsonString);
 	virtual void UpdateOperation(FLatentResponse& Response) override;
 
 	// HTTP通信を行ってレスポンスが返ってきた際のイベント処理

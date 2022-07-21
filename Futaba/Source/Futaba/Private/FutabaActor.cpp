@@ -60,7 +60,7 @@ FString AFutabaActor::GetAccessToken(FString ConfigFilePath, FutabaRequestStatus
 	}
 	else
 	{
-		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/config.json");
 	}
 
 	FString Message = "";
@@ -163,7 +163,7 @@ void AFutabaActor::GetAccessTokenLatent(UObject* WorldContextObject, FLatentActi
 	}
 	else
 	{
-		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/config.json");
 	}
 
 	futabaStatus = FutabaRequestStatus::User_Error;
@@ -221,7 +221,16 @@ void AFutabaActor::GetAccessTokenLatent(UObject* WorldContextObject, FLatentActi
 
 void AFutabaActor::SetAccessTokenByConfigFile(FString ConfigFilePath)
 {
-	const FString JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/" + ConfigFilePath);
+	FString JsonFullPath;
+
+	if (ConfigFilePath.Len() > 0)
+	{
+		JsonFullPath = ConfigFilePath;
+	}
+	else
+	{
+		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/config.json");
+	}
 
 	auto LoadError = [&JsonFullPath]()
 	{
@@ -312,7 +321,7 @@ void AFutabaActor::SaveConfiguration(FString ConfigFilePath)
 	}
 	else
 	{
-		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/data/config.json");
+		JsonFullPath = FPaths::ProjectPluginsDir().Append("Futaba/Content/config.json");
 	}
 	TSharedPtr<FJsonObject> Buffer = MakeShareable(new FJsonObject);
 	Buffer->SetStringField("target_api", AFutabaActor::ConnectionTarget);
@@ -473,16 +482,15 @@ void AFutabaActor::GetThingsByParameter(FString searchParameters)
 	Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, bool& isSuccess, int32& statusCode, FString& jsonString)
+void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& status, int32& statusCode)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/things";
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
 	Request->SetContentAsString(searchParameters);
-	isSuccess = false;
 	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
 	{
 		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
-		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, isSuccess, statusCode, jsonString));
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, status, statusCode, jsonString));
 	}
 }
 
@@ -724,7 +732,6 @@ void FRequestTokenManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResp
 	FString ContentAsString = Response->GetContentAsString();
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<> > Reader = TJsonReaderFactory<>::Create(ContentAsString);
-	// Jsonオブジェクトをデシリアライズ
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		*contentStringPtr = ContentAsString;
@@ -748,10 +755,10 @@ void FRequestTokenManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResp
 }
 
 
-FRequestAction::FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, bool& success, int32& statusCode, FString& jsonString) : m_LatentInfo(LatentInfo)
+FRequestAction::FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FutabaRequestStatus& status, int32& statusCode, FString& jsonString) : m_LatentInfo(LatentInfo)
 {
 	jsonStringPtr = &jsonString;
-	successPtr = &success;
+	statusPtr = &status;
 	statusCodePtr = &statusCode;
 	Request->OnProcessRequestComplete().BindRaw(this, &FRequestAction::OnResponseReceived);
 	Request->ProcessRequest();
@@ -764,18 +771,26 @@ void FRequestAction::UpdateOperation(FLatentResponse& Response)
 
 void FRequestAction::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	*successPtr = false;
-	*statusCodePtr = Response->GetResponseCode();
+	*statusPtr = FutabaRequestStatus::User_Error;
+	int32 statusCode = Response->GetResponseCode();
+	*statusCodePtr = statusCode;
 	FString ContentAsString = Response->GetContentAsString();
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<> > Reader = TJsonReaderFactory<>::Create(ContentAsString);
-	// Jsonオブジェクトをデシリアライズ
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		*jsonStringPtr = ContentAsString;
-		if (EHttpResponseCodes::IsOk(Response->GetResponseCode()))
+		if (bWasSuccessful && statusCode >= 200 && statusCode < 300)
 		{
-			*successPtr = true;
+			*statusPtr = FutabaRequestStatus::Success;
+		}
+		else if (statusCode >= 500)
+		{
+			*statusPtr = FutabaRequestStatus::Platform_Error;
+		}
+		else
+		{
+			*statusPtr = FutabaRequestStatus::User_Error;
 		}
 	}
 	isCompleted = true;
