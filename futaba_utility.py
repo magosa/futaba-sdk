@@ -42,6 +42,9 @@ class FutabaUtility:
         self.root_building = self.alterArrayPrameter(building_array);
         return self
 
+    def getTargetBuilding(self):
+        return self.root_building
+
     def setFileOptions(self, file_name=None, file_type="parquet", compress_type="snappy"):
         if file_name is not None and type(file_name) is str and len(file_name) > 0:
             self.file_options['file_name'] = file_name
