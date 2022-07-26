@@ -442,7 +442,7 @@ class Futaba:
         type: データプラットフォームに、共有データを新規追加する
     """
     def setSharedData(self, data_type_id, root, values):
-        url = "https://{}/api/commondata/add".format(self.host_common)
+        path = "https://{}/api/commondata/add".format(self.host_common)
         request_header = self.makeRequestHeader(path,"POST")
         add_data = {
             'dataTypeId': data_type_id,
@@ -463,7 +463,7 @@ class Futaba:
         type: データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータ本文を取得する
     """
     def getSharedData(self, data_type_id, root, filter=None):
-        url = "https://{}/api/commondata/search".format(self.host_common)
+        path = "https://{}/api/commondata/search".format(self.host_common)
         request_header = self.makeRequestHeader(path,"POST")
         search_parameters = {
             'dataTypeId': data_type_id,
@@ -485,7 +485,7 @@ class Futaba:
         dict: データ追加APIによりデータプラットフォームに追加した共有データを検索し、対象のデータを削除する
     """
     def deleteSharedData(self, data_type_id, root, filter=None):
-        url = "https://{}/api/commondata/delete".format(self.host_common)
+        path = "https://{}/api/commondata/delete".format(self.host_common)
         request_header = self.makeRequestHeader(path,"POST")
         delete_parameters = {
           'dataTypeId': data_type_id,
