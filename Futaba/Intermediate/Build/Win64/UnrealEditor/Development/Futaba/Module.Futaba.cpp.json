@@ -1,0 +1,34 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\intermediate\\build\\win64\\unrealeditor\\development\\futaba\\module.futaba.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\intermediate\\build\\win64\\futabasdkeditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\intermediate\\build\\win64\\unrealeditor\\development\\futaba\\definitions.futaba.h",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\private\\futaba.cpp",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\public\\futaba.h",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\private\\futabaactor.cpp",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\public\\futabaactor.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\engine\\public\\latentactions.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\http.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\httpmodule.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\interfaces\\ihttprequest.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\interfaces\\ihttpbase.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\interfaces\\ihttpresponse.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\platformhttp.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\windows\\windowsplatformhttp.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\genericplatform\\genericplatformhttp.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\httpmanager.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\private\\ihttpthreadedrequest.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\genericplatform\\httprequestimpl.h",
+            "c:\\program files\\epic games\\ue_5.0\\engine\\source\\runtime\\online\\http\\public\\httppackage.h",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\intermediate\\build\\win64\\unrealeditor\\inc\\futaba\\futabaactor.generated.h",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\private\\futababplibrary.cpp",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\source\\futaba\\public\\futababplibrary.h",
+            "c:\\users\\1600028\\desktop\\development\\ue5\\futabasdk\\plugins\\futaba\\intermediate\\build\\win64\\unrealeditor\\inc\\futaba\\futababplibrary.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

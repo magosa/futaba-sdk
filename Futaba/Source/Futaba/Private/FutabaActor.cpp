@@ -214,7 +214,7 @@ void AFutabaActor::GetAccessTokenLatent(UObject* WorldContextObject, FLatentActi
 		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
 		{
 			FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
-			LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestTokenManager(LatentInfo, Request, this->AccessToken, this->RefreshToken, futabaStatus, statusCode, contentString));
+			LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestTokenManager(LatentInfo, Request, this->AccessToken, this->RefreshToken, contentString, futabaStatus, statusCode));
 		}
 	}
 }
@@ -351,6 +351,18 @@ void AFutabaActor::GetTelemetryData(FString searchParameters)
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::GetTelemetryDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode) 
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/pointvalues";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(searchParameters);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::GetDigitalTwinData(FString searchParameters)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins";
@@ -358,6 +370,18 @@ void AFutabaActor::GetDigitalTwinData(FString searchParameters)
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->SetContentAsString(searchParameters);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::GetDigitalTwinDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(searchParameters);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::UpdateDigitalTwinData(FString updateParameters, FString property, FString value)
@@ -386,6 +410,35 @@ void AFutabaActor::UpdateDigitalTwinData(FString updateParameters, FString prope
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::UpdateDigitalTwinDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString updateParameters, FString property, FString value, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/batchupdate";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	TSharedPtr<FJsonObject> jsonObject = MakeShareable(new FJsonObject());
+	TSharedRef<TJsonReader<> > Reader = TJsonReaderFactory<>::Create(updateParameters);
+
+	if (FJsonSerializer::Deserialize(Reader, jsonObject))
+	{
+		jsonObject->SetStringField("property", property);
+		jsonObject->SetStringField("value", value);
+		FString jsonString;
+		TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+		if (FJsonSerializer::Serialize(jsonObject.ToSharedRef(), Writer))
+		{
+			Request->SetContentAsString(jsonString);
+		}
+	}
+	else
+	{
+		Request->SetContentAsString(updateParameters);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::SetTelemetryDataFloat(FString targetBuilding, FString dtid, float value, int priority)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/remotecontrol";
@@ -409,6 +462,34 @@ void AFutabaActor::SetTelemetryDataFloat(FString targetBuilding, FString dtid, f
 	}
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::SetTelemetryDataFloatLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString targetBuilding, FString dtid, float value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/remotecontrol";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	TSharedPtr<FJsonObject> valueJson = MakeShareable(new FJsonObject());
+	valueJson->SetNumberField("value", value);
+	if (priority > 0)
+	{
+		valueJson->SetNumberField("priority", priority);
+	}
+	TSharedPtr<FJsonObject> jsonObject = MakeShareable(new FJsonObject());
+	jsonObject->SetStringField("root", targetBuilding);
+	jsonObject->SetStringField("dtId", dtid);
+	jsonObject->SetObjectField("values", valueJson);
+
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonContentString);
+	if (FJsonSerializer::Serialize(jsonObject.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonContentString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::SetTelemetryDataString(FString targetBuilding, FString dtid, FString value, int priority)
@@ -436,6 +517,34 @@ void AFutabaActor::SetTelemetryDataString(FString targetBuilding, FString dtid, 
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::SetTelemetryDataStringLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString targetBuilding, FString dtid, FString value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/remotecontrol";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	TSharedPtr<FJsonObject> valueJson = MakeShareable(new FJsonObject());
+	valueJson->SetStringField("value", value);
+	if (priority > 0)
+	{
+		valueJson->SetNumberField("priority", priority);
+	}
+	TSharedPtr<FJsonObject> jsonObject = MakeShareable(new FJsonObject());
+	jsonObject->SetStringField("root", targetBuilding);
+	jsonObject->SetStringField("dtId", dtid);
+	jsonObject->SetObjectField("values", valueJson);
+
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonContentString);
+	if (FJsonSerializer::Serialize(jsonObject.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonContentString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::SetTelemetryStream(FString surveillanceParameters)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/telemetrystream/add";
@@ -443,6 +552,18 @@ void AFutabaActor::SetTelemetryStream(FString surveillanceParameters)
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->SetContentAsString(surveillanceParameters);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::SetTelemetryStreamLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString surveillanceParameters, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/telemetrystream/add";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(surveillanceParameters);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::DeleteTelemetryStream(FString searchParameters)
@@ -454,12 +575,35 @@ void AFutabaActor::DeleteTelemetryStream(FString searchParameters)
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::DeleteTelemetryStreamLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/telemetrystream/delete";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(searchParameters);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::CheckTelemetryStream()
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/telemetrystream";
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::CheckTelemetryStreamLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/digitaltwins/telemetrystream";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 
@@ -473,6 +617,17 @@ void AFutabaActor::GetThings(FString botPath)
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::GetThingsLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString botPath, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things?path=" + botPath;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::GetThingsByParameter(FString searchParameters)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/things";
@@ -482,7 +637,7 @@ void AFutabaActor::GetThingsByParameter(FString searchParameters)
 	Request->ProcessRequest();
 }
 
-void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& status, int32& statusCode)
+void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString searchParameters, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
 {
 	FString path = "https://" + AFutabaActor::HostHot + "/api/things";
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
@@ -490,7 +645,7 @@ void AFutabaActor::GetThingsByParameterLatent(UObject* WorldContextObject, FLate
 	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
 	{
 		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
-		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, status, statusCode, jsonString));
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
 	}
 }
 
@@ -503,6 +658,18 @@ void AFutabaActor::GetThingsProperties(FString rootId, FString tdId, bool useIdK
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::GetThingsPropertiesLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, bool useIdKey, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString useidkey = useIdKey ? TEXT("true") : TEXT("false");
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + rootId + "/" + tdId + "/properties?useIdKey=" + useidkey;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::GetThingsProperty(FString rootId, FString tdId, FString property, bool useIdKey)
 {
 	FString useidkey = useIdKey ? TEXT("true") : TEXT("false");
@@ -510,6 +677,18 @@ void AFutabaActor::GetThingsProperty(FString rootId, FString tdId, FString prope
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::GetThingsPropertyLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, FString property, bool useIdKey, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString useidkey = useIdKey ? TEXT("true") : TEXT("false");
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + rootId + "/" + tdId + "/properties/" + property + "?useIdKey=" + useidkey;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::SetThingsPropertyFloat(FString rootId, FString tdId, FString property, float value, int priority)
@@ -531,6 +710,28 @@ void AFutabaActor::SetThingsPropertyFloat(FString rootId, FString tdId, FString 
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::SetThingsPropertyFloatLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, FString property, float value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
+	values->SetNumberField("value", value);
+	if (priority > 0)
+	{
+		values->SetNumberField("priority", priority);
+	}
+	FString edit_data;
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&edit_data);
+	FJsonSerializer::Serialize(values.ToSharedRef(), JsonWriter);
+
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + rootId + "/" + tdId + "/properties/" + property;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(edit_data);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::SetThingsPropertyString(FString rootId, FString tdId, FString property, FString value, int priority)
 {
 	TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
@@ -550,6 +751,28 @@ void AFutabaActor::SetThingsPropertyString(FString rootId, FString tdId, FString
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::SetThingsPropertyStringLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, FString property, FString value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	TSharedPtr<FJsonObject> values = MakeShareable(new FJsonObject);
+	values->SetStringField("value", value);
+	if (priority > 0)
+	{
+		values->SetNumberField("priority", priority);
+	}
+	FString edit_data;
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&edit_data);
+	FJsonSerializer::Serialize(values.ToSharedRef(), JsonWriter);
+
+	FString path = "https://" + AFutabaActor::HostHot + "/api/things/" + rootId + "/" + tdId + "/properties/" + property;
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(edit_data);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 
 //Building dataset API
 
@@ -560,6 +783,18 @@ void AFutabaActor::CreateTask(FString task)
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->SetContentAsString(task);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::CreateTaskLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString task, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	Request->SetContentAsString(task);
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::GetTaskProgress(int taskId, FString status, FString createDatetime, bool includeRequestInfo)
@@ -575,6 +810,24 @@ void AFutabaActor::GetTaskProgress(int taskId, FString status, FString createDat
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::GetTaskProgressLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, int taskId, FString status, FString createDatetime, bool includeRequestInfo, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString option = "";
+	if (taskId > 0) { option = option + "&taskId=" + FString::FromInt(taskId); }
+	if (status.Len() > 0) { option = option + "&status=" + status; }
+	if (createDatetime.Len() > 0) { option = option + "&createDatetime=" + createDatetime; }
+	FString requestInfo = includeRequestInfo ? TEXT("true") : TEXT("false");
+	option = option + "&includeRequestInfo=" + requestInfo;
+	option.RemoveAt(0, 1);
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task?" + FGenericPlatformHttp::UrlEncode(option);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "GET");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::ChangeTaskValidity(int taskId, bool status)
@@ -595,12 +848,44 @@ void AFutabaActor::ChangeTaskValidity(int taskId, bool status)
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::ChangeTaskValidityLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, int taskId, bool status, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task";
+	TSharedPtr<FJsonObject> task = MakeShareable(new FJsonObject());
+	task->SetNumberField("taskId", taskId);
+	task->SetBoolField("enabled", status);
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "PATCH");
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(task.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::DeleteTask(int taskId)
 {	
 	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task?taskId=" + FString::FromInt(taskId);
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteTaskLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, int taskId, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/task?taskId=" + FString::FromInt(taskId);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 void AFutabaActor::SetWebhook(FString url)
@@ -619,12 +904,42 @@ void AFutabaActor::SetWebhook(FString url)
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::SetWebhookLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString url, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/webhook";
+	TSharedPtr<FJsonObject> webhook = MakeShareable(new FJsonObject());
+	webhook->SetStringField("webhook_url", url);
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(webhook.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::DeleteWebhook()
 {
 	FString path = "https://" + AFutabaActor::HostCold + "/api/model/webhook";
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteWebhookLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCold + "/api/model/webhook";
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "DELETE");
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 
@@ -649,6 +964,28 @@ void AFutabaActor::SetSharedData(FString dataTypeId, FString targetBuilding, FSt
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::SetSharedDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString dataTypeId, FString targetBuilding, FString values, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/add";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	shareData->SetStringField("values", values);
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::GetSharedData(FString dataTypeId, FString targetBuilding, FString filter)
 {
 	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/search";
@@ -668,6 +1005,28 @@ void AFutabaActor::GetSharedData(FString dataTypeId, FString targetBuilding, FSt
 	Request->ProcessRequest();
 }
 
+void AFutabaActor::GetSharedDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString dataTypeId, FString targetBuilding, FString filter, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/search";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	if (filter.Len() > 0) { shareData->SetStringField("filter", filter); }
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
+}
+
 void AFutabaActor::DeleteSharedData(FString dataTypeId, FString targetBuilding, FString filter)
 {
 	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/delete";
@@ -685,6 +1044,28 @@ void AFutabaActor::DeleteSharedData(FString dataTypeId, FString targetBuilding, 
 	}
 	Request->OnProcessRequestComplete().BindUObject(this, &AFutabaActor::HandleRequestCompleted);
 	Request->ProcessRequest();
+}
+
+void AFutabaActor::DeleteSharedDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString dataTypeId, FString targetBuilding, FString filter, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode)
+{
+	FString path = "https://" + AFutabaActor::HostCommon + "/api/commondata/delete";
+	TSharedPtr<FJsonObject> shareData = MakeShareable(new FJsonObject());
+	shareData->SetStringField("dataTypeId", dataTypeId);
+	shareData->SetStringField("root", targetBuilding);
+	if (filter.Len() > 0) { shareData->SetStringField("filter", filter); }
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = AFutabaActor::MakeRequestHeader(path, "POST");
+	FString jsonContentString;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&jsonString);
+	if (FJsonSerializer::Serialize(shareData.ToSharedRef(), Writer))
+	{
+		Request->SetContentAsString(jsonString);
+	}
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, new FRequestAction(LatentInfo, Request, jsonString, requestStatus, statusCode));
+	}
 }
 
 
@@ -708,11 +1089,11 @@ void AFutabaActor::HandleRequestCompleted(FHttpRequestPtr Request, FHttpResponse
 
 //Latent Functions
 
-FRequestTokenManager::FRequestTokenManager(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& accessToken, FString& refreshToken, FutabaRequestStatus& status, int32& statusCode, FString& contentString) : m_LatentInfo(LatentInfo)
+FRequestTokenManager::FRequestTokenManager(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& accessToken, FString& refreshToken, FString& contentString, FutabaRequestStatus& requestStatus, int32& statusCode) : m_LatentInfo(LatentInfo)
 {
 	accessTokenPtr = &accessToken;
 	refreshTokenPtr = &refreshToken;
-	statusPtr = &status;
+	statusPtr = &requestStatus;
 	statusCodePtr = &statusCode;
 	contentStringPtr = &contentString;
 	Request->OnProcessRequestComplete().BindRaw(this, &FRequestTokenManager::OnResponseReceived);
@@ -755,10 +1136,10 @@ void FRequestTokenManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResp
 }
 
 
-FRequestAction::FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FutabaRequestStatus& status, int32& statusCode, FString& jsonString) : m_LatentInfo(LatentInfo)
+FRequestAction::FRequestAction(const FLatentActionInfo& LatentInfo, TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode) : m_LatentInfo(LatentInfo)
 {
 	jsonStringPtr = &jsonString;
-	statusPtr = &status;
+	statusPtr = &requestStatus;
 	statusCodePtr = &statusCode;
 	Request->OnProcessRequestComplete().BindRaw(this, &FRequestAction::OnResponseReceived);
 	Request->ProcessRequest();
