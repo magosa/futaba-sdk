@@ -41,6 +41,10 @@ class FutabaUtility {
     return this;
   }
 
+  getTargetBuilding() {
+    return this.root_building;
+  }
+
   setFileOptions(file_name = null, file_type = "parquet", compress_type = "snappy") {
     if (file_name && typeof file_name === 'string' && file_name.length > 0) {
       this.file_options.file_name = file_name
