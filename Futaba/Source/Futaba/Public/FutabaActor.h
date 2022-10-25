@@ -93,10 +93,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Update Digital Twin Data <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
 		void UpdateDigitalTwinDataLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString updateParameters, FString property, FString value, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (float)"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (integer)"))
 		void SetTelemetryDataInteger(FString targetBuilding, FString dtid, int value, int priority);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (float) <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (integer) <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
 		void SetTelemetryDataIntegerLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString targetBuilding, FString dtid, int value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Digital Twin API", meta = (DisplayName = "Set Telemetry Data (float)"))
@@ -156,10 +156,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Get Things Property <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", useIdKey = false))
 		void GetThingsPropertyLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, FString property, bool useIdKey, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (float)"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (integer)"))
 		void SetThingsPropertyInteger(FString rootId, FString tdId, FString property, int value, int priority);
 
-	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (float) <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
+	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (integer) <Latent>", Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo"))
 		void SetThingsPropertyIntegerLatent(UObject* WorldContextObject, FLatentActionInfo LatentInfo, FString rootId, FString tdId, FString property, int value, int priority, FString& jsonString, FutabaRequestStatus& requestStatus, int32& statusCode);
 
 	UFUNCTION(BlueprintCallable, Category = "futaba|Web of Things API", meta = (DisplayName = "Set Things Property (float)"))
