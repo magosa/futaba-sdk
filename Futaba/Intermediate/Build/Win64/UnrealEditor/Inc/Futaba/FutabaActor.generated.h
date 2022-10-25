@@ -65,6 +65,8 @@ static inline void FOnHttpRequestCompleted_DelegateWrapper(const FMulticastScrip
 	DECLARE_FUNCTION(execSetThingsPropertyString); \
 	DECLARE_FUNCTION(execSetThingsPropertyFloatLatent); \
 	DECLARE_FUNCTION(execSetThingsPropertyFloat); \
+	DECLARE_FUNCTION(execSetThingsPropertyIntegerLatent); \
+	DECLARE_FUNCTION(execSetThingsPropertyInteger); \
 	DECLARE_FUNCTION(execGetThingsPropertyLatent); \
 	DECLARE_FUNCTION(execGetThingsProperty); \
 	DECLARE_FUNCTION(execGetThingsPropertiesLatent); \
@@ -83,6 +85,8 @@ static inline void FOnHttpRequestCompleted_DelegateWrapper(const FMulticastScrip
 	DECLARE_FUNCTION(execSetTelemetryDataString); \
 	DECLARE_FUNCTION(execSetTelemetryDataFloatLatent); \
 	DECLARE_FUNCTION(execSetTelemetryDataFloat); \
+	DECLARE_FUNCTION(execSetTelemetryDataIntegerLatent); \
+	DECLARE_FUNCTION(execSetTelemetryDataInteger); \
 	DECLARE_FUNCTION(execUpdateDigitalTwinDataLatent); \
 	DECLARE_FUNCTION(execUpdateDigitalTwinData); \
 	DECLARE_FUNCTION(execGetDigitalTwinDataLatent); \
@@ -122,6 +126,8 @@ static inline void FOnHttpRequestCompleted_DelegateWrapper(const FMulticastScrip
 	DECLARE_FUNCTION(execSetThingsPropertyString); \
 	DECLARE_FUNCTION(execSetThingsPropertyFloatLatent); \
 	DECLARE_FUNCTION(execSetThingsPropertyFloat); \
+	DECLARE_FUNCTION(execSetThingsPropertyIntegerLatent); \
+	DECLARE_FUNCTION(execSetThingsPropertyInteger); \
 	DECLARE_FUNCTION(execGetThingsPropertyLatent); \
 	DECLARE_FUNCTION(execGetThingsProperty); \
 	DECLARE_FUNCTION(execGetThingsPropertiesLatent); \
@@ -140,6 +146,8 @@ static inline void FOnHttpRequestCompleted_DelegateWrapper(const FMulticastScrip
 	DECLARE_FUNCTION(execSetTelemetryDataString); \
 	DECLARE_FUNCTION(execSetTelemetryDataFloatLatent); \
 	DECLARE_FUNCTION(execSetTelemetryDataFloat); \
+	DECLARE_FUNCTION(execSetTelemetryDataIntegerLatent); \
+	DECLARE_FUNCTION(execSetTelemetryDataInteger); \
 	DECLARE_FUNCTION(execUpdateDigitalTwinDataLatent); \
 	DECLARE_FUNCTION(execUpdateDigitalTwinData); \
 	DECLARE_FUNCTION(execGetDigitalTwinDataLatent); \

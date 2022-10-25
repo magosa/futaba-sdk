@@ -23,7 +23,7 @@ void EmptyLinkFunctionForGeneratedCodeFutaba_init() {}
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0x8CA96C3E,
+				0x137AFA12,
 				0x85E9ED1E,
 				METADATA_PARAMS(nullptr, 0)
 			};
@@ -31,5 +31,5 @@ void EmptyLinkFunctionForGeneratedCodeFutaba_init() {}
 		}
 		return Z_Registration_Info_UPackage__Script_Futaba.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_Futaba(Z_Construct_UPackage__Script_Futaba, TEXT("/Script/Futaba"), Z_Registration_Info_UPackage__Script_Futaba, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0x8CA96C3E, 0x85E9ED1E));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_Futaba(Z_Construct_UPackage__Script_Futaba, TEXT("/Script/Futaba"), Z_Registration_Info_UPackage__Script_Futaba, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0x137AFA12, 0x85E9ED1E));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

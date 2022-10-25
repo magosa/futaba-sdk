@@ -414,6 +414,35 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		P_THIS->SetThingsPropertyFloat(Z_Param_rootId,Z_Param_tdId,Z_Param_property,Z_Param_value,Z_Param_priority);
 		P_NATIVE_END;
 	}
+	DEFINE_FUNCTION(AFutabaActor::execSetThingsPropertyIntegerLatent)
+	{
+		P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
+		P_GET_STRUCT(FLatentActionInfo,Z_Param_LatentInfo);
+		P_GET_PROPERTY(FStrProperty,Z_Param_rootId);
+		P_GET_PROPERTY(FStrProperty,Z_Param_tdId);
+		P_GET_PROPERTY(FStrProperty,Z_Param_property);
+		P_GET_PROPERTY(FIntProperty,Z_Param_value);
+		P_GET_PROPERTY(FIntProperty,Z_Param_priority);
+		P_GET_PROPERTY_REF(FStrProperty,Z_Param_Out_jsonString);
+		P_GET_ENUM_REF(FutabaRequestStatus,Z_Param_Out_requestStatus);
+		P_GET_PROPERTY_REF(FIntProperty,Z_Param_Out_statusCode);
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		P_THIS->SetThingsPropertyIntegerLatent(Z_Param_WorldContextObject,Z_Param_LatentInfo,Z_Param_rootId,Z_Param_tdId,Z_Param_property,Z_Param_value,Z_Param_priority,Z_Param_Out_jsonString,(FutabaRequestStatus&)(Z_Param_Out_requestStatus),Z_Param_Out_statusCode);
+		P_NATIVE_END;
+	}
+	DEFINE_FUNCTION(AFutabaActor::execSetThingsPropertyInteger)
+	{
+		P_GET_PROPERTY(FStrProperty,Z_Param_rootId);
+		P_GET_PROPERTY(FStrProperty,Z_Param_tdId);
+		P_GET_PROPERTY(FStrProperty,Z_Param_property);
+		P_GET_PROPERTY(FIntProperty,Z_Param_value);
+		P_GET_PROPERTY(FIntProperty,Z_Param_priority);
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		P_THIS->SetThingsPropertyInteger(Z_Param_rootId,Z_Param_tdId,Z_Param_property,Z_Param_value,Z_Param_priority);
+		P_NATIVE_END;
+	}
 	DEFINE_FUNCTION(AFutabaActor::execGetThingsPropertyLatent)
 	{
 		P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
@@ -623,6 +652,33 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		P_THIS->SetTelemetryDataFloat(Z_Param_targetBuilding,Z_Param_dtid,Z_Param_value,Z_Param_priority);
 		P_NATIVE_END;
 	}
+	DEFINE_FUNCTION(AFutabaActor::execSetTelemetryDataIntegerLatent)
+	{
+		P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
+		P_GET_STRUCT(FLatentActionInfo,Z_Param_LatentInfo);
+		P_GET_PROPERTY(FStrProperty,Z_Param_targetBuilding);
+		P_GET_PROPERTY(FStrProperty,Z_Param_dtid);
+		P_GET_PROPERTY(FIntProperty,Z_Param_value);
+		P_GET_PROPERTY(FIntProperty,Z_Param_priority);
+		P_GET_PROPERTY_REF(FStrProperty,Z_Param_Out_jsonString);
+		P_GET_ENUM_REF(FutabaRequestStatus,Z_Param_Out_requestStatus);
+		P_GET_PROPERTY_REF(FIntProperty,Z_Param_Out_statusCode);
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		P_THIS->SetTelemetryDataIntegerLatent(Z_Param_WorldContextObject,Z_Param_LatentInfo,Z_Param_targetBuilding,Z_Param_dtid,Z_Param_value,Z_Param_priority,Z_Param_Out_jsonString,(FutabaRequestStatus&)(Z_Param_Out_requestStatus),Z_Param_Out_statusCode);
+		P_NATIVE_END;
+	}
+	DEFINE_FUNCTION(AFutabaActor::execSetTelemetryDataInteger)
+	{
+		P_GET_PROPERTY(FStrProperty,Z_Param_targetBuilding);
+		P_GET_PROPERTY(FStrProperty,Z_Param_dtid);
+		P_GET_PROPERTY(FIntProperty,Z_Param_value);
+		P_GET_PROPERTY(FIntProperty,Z_Param_priority);
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		P_THIS->SetTelemetryDataInteger(Z_Param_targetBuilding,Z_Param_dtid,Z_Param_value,Z_Param_priority);
+		P_NATIVE_END;
+	}
 	DEFINE_FUNCTION(AFutabaActor::execUpdateDigitalTwinDataLatent)
 	{
 		P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
@@ -799,12 +855,16 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 			{ "SetSharedDataLatent", &AFutabaActor::execSetSharedDataLatent },
 			{ "SetTelemetryDataFloat", &AFutabaActor::execSetTelemetryDataFloat },
 			{ "SetTelemetryDataFloatLatent", &AFutabaActor::execSetTelemetryDataFloatLatent },
+			{ "SetTelemetryDataInteger", &AFutabaActor::execSetTelemetryDataInteger },
+			{ "SetTelemetryDataIntegerLatent", &AFutabaActor::execSetTelemetryDataIntegerLatent },
 			{ "SetTelemetryDataString", &AFutabaActor::execSetTelemetryDataString },
 			{ "SetTelemetryDataStringLatent", &AFutabaActor::execSetTelemetryDataStringLatent },
 			{ "SetTelemetryStream", &AFutabaActor::execSetTelemetryStream },
 			{ "SetTelemetryStreamLatent", &AFutabaActor::execSetTelemetryStreamLatent },
 			{ "SetThingsPropertyFloat", &AFutabaActor::execSetThingsPropertyFloat },
 			{ "SetThingsPropertyFloatLatent", &AFutabaActor::execSetThingsPropertyFloatLatent },
+			{ "SetThingsPropertyInteger", &AFutabaActor::execSetThingsPropertyInteger },
+			{ "SetThingsPropertyIntegerLatent", &AFutabaActor::execSetThingsPropertyIntegerLatent },
 			{ "SetThingsPropertyString", &AFutabaActor::execSetThingsPropertyString },
 			{ "SetThingsPropertyStringLatent", &AFutabaActor::execSetThingsPropertyStringLatent },
 			{ "SetWebhook", &AFutabaActor::execSetWebhook },
@@ -1457,7 +1517,7 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_AFutabaActor_DeleteWebhookLatent_Statics::Function_MetaDataParams[] = {
 		{ "Category", "futaba|Building dataset API" },
-		{ "DisplayName", "DeleteWebhook <Latent>" },
+		{ "DisplayName", "Delete Webhook <Latent>" },
 		{ "Latent", "" },
 		{ "LatentInfo", "LatentInfo" },
 		{ "ModuleRelativePath", "Public/FutabaActor.h" },
@@ -2820,6 +2880,124 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		}
 		return ReturnFunction;
 	}
+	struct Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics
+	{
+		struct FutabaActor_eventSetTelemetryDataInteger_Parms
+		{
+			FString targetBuilding;
+			FString dtid;
+			int32 value;
+			int32 priority;
+		};
+		static const UECodeGen_Private::FStrPropertyParams NewProp_targetBuilding;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_dtid;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_value;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_priority;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_targetBuilding = { "targetBuilding", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataInteger_Parms, targetBuilding), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_dtid = { "dtid", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataInteger_Parms, dtid), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_value = { "value", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataInteger_Parms, value), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_priority = { "priority", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataInteger_Parms, priority), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_targetBuilding,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_dtid,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_value,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::NewProp_priority,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::Function_MetaDataParams[] = {
+		{ "Category", "futaba|Digital Twin API" },
+		{ "DisplayName", "Set Telemetry Data (float)" },
+		{ "ModuleRelativePath", "Public/FutabaActor.h" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AFutabaActor, nullptr, "SetTelemetryDataInteger", nullptr, nullptr, sizeof(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::FutabaActor_eventSetTelemetryDataInteger_Parms), Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::Function_MetaDataParams, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
+	struct Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics
+	{
+		struct FutabaActor_eventSetTelemetryDataIntegerLatent_Parms
+		{
+			UObject* WorldContextObject;
+			FLatentActionInfo LatentInfo;
+			FString targetBuilding;
+			FString dtid;
+			int32 value;
+			int32 priority;
+			FString jsonString;
+			FutabaRequestStatus requestStatus;
+			int32 statusCode;
+		};
+		static const UECodeGen_Private::FObjectPropertyParams NewProp_WorldContextObject;
+		static const UECodeGen_Private::FStructPropertyParams NewProp_LatentInfo;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_targetBuilding;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_dtid;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_value;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_priority;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_jsonString;
+		static const UECodeGen_Private::FBytePropertyParams NewProp_requestStatus_Underlying;
+		static const UECodeGen_Private::FEnumPropertyParams NewProp_requestStatus;
+		static const UECodeGen_Private::FIntPropertyParams NewProp_statusCode;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_WorldContextObject = { "WorldContextObject", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, WorldContextObject), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_LatentInfo = { "LatentInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, LatentInfo), Z_Construct_UScriptStruct_FLatentActionInfo, METADATA_PARAMS(nullptr, 0) }; // 4072181092
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_targetBuilding = { "targetBuilding", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, targetBuilding), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_dtid = { "dtid", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, dtid), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_value = { "value", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, value), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_priority = { "priority", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, priority), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_jsonString = { "jsonString", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, jsonString), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FBytePropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_requestStatus_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_requestStatus = { "requestStatus", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, requestStatus), Z_Construct_UEnum_Futaba_FutabaRequestStatus, METADATA_PARAMS(nullptr, 0) }; // 1425841634
+	const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_statusCode = { "statusCode", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetTelemetryDataIntegerLatent_Parms, statusCode), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_WorldContextObject,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_LatentInfo,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_targetBuilding,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_dtid,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_value,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_priority,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_jsonString,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_requestStatus_Underlying,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_requestStatus,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::NewProp_statusCode,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::Function_MetaDataParams[] = {
+		{ "Category", "futaba|Digital Twin API" },
+		{ "DisplayName", "Set Telemetry Data (float) <Latent>" },
+		{ "Latent", "" },
+		{ "LatentInfo", "LatentInfo" },
+		{ "ModuleRelativePath", "Public/FutabaActor.h" },
+		{ "WorldContext", "WorldContextObject" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AFutabaActor, nullptr, "SetTelemetryDataIntegerLatent", nullptr, nullptr, sizeof(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::FutabaActor_eventSetTelemetryDataIntegerLatent_Parms), Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04420401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::Function_MetaDataParams, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
 	struct Z_Construct_UFunction_AFutabaActor_SetTelemetryDataString_Statics
 	{
 		struct FutabaActor_eventSetTelemetryDataString_Parms
@@ -3154,6 +3332,132 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		if (!ReturnFunction)
 		{
 			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AFutabaActor_SetThingsPropertyFloatLatent_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
+	struct Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics
+	{
+		struct FutabaActor_eventSetThingsPropertyInteger_Parms
+		{
+			FString rootId;
+			FString tdId;
+			FString property;
+			int32 value;
+			int32 priority;
+		};
+		static const UECodeGen_Private::FStrPropertyParams NewProp_rootId;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_tdId;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_property;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_value;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_priority;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_rootId = { "rootId", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyInteger_Parms, rootId), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_tdId = { "tdId", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyInteger_Parms, tdId), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_property = { "property", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyInteger_Parms, property), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_value = { "value", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyInteger_Parms, value), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_priority = { "priority", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyInteger_Parms, priority), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_rootId,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_tdId,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_property,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_value,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::NewProp_priority,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::Function_MetaDataParams[] = {
+		{ "Category", "futaba|Web of Things API" },
+		{ "DisplayName", "Set Things Property (float)" },
+		{ "ModuleRelativePath", "Public/FutabaActor.h" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AFutabaActor, nullptr, "SetThingsPropertyInteger", nullptr, nullptr, sizeof(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::FutabaActor_eventSetThingsPropertyInteger_Parms), Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::Function_MetaDataParams, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
+	struct Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics
+	{
+		struct FutabaActor_eventSetThingsPropertyIntegerLatent_Parms
+		{
+			UObject* WorldContextObject;
+			FLatentActionInfo LatentInfo;
+			FString rootId;
+			FString tdId;
+			FString property;
+			int32 value;
+			int32 priority;
+			FString jsonString;
+			FutabaRequestStatus requestStatus;
+			int32 statusCode;
+		};
+		static const UECodeGen_Private::FObjectPropertyParams NewProp_WorldContextObject;
+		static const UECodeGen_Private::FStructPropertyParams NewProp_LatentInfo;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_rootId;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_tdId;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_property;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_value;
+		static const UECodeGen_Private::FUnsizedIntPropertyParams NewProp_priority;
+		static const UECodeGen_Private::FStrPropertyParams NewProp_jsonString;
+		static const UECodeGen_Private::FBytePropertyParams NewProp_requestStatus_Underlying;
+		static const UECodeGen_Private::FEnumPropertyParams NewProp_requestStatus;
+		static const UECodeGen_Private::FIntPropertyParams NewProp_statusCode;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_WorldContextObject = { "WorldContextObject", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, WorldContextObject), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_LatentInfo = { "LatentInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, LatentInfo), Z_Construct_UScriptStruct_FLatentActionInfo, METADATA_PARAMS(nullptr, 0) }; // 4072181092
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_rootId = { "rootId", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, rootId), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_tdId = { "tdId", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, tdId), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_property = { "property", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, property), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_value = { "value", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, value), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FUnsizedIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_priority = { "priority", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, priority), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_jsonString = { "jsonString", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, jsonString), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FBytePropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_requestStatus_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_requestStatus = { "requestStatus", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, requestStatus), Z_Construct_UEnum_Futaba_FutabaRequestStatus, METADATA_PARAMS(nullptr, 0) }; // 1425841634
+	const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_statusCode = { "statusCode", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FutabaActor_eventSetThingsPropertyIntegerLatent_Parms, statusCode), METADATA_PARAMS(nullptr, 0) };
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_WorldContextObject,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_LatentInfo,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_rootId,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_tdId,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_property,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_value,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_priority,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_jsonString,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_requestStatus_Underlying,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_requestStatus,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::NewProp_statusCode,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::Function_MetaDataParams[] = {
+		{ "Category", "futaba|Web of Things API" },
+		{ "DisplayName", "Set Things Property (float) <Latent>" },
+		{ "Latent", "" },
+		{ "LatentInfo", "LatentInfo" },
+		{ "ModuleRelativePath", "Public/FutabaActor.h" },
+		{ "WorldContext", "WorldContextObject" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AFutabaActor, nullptr, "SetThingsPropertyIntegerLatent", nullptr, nullptr, sizeof(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::FutabaActor_eventSetThingsPropertyIntegerLatent_Parms), Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04420401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::Function_MetaDataParams, UE_ARRAY_COUNT(Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent_Statics::FuncParams);
 		}
 		return ReturnFunction;
 	}
@@ -3570,7 +3874,7 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		{ &Z_Construct_UFunction_AFutabaActor_DeleteTelemetryStream, "DeleteTelemetryStream" }, // 73891938
 		{ &Z_Construct_UFunction_AFutabaActor_DeleteTelemetryStreamLatent, "DeleteTelemetryStreamLatent" }, // 750571170
 		{ &Z_Construct_UFunction_AFutabaActor_DeleteWebhook, "DeleteWebhook" }, // 3033572579
-		{ &Z_Construct_UFunction_AFutabaActor_DeleteWebhookLatent, "DeleteWebhookLatent" }, // 2689258943
+		{ &Z_Construct_UFunction_AFutabaActor_DeleteWebhookLatent, "DeleteWebhookLatent" }, // 2838197574
 		{ &Z_Construct_UDelegateFunction_AFutabaActor_FutabaOnEventDispather__DelegateSignature, "FutabaOnEventDispather__DelegateSignature" }, // 256139547
 		{ &Z_Construct_UFunction_AFutabaActor_GetAccessToken, "GetAccessToken" }, // 3319320736
 		{ &Z_Construct_UFunction_AFutabaActor_GetAccessTokenLatent, "GetAccessTokenLatent" }, // 3962026572
@@ -3599,12 +3903,16 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		{ &Z_Construct_UFunction_AFutabaActor_SetSharedDataLatent, "SetSharedDataLatent" }, // 2295146567
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataFloat, "SetTelemetryDataFloat" }, // 2285395844
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataFloatLatent, "SetTelemetryDataFloatLatent" }, // 964288934
+		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataInteger, "SetTelemetryDataInteger" }, // 785808631
+		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataIntegerLatent, "SetTelemetryDataIntegerLatent" }, // 93157832
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataString, "SetTelemetryDataString" }, // 1587457452
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryDataStringLatent, "SetTelemetryDataStringLatent" }, // 2951606387
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryStream, "SetTelemetryStream" }, // 1445789908
 		{ &Z_Construct_UFunction_AFutabaActor_SetTelemetryStreamLatent, "SetTelemetryStreamLatent" }, // 2478492398
 		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyFloat, "SetThingsPropertyFloat" }, // 1895575431
 		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyFloatLatent, "SetThingsPropertyFloatLatent" }, // 1044180366
+		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyInteger, "SetThingsPropertyInteger" }, // 3560874508
+		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyIntegerLatent, "SetThingsPropertyIntegerLatent" }, // 1342075000
 		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyString, "SetThingsPropertyString" }, // 858511405
 		{ &Z_Construct_UFunction_AFutabaActor_SetThingsPropertyStringLatent, "SetThingsPropertyStringLatent" }, // 800528267
 		{ &Z_Construct_UFunction_AFutabaActor_SetWebhook, "SetWebhook" }, // 3329092325
@@ -3720,9 +4028,9 @@ void EmptyLinkFunctionForGeneratedCodeFutabaActor() {}
 		{ FutabaRequestStatus_StaticEnum, TEXT("FutabaRequestStatus"), &Z_Registration_Info_UEnum_FutabaRequestStatus, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1425841634U) },
 	};
 	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_AFutabaActor, AFutabaActor::StaticClass, TEXT("AFutabaActor"), &Z_Registration_Info_UClass_AFutabaActor, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AFutabaActor), 395128333U) },
+		{ Z_Construct_UClass_AFutabaActor, AFutabaActor::StaticClass, TEXT("AFutabaActor"), &Z_Registration_Info_UClass_AFutabaActor, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AFutabaActor), 1134736903U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_1945232359(TEXT("/Script/Futaba"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_2524629160(TEXT("/Script/Futaba"),
 		Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_Statics::ClassInfo),
 		nullptr, 0,
 		Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_FutabaSDK_Plugins_Futaba_Source_Futaba_Public_FutabaActor_h_Statics::EnumInfo));
