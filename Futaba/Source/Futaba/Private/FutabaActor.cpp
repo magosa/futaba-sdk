@@ -209,6 +209,7 @@ void AFutabaActor::GetAccessTokenLatent(UObject* WorldContextObject, FLatentActi
 		Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 		Request->SetHeader(TEXT("X-DTDPF-CLIENT-ID"), JsonObject->GetStringField("client_id"));
 		Request->SetHeader(TEXT("X-DTDPF-CLIENT-SECRET"), JsonObject->GetStringField("client_secret"));
+		this->ConnectionTarget = JsonObject->GetStringField("target_api");
 		this->ClientId = JsonObject->GetStringField("client_id");
 		this->ClientSecret = JsonObject->GetStringField("client_secret");
 		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
