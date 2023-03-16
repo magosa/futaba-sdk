@@ -111,6 +111,8 @@ let client = new futaba();
 let fu = new futabaUtility();
 fu.setTargetBuilding(["R90/research", "R90/east"])
   .setDownloadFolderPath(__dirname + '/download/');
+
+// ポイントの検索と状態値取得
 const telemetry_search_parameters = fu.initializeFilterObject()
   .setFilterOfTwinTitle(["ElementA", "ElementB"])
   .setFilterOfGlobalId(["aaa", "bbb"])
@@ -144,7 +146,7 @@ const dir_conf = {
   depth: null
 }
 
-// TDへの書き込み
+// 対象ポイントへの書き込み
 const control_dtid = "R90_000001";
 const control_value = 26.2;
 const control_priority = 40;
