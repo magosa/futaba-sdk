@@ -10,7 +10,7 @@
 
 # Installation
 
-* 環境構築.
+### Node Moduleのセットアップ
 
 ```bash
 git clone -b js https://github.com/magosa/futaba-sdk.git
@@ -77,8 +77,8 @@ APIからのレスポンスには ***"access_token"*** と ***"refresh_token"***
 ```Javascript:config.json
 {
   "target_api":"futaba2",
-  "client_id": "ID assigned by administrator",
-  "client_secret": "Secret assigned by administrator",
+  "client_id": "00000",
+  "client_secret": "XXXXX",
   "access_token": "tNe5+0OQkWEjXi14ubRwSoIAxe0O90wyxwhx/g+3JMghuPHNy1nFdOv4mhOXvvzB",
   "refresh_token": "Y3ewSFyGh43KwkZwPd4V70OGmkivkRacazsCGmOMCt6WrCqMYni8ZGaGnzATcClL"
 }
@@ -159,7 +159,7 @@ client.setTelemetryData(fu.getTargetBuilding()[0], control_dtid, control_value, 
 # Note
 
 futabaの各APIについては、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)を確認してください。  
-シークレットやリフレッシュトークンを紛失した場合には、即座に管理者へ問い合わせを行ってください。
+シークレットやリフレッシュトークンを紛失した場合には、管理者へ問い合わせを行い再発行手続きを進めて下さい。
 
 # Author
 
