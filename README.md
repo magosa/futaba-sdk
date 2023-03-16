@@ -10,7 +10,7 @@
 
 # Installation
 
-### Node Moduleのセットアップ
+### 必要ライブラリのセットアップ
 
 ```bash
 git clone -b js https://github.com/magosa/futaba-sdk.git
