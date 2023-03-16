@@ -103,9 +103,7 @@ client.setAccessToken(obj);
 ### 建物データと各機器の状態値取得
 
 建物内の機器の状態値を取得するには、デジタルツイン APIもしくは、WoT APIから機器のプロパティを検索します。
-
 サンプルプログラムは ***"futaba_hot_sample.js"*** です。
-
 以下に現在値取得の一例を示します。
 
 ***"getTelemetryData"*** 関数（「Sample_1_3」内の内容）を利用して特定の機器を検索し、機器の状態値を取得します。
@@ -130,8 +128,8 @@ client.getTelemetryData(telemetry_search_parameters)
 
 APIからのレスポンスが ***1024KB*** を超える場合には、Thingが返却されずダウンロードURLが返却されます。
 
-TDやプロパティ取得の関数は複数用意されています。  
-詳しくは、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)をご確認ください。
+デジタルツイン情報やプロパティに関する関数はAPIのリファレンスと対応しています。
+APIへのアクセス方法が複数用意されているので、詳しくは管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)をご確認ください。
 
 ### 機器の遠隔制御
 
