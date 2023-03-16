@@ -20,9 +20,9 @@ npm install
 
 # 接続情報の事前設定
 
-ソースコードをダウンロード後にdataディレクトリ内のconfig.jsを編集します。
+ソースコードをダウンロード後にdataディレクトリ内のconfig.jsonを編集します。
 
-### config.jsの編集
+### config.jsonの編集
 
 ```Javascript:config.json
 {
@@ -40,7 +40,12 @@ npm install
 
 ```Javascript:futaba_hot_sample.js
 const futaba = require('./futaba.js');
+const futabaUtility = require('./futaba-utility.js')
+
 let client = new futaba();
+let fu = new futabaUtility();
+fu.setTargetBuilding(["R90/research", "R90/east"])
+  .setDownloadFolderPath(__dirname + '/download/');
 ```
 
 ### アクセストークンの発効・更新
@@ -64,14 +69,27 @@ client.getAccessToken(obj)
   });
 ```
 
-APIからのレスポンスには***"access_token"***と***"refresh_token"***が含まれています。  
-認証API以外のAPI（hot, cold, ext）には***"access_token"***が必須となりますが、発行後24時間のみ有効なトークンとなります。
+APIからのレスポンスには ***"access_token"*** と ***"refresh_token"*** が含まれています。  
+認証API以外のAPI（hot, cold, ext）には ***"access_token"*** が必須となりますが、発行後24時間のみ有効なトークンとなります。
 
-トークンの期限が切れた場合には再度***"getAccessToken"*** 関数を実行してトークンの更新を行ってください。***"refresh_token"***を使って最新のトークンに更新するため、***"refresh_token"***を紛失した場合には管理者に問い合わせを行ってください。
+### AccessToken取得後のconfig.json例
+
+```Javascript:config.json
+{
+  "target_api":"futaba2",
+  "client_id": "ID assigned by administrator",
+  "client_secret": "Secret assigned by administrator",
+  "access_token": "tNe5+0OQkWEjXi14ubRwSoIAxe0O90wyxwhx/g+3JMghuPHNy1nFdOv4mhOXvvzB",
+  "refresh_token": "Y3ewSFyGh43KwkZwPd4V70OGmkivkRacazsCGmOMCt6WrCqMYni8ZGaGnzATcClL"
+}
+```
+
+トークンの期限が切れた場合には再度 ***"getAccessToken"*** 関数を実行してトークンの更新を行ってください。
+***"refresh_token"*** を使って最新のトークンに更新するため、***"refresh_token"*** を紛失した場合には管理者に問い合わせを行ってください。
 
 ### 期限内のアクセストークンの利用
 
-期限内のアクセストークンを利用するには***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
+期限内のアクセストークンを利用するには ***"setAccessToken"*** 関数を使ってクライアントインスタンスに認証情報を書き込みます。
 
 ```Javascript:futaba_hot_sample.js
 const fs = require('fs');
@@ -85,7 +103,7 @@ client.setAccessToken(obj);
 
 建物内の機器の状態値を取得するには、デジタルツイン APIもしくは、WoT APIから機器のプロパティを検索します。
 
-サンプルプログラムは***"futaba_hot_sample.js"***です。
+サンプルプログラムは ***"futaba_hot_sample.js"*** です。
 
 以下に現在値取得の一例を示します。
 
@@ -109,16 +127,16 @@ client.getTelemetryData(telemetry_search_parameters)
   .then(res => console.dir(res, dir_conf));
 ```
 
-APIからのレスポンスが**1024KB**を超える場合には、Thingが返却されずダウンロードURLが返却されます。
+APIからのレスポンスが ***1024KB*** を超える場合には、Thingが返却されずダウンロードURLが返却されます。
 
 TDやプロパティ取得の関数は複数用意されています。  
 詳しくは、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)をご確認ください。
 
 ### 機器の遠隔制御
 
-建物内の機器に値を書き込むには***"setTelemetryData"*** 関数（「Sample_4」内の内容）を利用します。  
+建物内の機器に値を書き込むには ***"setTelemetryData"*** 関数（「Sample_4」内の内容）を利用します。  
 引数には＜機器のデジタルツインID(制御対象ポイントのID)＞, ＜書き込むデータ＞, ＜書き込むデータの優先度（BACnet制御など特定のプロトコルの場合）＞を渡します。  
-＜機器のデジタルツインID＞については***"getDigitalTwinData"*** 関数（「Sample_2-1~3」内の内容）で取得できるメタデータに記載されています。
+＜機器のデジタルツインID＞については ***"getDigitalTwinData"*** 関数（「Sample_2-1~3」内の内容）で取得できるメタデータに記載されています。
 
 ```Javascript:futaba_hot_sample.js
 let client = new futaba();
