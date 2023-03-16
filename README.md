@@ -158,7 +158,7 @@ client.setTelemetryData(fu.getTargetBuilding()[0], control_dtid, control_value, 
 # Note
 
 1. futabaの各APIについては、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)を確認してください。  
-2. シークレットやリフレッシュトークンを紛失した場合は、管理者へ問い合わせを行い再発行を進めて下さい。
+2. シークレットやリフレッシュトークンを紛失した場合は、管理者へ問い合わせを行い再発行してください。
 
 # Author
 
