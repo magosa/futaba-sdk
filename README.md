@@ -2,6 +2,8 @@
 
 * futabaのAPIに接続するためのラッパー関数ライブラリーとサンプルです。
 
+* futabaAPIのバージョンは[futaba2](https://futaba2-dev-app-apidoc.azurewebsites.net/)に対応します。
+
 * ライブラリを利用することでAPIリクエストを簡略化し、futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
 
 [English](https://github.com/magosa/futaba-sdk/blob/js/README_ENG.md)
@@ -30,7 +32,7 @@ npm install
 }
 ```
 
-# WoT APIへのアクセス
+# API共通の認証プロセス
 
 ### クライアントインスタンスの生成
 
@@ -79,62 +81,66 @@ let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
 client.setAccessToken(obj);
 ```
 
-### Thingデータと状態値の取得
+### 建物データと各機器の状態値取得
 
-建物内の機器の状態値を取得するには、WoT APIから建物のThing Descriptions（TD）を取得し、TDのIDをキーに機器のプロパティを検索します。
+建物内の機器の状態値を取得するには、デジタルツイン APIもしくは、WoT APIから機器のプロパティを検索します。
 
-以下に現在値取得の一例を示します。  
+サンプルプログラムは***"futaba_hot_sample.js"***です。
 
-1. ***"getThingsWithQuery"*** 関数を利用してTDを取得
-2. 取得したTDのIDを***"getThingsPropertiesWithAlias"*** 関数に渡すことで現在値を取得
+以下に現在値取得の一例を示します。
+
+***"getTelemetryData"*** 関数（「Sample_1_3」内の内容）を利用して特定の機器を検索し、機器の状態値を取得します。
 
 ```Javascript:futaba_hot_sample.js
-// 特定のTDを検索し、プロパティを表示
-let data = {
-  building: 'nkc/livinglab',
-  query_type: 'odata',
-  query: "$filter=element eq 'DL4'" //Titleに合致するthingを検索
-};
+let client = new futaba();
+let fu = new futabaUtility();
+fu.setTargetBuilding(["R90/research", "R90/east"])
+  .setDownloadFolderPath(__dirname + '/download/');
+const telemetry_search_parameters = fu.initializeFilterObject()
+  .setFilterOfTwinTitle(["ElementA", "ElementB"])
+  .setFilterOfGlobalId(["aaa", "bbb"])
+  .setFilterOfTwinTag(["tagA", "tagC"], "and")
+  .setFilterOfTwinPath(["/A/*", "/B"])
+  .setFilterOfTwinModelId(["dtmi:point:bacnetPoint;1", "dtmi:point:humanPoint;1"])
+  .setFilterOfDtId(["R90_000001", "R90_000002"])
+  .generateParameterWithFilter();
 
-client.getThingsWithQuery(data)
-  .then(res => {
-    res.things.map(item => {
-      // console.log(item);
-      client.getThingsPropertiesWithAlias(item.tdId)
-        .then(d => {
-          console.log(item.tdId);
-          console.log(d)
-        });
-    })
-  });
+client.getTelemetryData(telemetry_search_parameters)
+  .then(res => console.dir(res, dir_conf));
 ```
 
 APIからのレスポンスが**1024KB**を超える場合には、Thingが返却されずダウンロードURLが返却されます。
 
 TDやプロパティ取得の関数は複数用意されています。  
-詳しくは、管理者から別途提供されるAPI仕様書をご確認ください。
+詳しくは、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)をご確認ください。
 
 ### 機器の遠隔制御
 
-建物内の機器に値を書き込むには***"setThingsProperty"*** 関数を利用します。  
-引数には＜TDのID＞, ＜機器のポイントID＞, ＜書き込むデータのJSONオブジェクト＞を渡します。  
-＜TDのID＞と＜機器のポイントID＞については***"getThingsWithQuery"*** 関数で取得できるTDに記載されています。
+建物内の機器に値を書き込むには***"setTelemetryData"*** 関数（「Sample_4」内の内容）を利用します。  
+引数には＜機器のデジタルツインID(制御対象ポイントのID)＞, ＜書き込むデータ＞, ＜書き込むデータの優先度（BACnet制御など特定のプロトコルの場合）＞を渡します。  
+＜機器のデジタルツインID＞については***"getDigitalTwinData"*** 関数（「Sample_2-1~3」内の内容）で取得できるメタデータに記載されています。
 
 ```Javascript:futaba_hot_sample.js
-// TDへの書き込み
-let data = {
-  values: {
-    value: '0'
-  }
-};
+let client = new futaba();
+let fu = new futabaUtility();
+fu.setTargetBuilding(["R90/research", "R90/east"])
+  .setDownloadFolderPath(__dirname + '/download/');
+const dir_conf = {
+  depth: null
+}
 
-client.setThingsProperty('f9058086-9180-452c-820b-504afc703169', 'CGL_000002', data)
-.then(d => console.log(d));
+// TDへの書き込み
+const control_dtid = "R90_000001";
+const control_value = 26.2;
+const control_priority = 40;
+
+client.setTelemetryData(fu.getTargetBuilding()[0], control_dtid, control_value, control_priority)
+  .then(res => console.dir(res, dir_conf));
 ```
 
 # Note
 
-futabaの各APIについては、管理者から別途提供されるAPI仕様書を確認してください。  
+futabaの各APIについては、管理者から別途提供される[API仕様書](https://futaba2-dev-app-apidoc.azurewebsites.net/)を確認してください。  
 シークレットやリフレッシュトークンを紛失した場合には、即座に管理者へ問い合わせを行ってください。
 
 # Author

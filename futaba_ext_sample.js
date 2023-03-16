@@ -4,42 +4,51 @@ const futaba = require('./futaba.js');
 const fs = require('fs');
 
 let client = new futaba();
-let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
-
 const dir_conf = {
   depth: null
 }
 
+/**
+ * 共有データAPI サンプル
+ */
 
-async function main() {
-  // トークンの発行・更新
-  // await client.getAccessToken(obj)
-  //   .then(res => {
-  //     obj.access_token = res.accessToken;
-  //     obj.refresh_token = res.refreshToken;
-  //     if (obj.access_token && obj.refresh_token) {
-  //       fs.writeFileSync('./data/config.json', JSON.stringify(obj));
-  //     }
-  //     console.log(res);
-  //   });
-
-
-  //既存トークンのセット
-  client.setAccessToken(obj);
-
-
-  /**
-   * 共有データAPI サンプル
-   */
-
-  // 1.共有データ追加
+// 1.共有データ追加
+async function Sample_1() {
   const values = [
     "{\"userProp1\": \"abc\", \"userProp2\": 1}",
     "{\"userProp1\": \"def\", \"userProp2\": 2}"
   ]
   client.setSharedData(2, "R90/research", values)
     .then(res => console.dir(res, dir_conf));
+};
 
+// 2.共有データ検索
+async function Sample_2(filter) {
+  client.getSharedData(2, "R90/research", filter)
+    .then(res => console.dir(res, dir_conf));
+};
+
+// 3.共有データ削除
+async function Sample_3(filter) {
+  client.deleteSharedData(2, "R90/research", filter)
+    .then(res => console.dir(res, dir_conf));
+};
+
+async function main() {
+  // トークンの発行・更新
+  let obj = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
+  await client.getAccessToken(obj)
+    .then(res => {
+      obj.access_token = res.accessToken;
+      obj.refresh_token = res.refreshToken;
+      if (obj.access_token && obj.refresh_token) {
+        fs.writeFileSync('./data/config.json', JSON.stringify(obj));
+      }
+      console.log(res);
+    });
+
+  //既存トークンのセット
+  // client.setAccessToken(obj);
 
   const filter = {
     startOffset: 10,
@@ -53,14 +62,7 @@ async function main() {
     }]
   }
 
-  // 2.共有データ検索
-  client.getSharedData(2, "R90/research", filter)
-    .then(res => console.dir(res, dir_conf));
-
-
-  // 3.共有データ削除
-  client.deleteSharedData(2, "R90/research", filter)
-    .then(res => console.dir(res, dir_conf));
+  await Sample_1();
 }
 
 
