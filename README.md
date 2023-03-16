@@ -70,7 +70,8 @@ client.getAccessToken(obj)
 ```
 
 APIからのレスポンスには ***"access_token"*** と ***"refresh_token"*** が含まれています。  
-認証API以外のAPI（hot, cold, ext）には ***"access_token"*** が必須となりますが、発行後24時間のみ有効なトークンとなります。
+認証API以外のAPI（デジタルツイン, WoT, モデル学習データ取得, 共有データ）へのアクセスには ***"access_token"*** が必須となります。
+トークンは発行後24時間のみ有効です。
 
 ### AccessToken取得後のconfig.json例
 
