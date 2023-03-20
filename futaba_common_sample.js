@@ -4,6 +4,10 @@ const futaba = require('./futaba.js');
 const fs = require('fs');
 
 let client = new futaba();
+let fu = new futabaUtility();
+fu.setTargetBuilding(["R90/research", "R90/east"])
+  .setDownloadFolderPath(__dirname + '/download/');
+
 const dir_conf = {
   depth: null
 }
@@ -18,19 +22,19 @@ async function Sample_1() {
     "{\"userProp1\": \"abc\", \"userProp2\": 1}",
     "{\"userProp1\": \"def\", \"userProp2\": 2}"
   ]
-  client.setSharedData(2, "R90/research", values)
+  client.setSharedData(2, fu.getTargetBuilding()[0], values)
     .then(res => console.dir(res, dir_conf));
 };
 
 // 2.共有データ検索
 async function Sample_2(filter) {
-  client.getSharedData(2, "R90/research", filter)
+  client.getSharedData(2, fu.getTargetBuilding()[0], filter)
     .then(res => console.dir(res, dir_conf));
 };
 
 // 3.共有データ削除
 async function Sample_3(filter) {
-  client.deleteSharedData(2, "R90/research", filter)
+  client.deleteSharedData(2, fu.getTargetBuilding()[0], filter)
     .then(res => console.dir(res, dir_conf));
 };
 
