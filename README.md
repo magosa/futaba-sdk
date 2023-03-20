@@ -4,8 +4,6 @@
 * futabaAPIのバージョンは[futaba2](https://futaba2-dev-app-apidoc.azurewebsites.net/)に対応します。
 * ライブラリを利用することでAPIリクエストを簡略化し、futabaを導入したビル内部の設備システムやIoT機器の状態やBIMデータに紐づく建物データを簡単に取得できます。
 
-[English](https://github.com/magosa/futaba-sdk/blob/js/README_ENG.md)
-
 # Installation
 
 ### 必要ライブラリのセットアップ
